@@ -1,28 +1,35 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 import { ShoppingCart, Menu, X } from "lucide-react";
-
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-
-  const categories = [
-    { name: "Furniture", path: "/category/furniture" },
-    { name: "Lighting", path: "/category/lighting" },
-    { name: "Flooring", path: "/category/flooring" },
-    { name: "Doors & Windows", path: "/category/doors-windows" },
-    { name: "Kitchen", path: "/category/kitchen" },
-    { name: "Bathroom", path: "/category/bathroom" },
-    { name: "Decor", path: "/category/decor" },
-  ];
-
-  return (
-    <header className="border-b border-eco-sand/30 bg-white/90 backdrop-blur-sm sticky top-0 z-50">
+  const categories = [{
+    name: "Furniture",
+    path: "/category/furniture"
+  }, {
+    name: "Lighting",
+    path: "/category/lighting"
+  }, {
+    name: "Flooring",
+    path: "/category/flooring"
+  }, {
+    name: "Doors & Windows",
+    path: "/category/doors-windows"
+  }, {
+    name: "Kitchen",
+    path: "/category/kitchen"
+  }, {
+    name: "Bathroom",
+    path: "/category/bathroom"
+  }, {
+    name: "Decor",
+    path: "/category/decor"
+  }];
+  return <header className="border-b border-eco-sand/30 bg-white/90 backdrop-blur-sm sticky top-0 z-50">
       <div className="eco-container flex justify-between items-center py-4">
         <Link to="/" className="flex items-center">
           <h1 className="font-serif text-2xl md:text-3xl font-medium text-eco-moss">
@@ -32,15 +39,9 @@ const Header = () => {
 
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex space-x-8">
-          {categories.map((category) => (
-            <Link
-              key={category.name}
-              to={category.path}
-              className="text-eco-bark hover:text-eco-moss transition-colors"
-            >
+          {categories.map(category => <Link key={category.name} to={category.path} className="text-eco-bark hover:text-eco-moss transition-colors mx-[11px] my-0 px-0 py-px\nMake their outlining in bubble">
               {category.name}
-            </Link>
-          ))}
+            </Link>)}
         </nav>
 
         <div className="flex items-center gap-4">
@@ -63,27 +64,16 @@ const Header = () => {
       </div>
 
       {/* Mobile Menu */}
-      {isMenuOpen && (
-        <div className="lg:hidden bg-white border-t border-eco-sand/30 animate-fade-in">
+      {isMenuOpen && <div className="lg:hidden bg-white border-t border-eco-sand/30 animate-fade-in">
           <nav className="eco-container py-4 flex flex-col space-y-3">
-            {categories.map((category) => (
-              <Link
-                key={category.name}
-                to={category.path}
-                className="text-eco-bark hover:text-eco-moss transition-colors py-2"
-                onClick={() => setIsMenuOpen(false)}
-              >
+            {categories.map(category => <Link key={category.name} to={category.path} className="text-eco-bark hover:text-eco-moss transition-colors py-2" onClick={() => setIsMenuOpen(false)}>
                 {category.name}
-              </Link>
-            ))}
+              </Link>)}
             <Button variant="ghost" className="eco-button w-full mt-4">
               Sign In
             </Button>
           </nav>
-        </div>
-      )}
-    </header>
-  );
+        </div>}
+    </header>;
 };
-
 export default Header;
