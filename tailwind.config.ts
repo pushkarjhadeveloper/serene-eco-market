@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,18 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+        // Custom eco palette
+        eco: {
+          sage: '#7D9D8C',
+          moss: '#4A6952',
+          sand: '#D3CAB0',
+          clay: '#C8A992',
+          stone: '#A6A39F',
+          cream: '#F5F3EF',
+          leaf: '#5E8B6F',
+          bark: '#7D6854',
+        }
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -84,12 +96,27 @@ export default {
 					to: {
 						height: '0'
 					}
-				}
+				},
+        'fade-in': {
+          '0%': {
+            opacity: '0',
+            transform: 'translateY(10px)'
+          },
+          '100%': {
+            opacity: '1',
+            transform: 'translateY(0)'
+          }
+        },
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
-			}
+				'accordion-up': 'accordion-up 0.2s ease-out',
+        'fade-in': 'fade-in 0.6s ease-out',
+			},
+      fontFamily: {
+        'serif': ['Playfair Display', 'serif'],
+        'sans': ['Poppins', 'sans-serif'],
+      }
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
