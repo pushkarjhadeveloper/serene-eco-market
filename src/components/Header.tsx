@@ -35,6 +35,23 @@ const Header = () => {
     path: "/category/decor"
   }];
   
+  const mainNav = [{
+    name: "Shop Collection",
+    path: "/themes"
+  }, {
+    name: "Design Services",
+    path: "/design-services"
+  }, {
+    name: "Sustainability",
+    path: "/sustainability"
+  }, {
+    name: "About",
+    path: "/about"
+  }, {
+    name: "Contact",
+    path: "/contact"
+  }];
+  
   // Check if a path is active
   const isActive = (path: string) => {
     return location.pathname === path;
@@ -91,6 +108,7 @@ const Header = () => {
       {isMenuOpen && (
         <div className="lg:hidden bg-white border-t border-eco-sand/30 animate-fade-in">
           <nav className="eco-container py-4 flex flex-col space-y-3">
+            <h3 className="font-medium text-eco-moss mb-2">Product Categories</h3>
             {categories.map(category => {
               const active = isActive(category.path);
               return (
@@ -108,6 +126,28 @@ const Header = () => {
                 </Link>
               );
             })}
+            
+            <div className="border-t border-eco-sand/30 my-4 pt-4">
+              <h3 className="font-medium text-eco-moss mb-2">Main Navigation</h3>
+              {mainNav.map(item => {
+                const active = isActive(item.path);
+                return (
+                  <Link 
+                    key={item.name} 
+                    to={item.path} 
+                    className={`block text-eco-bark hover:text-eco-moss transition-colors py-2 px-4 rounded-full 
+                    ${active 
+                      ? 'bg-eco-sage/10 border border-eco-sage/30 text-eco-moss' 
+                      : 'hover:bg-eco-sand/10 border border-transparent hover:border-eco-sand/30'
+                    }`}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.name}
+                  </Link>
+                );
+              })}
+            </div>
+            
             <Button variant="ghost" className="eco-button w-full mt-4" asChild>
               <Link to="/signin" onClick={() => setIsMenuOpen(false)}>
                 Sign In

@@ -1,5 +1,6 @@
 
 import { Button } from "./ui/button";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   return (
@@ -15,11 +16,11 @@ const Hero = () => {
               Transform your space with eco-friendly furnishings that combine beauty, comfort, and environmental responsibility.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-4">
-              <Button className="eco-button text-base px-8 py-6">
-                Shop Collection
+              <Button className="eco-button text-base px-8 py-6" asChild>
+                <Link to="/themes">Shop Collection</Link>
               </Button>
-              <Button variant="outline" className="border-eco-sage text-eco-moss hover:bg-eco-sage/10 text-base px-8 py-6">
-                Design Services
+              <Button variant="outline" className="border-eco-sage text-eco-moss hover:bg-eco-sage/10 text-base px-8 py-6" asChild>
+                <Link to="/design-services">Design Services</Link>
               </Button>
             </div>
             <div className="mt-12 flex items-center gap-6">
@@ -50,8 +51,8 @@ const Hero = () => {
           <div className="order-1 lg:order-2 relative">
             <div className="relative aspect-[4/3] overflow-hidden rounded-2xl">
               <img 
-                src="https://images.unsplash.com/photo-1483814466991-8cbcd92adf93?q=80&w=1074&auto=format&fit=crop" 
-                alt="Modern eco-friendly living room" 
+                src="/lovable-uploads/ea69fbf3-3d61-4007-a901-a08a6c1fbe17.png" 
+                alt="Modern eco-friendly living room with ceiling mural" 
                 className="object-cover h-full w-full"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-eco-moss/30 to-transparent"></div>
@@ -67,8 +68,8 @@ const Hero = () => {
                   </svg>
                 </div>
                 <div>
-                  <p className="font-medium text-eco-moss">100% Sustainable Materials</p>
-                  <p className="text-sm text-eco-bark">Every product is crafted with eco-conscious materials</p>
+                  <p className="font-medium text-eco-moss">Immersive Design Solutions</p>
+                  <p className="text-sm text-eco-bark">Transform any space with our sustainable design options</p>
                 </div>
               </div>
             </div>
