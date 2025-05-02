@@ -95,9 +95,15 @@ const Header = () => {
             </Link>
           </Button>
           
-          <Button variant="ghost" className="eco-button hidden lg:flex" asChild>
-            <Link to="/signin">Sign In</Link>
-          </Button>
+          <div className="hidden lg:flex gap-2">
+            <Button variant="ghost" className="eco-button" asChild>
+              <Link to="/signin">Sign In</Link>
+            </Button>
+            
+            <Button variant="default" className="eco-button" asChild>
+              <Link to="/signup">Sign Up</Link>
+            </Button>
+          </div>
 
           {/* Mobile Menu Button */}
           <Button variant="ghost" size="icon" onClick={toggleMenu} className="lg:hidden">
@@ -150,11 +156,19 @@ const Header = () => {
               })}
             </div>
             
-            <Button variant="ghost" className="eco-button w-full mt-4" asChild>
-              <Link to="/signin" onClick={() => setIsMenuOpen(false)}>
-                Sign In
-              </Link>
-            </Button>
+            <div className="flex flex-col gap-2 mt-4">
+              <Button variant="ghost" className="eco-button w-full" asChild>
+                <Link to="/signin" onClick={() => setIsMenuOpen(false)}>
+                  Sign In
+                </Link>
+              </Button>
+              
+              <Button variant="default" className="eco-button w-full" asChild>
+                <Link to="/signup" onClick={() => setIsMenuOpen(false)}>
+                  Sign Up
+                </Link>
+              </Button>
+            </div>
           </nav>
         </div>
       )}
