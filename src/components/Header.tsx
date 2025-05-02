@@ -1,11 +1,12 @@
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
 import { ShoppingCart, Menu, X } from "lucide-react";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
   
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -34,6 +35,11 @@ const Header = () => {
     path: "/category/decor"
   }];
   
+  // Check if a path is active
+  const isActive = (path: string) => {
+    return location.pathname === path;
+  };
+  
   return <header className="border-b border-eco-sand/30 bg-white/90 backdrop-blur-sm sticky top-0 z-50">
       <div className="eco-container flex justify-between items-center py-4">
         <Link to="/" className="flex items-center">
@@ -44,15 +50,22 @@ const Header = () => {
 
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex space-x-6">
-          {categories.map(category => (
-            <Link 
-              key={category.name} 
-              to={category.path} 
-              className="text-eco-bark hover:text-eco-moss transition-colors mx-2 my-1 px-4 py-2 rounded-full hover:bg-eco-sand/10 border border-transparent hover:border-eco-sand/30"
-            >
-              {category.name}
-            </Link>
-          ))}
+          {categories.map(category => {
+            const active = isActive(category.path);
+            return (
+              <Link 
+                key={category.name} 
+                to={category.path} 
+                className={`text-eco-bark hover:text-eco-moss transition-colors mx-2 my-1 px-4 py-2 rounded-full 
+                ${active 
+                  ? 'bg-eco-sage/10 border border-eco-sage/30 text-eco-moss' 
+                  : 'hover:bg-eco-sand/10 border border-transparent hover:border-eco-sand/30'
+                }`}
+              >
+                {category.name}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="flex items-center gap-4">
@@ -63,8 +76,8 @@ const Header = () => {
             </span>
           </Button>
           
-          <Button variant="ghost" className="eco-button hidden lg:flex">
-            Sign In
+          <Button variant="ghost" className="eco-button hidden lg:flex" asChild>
+            <Link to="/signin">Sign In</Link>
           </Button>
 
           {/* Mobile Menu Button */}
@@ -78,18 +91,27 @@ const Header = () => {
       {isMenuOpen && (
         <div className="lg:hidden bg-white border-t border-eco-sand/30 animate-fade-in">
           <nav className="eco-container py-4 flex flex-col space-y-3">
-            {categories.map(category => (
-              <Link 
-                key={category.name} 
-                to={category.path} 
-                className="text-eco-bark hover:text-eco-moss transition-colors py-2 px-4 rounded-full hover:bg-eco-sand/10 border border-transparent hover:border-eco-sand/30" 
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {category.name}
+            {categories.map(category => {
+              const active = isActive(category.path);
+              return (
+                <Link 
+                  key={category.name} 
+                  to={category.path} 
+                  className={`text-eco-bark hover:text-eco-moss transition-colors py-2 px-4 rounded-full 
+                  ${active 
+                    ? 'bg-eco-sage/10 border border-eco-sage/30 text-eco-moss' 
+                    : 'hover:bg-eco-sand/10 border border-transparent hover:border-eco-sand/30'
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {category.name}
+                </Link>
+              );
+            })}
+            <Button variant="ghost" className="eco-button w-full mt-4" asChild>
+              <Link to="/signin" onClick={() => setIsMenuOpen(false)}>
+                Sign In
               </Link>
-            ))}
-            <Button variant="ghost" className="eco-button w-full mt-4">
-              Sign In
             </Button>
           </nav>
         </div>
