@@ -86,11 +86,13 @@ const Header = () => {
         </nav>
 
         <div className="flex items-center gap-4">
-          <Button variant="outline" size="icon" className="relative">
-            <ShoppingCart className="h-5 w-5 text-eco-moss" />
-            <span className="absolute -top-1 -right-1 bg-eco-sage text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-              0
-            </span>
+          <Button variant="outline" size="icon" className="relative" asChild>
+            <Link to="/cart">
+              <ShoppingCart className="h-5 w-5 text-eco-moss" />
+              <span className="absolute -top-1 -right-1 bg-eco-sage text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                3
+              </span>
+            </Link>
           </Button>
           
           <Button variant="ghost" className="eco-button hidden lg:flex" asChild>

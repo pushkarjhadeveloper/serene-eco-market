@@ -10,6 +10,9 @@ import CategoryPage from "./pages/CategoryPage";
 import SignIn from "./pages/SignIn";
 import ThemesPage from "./pages/ThemesPage";
 import RoomVisualizerPage from "./pages/RoomVisualizerPage";
+import NewsletterConfirmation from "./pages/NewsletterConfirmation";
+import CartPage from "./pages/CartPage";
+import Chatbot from "./components/Chatbot";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +28,8 @@ const App = () => (
           <Route path="/signin" element={<SignIn />} />
           <Route path="/themes" element={<ThemesPage />} />
           <Route path="/design-services" element={<RoomVisualizerPage />} />
+          <Route path="/newsletter-confirmation" element={<NewsletterConfirmation />} />
+          <Route path="/cart" element={<CartPage />} />
           {/* These routes will be implemented in the future */}
           <Route path="/product/:productId" element={<Index />} />
           <Route path="/about" element={<Index />} />
@@ -33,6 +38,7 @@ const App = () => (
           {/* Catch-all route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <Chatbot />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

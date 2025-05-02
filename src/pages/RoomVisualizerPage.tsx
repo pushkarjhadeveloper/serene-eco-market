@@ -3,6 +3,7 @@ import { useState } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Slider } from "@/components/ui/slider";
 import { Upload, Download, Share2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -11,6 +12,7 @@ const RoomVisualizerPage = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [currentStyle, setCurrentStyle] = useState("original");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [sliderValue, setSliderValue] = useState([50]);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -90,6 +92,31 @@ const RoomVisualizerPage = () => {
     "scandinavian-minimalism": "brightness(110%) contrast(90%) saturate(70%)",
     "luxury-neutrals": "brightness(90%) contrast(110%) grayscale(20%)",
   };
+
+  // Before and After transformations data
+  const transformations = [
+    {
+      id: "living-room",
+      title: "Living Room Transformation",
+      description: "From dated to modern Scandinavian living space",
+      beforeImage: "https://images.unsplash.com/photo-1560185127-6ed189bf02f4?w=500&auto=format",
+      afterImage: "https://images.unsplash.com/photo-1565183928294-7063f23ce0f8?w=500&auto=format"
+    },
+    {
+      id: "kitchen",
+      title: "Kitchen Makeover",
+      description: "Traditional kitchen updated with Luxury Neutral palette",
+      beforeImage: "https://images.unsplash.com/photo-1556911220-bff31c812dba?w=500&auto=format",
+      afterImage: "https://images.unsplash.com/photo-1600607686527-6fb886090705?w=500&auto=format"
+    },
+    {
+      id: "bedroom",
+      title: "Bedroom Revitalization",
+      description: "Earthy Tones transformed this bedroom into a peaceful sanctuary",
+      beforeImage: "https://images.unsplash.com/photo-1598928636135-d146006ff4be?w=500&auto=format",
+      afterImage: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=500&auto=format"
+    }
+  ];
 
   return (
     <Layout>
@@ -204,6 +231,68 @@ const RoomVisualizerPage = () => {
                 </Button>
               </div>
             )}
+          </div>
+        </div>
+
+        {/* Before & After Slider Section */}
+        <div className="mt-20 mb-12">
+          <h2 className="font-serif text-3xl text-eco-moss mb-6 text-center">Before & After Transformations</h2>
+          <p className="text-eco-bark max-w-2xl mx-auto text-center mb-12">
+            See how different spaces were transformed with our design services. Drag the slider to compare before and after.
+          </p>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {transformations.map((transformation) => (
+              <div key={transformation.id} className="bg-white rounded-lg shadow-sm p-6 border border-eco-sand/30">
+                <h3 className="font-serif text-xl text-eco-moss mb-4">{transformation.title}</h3>
+                
+                <div className="relative h-80 overflow-hidden rounded-lg mb-4">
+                  {/* After image (full width) */}
+                  <div className="absolute inset-0">
+                    <img 
+                      src={transformation.afterImage} 
+                      alt="After transformation" 
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  
+                  {/* Before image (clipped with slider) */}
+                  <div 
+                    className="absolute inset-0 overflow-hidden" 
+                    style={{ width: `${sliderValue[0]}%` }}
+                  >
+                    <img 
+                      src={transformation.beforeImage} 
+                      alt="Before transformation" 
+                      className="w-full h-full object-cover"
+                      style={{ width: `${100 / (sliderValue[0]/100)}%` }}
+                    />
+                  </div>
+                  
+                  {/* Slider line */}
+                  <div 
+                    className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize"
+                    style={{ left: `calc(${sliderValue[0]}% - 0.5px)` }}
+                  ></div>
+                  
+                  {/* Slider handle */}
+                  <div 
+                    className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center cursor-ew-resize"
+                    style={{ left: `${sliderValue[0]}%` }}
+                  >
+                    <div className="w-5 h-0.5 bg-eco-moss"></div>
+                  </div>
+                </div>
+                
+                <Slider 
+                  value={sliderValue} 
+                  onValueChange={setSliderValue} 
+                  className="mb-4"
+                />
+                
+                <p className="text-sm text-eco-bark">{transformation.description}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>

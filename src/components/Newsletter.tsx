@@ -1,7 +1,32 @@
 
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 const Newsletter = () => {
+  const [email, setEmail] = useState("");
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (email.trim()) {
+      // In a real app, you would send this to your backend
+      console.log("Newsletter email:", email);
+      
+      // Navigate to confirmation page
+      navigate("/newsletter-confirmation");
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Email Required",
+        description: "Please enter your email address to subscribe.",
+      });
+    }
+  };
+
   return (
     <section className="eco-container py-16">
       <div className="bg-eco-sage/10 rounded-2xl p-8 md:p-12 relative overflow-hidden">
@@ -15,14 +40,16 @@ const Newsletter = () => {
             Subscribe to our newsletter for eco-design inspiration, special offers, and tips for creating a more sustainable home.
           </p>
           
-          <form className="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
+          <form className="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto" onSubmit={handleSubmit}>
             <input
               type="email"
               placeholder="Your email address"
               className="flex-1 px-4 py-3 rounded-md border border-eco-sand focus:outline-none focus:ring-2 focus:ring-eco-sage"
               required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
-            <Button className="eco-button whitespace-nowrap">
+            <Button type="submit" className="eco-button whitespace-nowrap">
               Subscribe
             </Button>
           </form>

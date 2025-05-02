@@ -23,21 +23,21 @@ const ThemesPage = () => {
     {
       id: "earthy-tones",
       name: "Earthy Tones",
-      description: "Warm beige, soft browns, terracotta, and muted olive green create a grounding, natural atmosphere.",
+      description: "Traditional designs inspired by Rajasthani palaces and South Indian architecture, featuring warm beige, soft browns, terracotta, and muted olive green for a grounding, natural atmosphere.",
       bgImage: "https://images.unsplash.com/photo-1602872030490-4a484a7b3ba6?w=500&auto=format",
       textColor: "text-eco-cream"
     },
     {
       id: "scandinavian-minimalism",
       name: "Scandinavian Minimalism",
-      description: "Cool whites, light greys, dusty blues, and soft blush for a clean, airy aesthetic.",
+      description: "Modern minimalist designs with purpose and meaning, featuring cool whites, light greys, dusty blues, and soft blush for a clean, airy aesthetic.",
       bgImage: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=500&auto=format",
       textColor: "text-eco-bark"
     },
     {
       id: "luxury-neutrals",
       name: "Luxury Neutrals",
-      description: "Charcoal, ivory, champagne gold, and soft greige for sophisticated elegance.",
+      description: "The epitome of luxury with premium materials and elegant designs, featuring charcoal, ivory, champagne gold, and soft greige for sophisticated elegance.",
       bgImage: "https://images.unsplash.com/photo-1618220179428-22790b461013?w=500&auto=format",
       textColor: "text-eco-cream"
     }
@@ -64,7 +64,7 @@ const ThemesPage = () => {
                 <div className="absolute inset-0 flex flex-col justify-center items-center text-center p-8">
                   <h2 className={`font-serif text-3xl md:text-5xl mb-3 ${theme.textColor}`}>{theme.name}</h2>
                   
-                  <div className={`overflow-hidden transition-all duration-500 ease-in-out ${hoveredTheme === theme.id ? 'max-h-32 opacity-100' : 'max-h-0 opacity-0'}`}>
+                  <div className={`overflow-hidden transition-all duration-500 ease-in-out ${hoveredTheme === theme.id ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
                     <p className={`${theme.textColor} mb-6 max-w-md`}>
                       {theme.description}
                     </p>
