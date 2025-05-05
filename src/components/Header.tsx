@@ -1,13 +1,14 @@
-
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
 import { ShoppingCart, Menu, X } from "lucide-react";
+import { useAppSelector } from "@/hooks/useAppSelector";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
   const menuRef = useRef<HTMLDivElement>(null);
+  const cartItems = useAppSelector(state => state.cart.items);
   
   // Add event listener for touch scrolling
   useEffect(() => {
@@ -31,6 +32,9 @@ const Header = () => {
       document.body.style.overflow = '';
     };
   }, [isMenuOpen]);
+  
+  // Calculate total items in cart
+  const totalCartItems = cartItems.reduce((total, item) => total + item.quantity, 0);
   
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -113,9 +117,11 @@ const Header = () => {
           <Button variant="outline" size="icon" className="relative" asChild>
             <Link to="/cart">
               <ShoppingCart className="h-5 w-5 text-eco-moss" />
-              <span className="absolute -top-1 -right-1 bg-eco-sage text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                3
-              </span>
+              {totalCartItems > 0 && (
+                <span className="absolute -top-1 -right-1 bg-eco-sage text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {totalCartItems}
+                </span>
+              )}
             </Link>
           </Button>
           

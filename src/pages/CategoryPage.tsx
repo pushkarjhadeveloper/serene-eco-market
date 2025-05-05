@@ -4,6 +4,8 @@ import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ShoppingCart } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useAppDispatch } from "@/hooks/useAppDispatch";
+import { addToCart } from "@/store/cartSlice";
 
 // Subcategory data organized by main category
 const subcategoriesData = {
@@ -96,6 +98,7 @@ const CategoryPage = () => {
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { toast } = useToast();
+  const dispatch = useAppDispatch();
   
   useEffect(() => {
     // Reset image index when product changes
@@ -135,15 +138,52 @@ const CategoryPage = () => {
     productsData[categoryName as keyof typeof productsData][subCategory as keyof typeof productsData[keyof typeof productsData]] || [] : [];
 
   const handleAddToCart = (product: any) => {
+    dispatch(addToCart({
+      id: product.id,
+      name: product.name,
+      image: product.images[0],
+      price: product.price,
+      quantity: 1,
+      theme: "Earthy Tones", // Default theme
+      category: categoryName || "Furniture" // Use category from URL or default
+    }));
+    
     toast({
       title: "Added to Cart",
       description: `${product.name} has been added to your cart.`,
     });
   };
 
-  const handleShare = (product: any) => {
-    setSelectedProduct(product);
-    setShareDialogOpen(true);
+  const handleShare = (platform?: string) => {
+    if (!selectedProduct) return;
+    
+    if (platform) {
+      const shareUrl = `https://sereneeco.com/product/${selectedProduct.id}`;
+      const shareText = `I found this amazing sustainable ${selectedProduct.name} that I thought you might like!`;
+      
+      switch (platform) {
+        case 'whatsapp':
+          window.open(`https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`, '_blank');
+          break;
+        case 'facebook':
+          window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank');
+          break;
+        case 'twitter':
+          window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
+          break;
+        default:
+          // Just copy to clipboard as fallback
+          navigator.clipboard.writeText(shareUrl);
+          toast({
+            title: "Link Copied",
+            description: "Product link copied to clipboard.",
+          });
+      }
+      
+      setShareDialogOpen(false);
+    } else {
+      setShareDialogOpen(true);
+    }
   };
 
   const nextImage = () => {
@@ -413,7 +453,11 @@ const CategoryPage = () => {
                 </div>
                 
                 <div className="grid grid-cols-3 gap-4 mb-6">
-                  <Button variant="outline" className="flex flex-col items-center p-4 h-auto">
+                  <Button 
+                    variant="outline" 
+                    className="flex flex-col items-center p-4 h-auto"
+                    onClick={() => handleShare('whatsapp')}
+                  >
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-green-600 mb-2">
                       <path d="M22 4.01v16.97a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4.01a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2Z"></path>
                       <path d="M22 8H2"></path>
@@ -424,7 +468,11 @@ const CategoryPage = () => {
                     <span className="text-sm">WhatsApp</span>
                   </Button>
                   
-                  <Button variant="outline" className="flex flex-col items-center p-4 h-auto">
+                  <Button 
+                    variant="outline" 
+                    className="flex flex-col items-center p-4 h-auto"
+                    onClick={() => handleShare('facebook')}
+                  >
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600 mb-2">
                       <path d="M16 8a6 6 0 0 1 6 6v8H2v-8a6 6 0 0 1 6-6z"></path>
                       <rect x="10" y="2" width="4" height="6"></rect>
@@ -432,7 +480,11 @@ const CategoryPage = () => {
                     <span className="text-sm">Facebook</span>
                   </Button>
                   
-                  <Button variant="outline" className="flex flex-col items-center p-4 h-auto">
+                  <Button 
+                    variant="outline" 
+                    className="flex flex-col items-center p-4 h-auto"
+                    onClick={() => handleShare('twitter')}
+                  >
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-sky-400 mb-2">
                       <path d="M22 2s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 13.5 1.3 8 1.3 8S4.5 9 6.5 8c-1.9-1.3-3-3.4-3-5.5C5.5 4.5 8.8 2 12 2c1 0 1.8.2 2.6.5C17.2 1 22 2 22 2z"></path>
                     </svg>

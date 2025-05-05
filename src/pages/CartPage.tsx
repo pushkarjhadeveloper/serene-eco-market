@@ -1,10 +1,12 @@
-
 import { useState } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Minus, Plus, Trash2, ArrowRight } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useAppSelector } from "@/hooks/useAppSelector";
+import { useAppDispatch } from "@/hooks/useAppDispatch";
+import { removeFromCart, updateQuantity } from "@/store/cartSlice";
 
 // Sample cart items
 const sampleCartItems = [
@@ -47,21 +49,16 @@ const gstRates = {
 };
 
 const CartPage = () => {
-  const [cartItems, setCartItems] = useState(sampleCartItems);
+  const cartItems = useAppSelector(state => state.cart.items);
+  const dispatch = useAppDispatch();
   const { toast } = useToast();
 
-  const handleQuantityChange = (id: number, change: number) => {
-    setCartItems(prev => 
-      prev.map(item => 
-        item.id === id 
-          ? { ...item, quantity: Math.max(1, item.quantity + change) } 
-          : item
-      )
-    );
+  const handleQuantityChange = (id: string | number, change: number) => {
+    dispatch(updateQuantity({ id, change }));
   };
 
-  const handleRemoveItem = (id: number) => {
-    setCartItems(prev => prev.filter(item => item.id !== id));
+  const handleRemoveItem = (id: string | number) => {
+    dispatch(removeFromCart(id));
     
     toast({
       title: "Item Removed",
