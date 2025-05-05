@@ -8,12 +8,20 @@ const allCategories = [
     name: "Furniture",
     image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=1216&auto=format&fit=crop",
     path: "/category/furniture",
+    subcategories: [
+      { name: "Sofas", path: "sofas", image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500&auto=format" },
+      { name: "Beds", path: "beds", image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=500&auto=format" },
+      { name: "Wardrobes", path: "wardrobes", image: "https://images.unsplash.com/photo-1595515106864-077d30192c56?w=500&auto=format" },
+      { name: "Dining", path: "dining", image: "https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?w=500&auto=format" },
+      { name: "Office Chairs", path: "office-chairs", image: "https://images.unsplash.com/photo-1518655061710-5ccf392c275a?w=500&auto=format" },
+      { name: "Outdoor", path: "outdoor", image: "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=500&auto=format" },
+    ]
   },
   {
     name: "Lighting",
     image: "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?q=80&w=1170&auto=format&fit=crop",
     path: "/category/lighting",
-    subcategories: lightingCategories.slice(0, 4), // Only show first 4 lighting subcategories
+    subcategories: lightingCategories.slice(0, 6), // Show 6 lighting subcategories
   },
   {
     name: "Decor",

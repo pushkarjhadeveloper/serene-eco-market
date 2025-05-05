@@ -8,77 +8,244 @@ import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { addToCart } from "@/store/cartSlice";
 import { shareProduct } from "@/utils/shareProduct";
 import { lightingCategories, lightingProducts } from "@/data/lightingProducts";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+
+// Furniture subcategories data
+const furnitureSubcategories = [
+  { name: "Sofas", path: "sofas", image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500&auto=format", description: "Eco-friendly sofas made with sustainable materials" },
+  { name: "Beds", path: "beds", image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=500&auto=format", description: "Sustainable bedroom furniture for restful sleep" },
+  { name: "Wardrobes", path: "wardrobes", image: "https://images.unsplash.com/photo-1595515106864-077d30192c56?w=500&auto=format", description: "Eco-conscious storage solutions for your home" },
+  { name: "Dining", path: "dining", image: "https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?w=500&auto=format", description: "Sustainable dining tables and chairs" },
+  { name: "Office Chairs", path: "office-chairs", image: "https://images.unsplash.com/photo-1518655061710-5ccf392c275a?w=500&auto=format", description: "Ergonomic and sustainable office seating" },
+  { name: "Outdoor", path: "outdoor", image: "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=500&auto=format", description: "Weather-resistant eco-friendly outdoor furniture" },
+];
 
 // Subcategory data organized by main category
 const subcategoriesData = {
-  "furniture": [
-    { name: "Sofas", path: "sofas", image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500&auto=format" },
-    { name: "Beds", path: "beds", image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=500&auto=format" },
-    { name: "Wardrobes", path: "wardrobes", image: "https://images.unsplash.com/photo-1595515106864-077d30192c56?w=500&auto=format" },
-    { name: "Dining", path: "dining", image: "https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?w=500&auto=format" },
-    { name: "Office Chairs", path: "office-chairs", image: "https://images.unsplash.com/photo-1518655061710-5ccf392c275a?w=500&auto=format" },
-    { name: "Outdoor", path: "outdoor", image: "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=500&auto=format" },
-  ],
+  "furniture": furnitureSubcategories,
   "lighting": lightingCategories,
   "flooring": [
-    { name: "Wooden", path: "wooden", image: "https://images.unsplash.com/photo-1581858726788-75bc0f6a952d?w=500&auto=format" },
-    { name: "Carpets", path: "carpets", image: "https://images.unsplash.com/photo-1584145951017-d9f047e8420c?w=500&auto=format" },
-    { name: "Tiles", path: "tiles", image: "https://images.unsplash.com/photo-1635362578680-a95b4c2cef81?w=500&auto=format" },
+    { name: "Wooden", path: "wooden", image: "https://images.unsplash.com/photo-1581858726788-75bc0f6a952d?w=500&auto=format", description: "Sustainable wooden flooring options" },
+    { name: "Carpets", path: "carpets", image: "https://images.unsplash.com/photo-1584145951017-d9f047e8420c?w=500&auto=format", description: "Eco-friendly carpet solutions" },
+    { name: "Tiles", path: "tiles", image: "https://images.unsplash.com/photo-1635362578680-a95b4c2cef81?w=500&auto=format", description: "Sustainable tile options for flooring" },
   ],
   // ... other categories with their subcategories
 };
 
-// Sample products organized by category and subcategory
+// Helper function to generate unique IDs
+const generateId = (category: string, subcategory: string, index: number): string => {
+  return `${category}-${subcategory}-${index + 1}`;
+};
+
+// Generate 15 sofa products
+const sofaProducts = Array(15).fill(null).map((_, index) => ({
+  id: generateId("furniture", "sofas", index),
+  name: [
+    "Organic Cotton Sofa", 
+    "Bamboo Sectional", 
+    "Recycled Polyester Loveseat",
+    "Hemp Fabric Couch",
+    "Reclaimed Wood Frame Sofa",
+    "Jute Upholstered Settee",
+    "Non-Toxic L-Shaped Sectional",
+    "Sustainable Linen Chaise Lounge",
+    "Cork Accent Sofa",
+    "Natural Latex Cushion Couch",
+    "FSC-Certified Timber Daybed",
+    "Upcycled Fabric Convertible Sofa",
+    "Organic Wool Stuffed Settee",
+    "Bamboo & Hemp Blend Futon",
+    "Recycled Ocean Plastic Outdoor Sofa"
+  ][index],
+  price: 43999 + (index * 5000),
+  description: "Handcrafted sofa with organic materials and sustainable wooden frame. Perfect for eco-conscious homes.",
+  material: "Organic cotton, FSC-certified wood",
+  deliveryTime: "3-4 weeks",
+  images: [
+    "https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=500&auto=format",
+    "https://images.unsplash.com/photo-1560448075-32314de132c0?w=500&auto=format",
+    "https://images.unsplash.com/photo-1550254478-ead40cc54513?w=500&auto=format"
+  ]
+}));
+
+// Generate 15 bed products
+const bedProducts = Array(15).fill(null).map((_, index) => ({
+  id: generateId("furniture", "beds", index),
+  name: [
+    "Reclaimed Wood King Bed", 
+    "Bamboo Queen Platform Bed", 
+    "Organic Cotton Upholstered Bed",
+    "Hemp Canopy Bed",
+    "FSC-Certified Pine Twin Bed",
+    "Upcycled Metal Frame Bed",
+    "Natural Latex Mattress & Frame Set",
+    "Solid Oak California King",
+    "Sustainable Walnut Sleigh Bed",
+    "Minimalist Bamboo Platform Bed",
+    "Recycled Wood Panel Headboard Bed",
+    "Cork & Wood Blend Frame",
+    "Zero VOC Finish Maple Bed",
+    "Organic Cotton Daybed",
+    "Convertible Tatami Style Bed"
+  ][index],
+  price: 59999 + (index * 4000),
+  description: "Eco-friendly bed frame crafted from sustainable materials with a natural finish. Sleep well knowing you've made an environmentally conscious choice.",
+  material: "Reclaimed wood, Non-toxic finish",
+  deliveryTime: "4 weeks",
+  images: [
+    "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=500&auto=format",
+    "https://images.unsplash.com/photo-1505693314053-e3e1626c98e6?w=500&auto=format",
+    "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=500&auto=format"
+  ]
+}));
+
+// Generate 15 wardrobe products
+const wardrobeProducts = Array(15).fill(null).map((_, index) => ({
+  id: generateId("furniture", "wardrobes", index),
+  name: [
+    "Bamboo Sliding Door Wardrobe", 
+    "Reclaimed Wood Armoire", 
+    "Modular Sustainable Storage System",
+    "FSC-Certified Oak Wardrobe",
+    "Hemp Canvas Garment Organizer",
+    "Minimalist Eco-Plywood Closet",
+    "Recycled Metal Frame Wardrobe",
+    "Jute & Wood Storage Cabinet",
+    "Natural Oil Finish Pine Wardrobe",
+    "Convertible Multi-use Storage",
+    "Zero-Waste Birch Ply Wardrobe",
+    "Organic Cotton Covered Storage System",
+    "Upcycled Door Panel Armoire",
+    "Bamboo & Rattan Flexible Storage",
+    "Recycled Plastic Outdoor Storage Cabinet"
+  ][index],
+  price: 72999 + (index * 6000),
+  description: "Spacious wardrobe made from sustainable materials, offering ample storage space while minimizing environmental impact.",
+  material: "FSC-certified wood, Non-toxic finishes",
+  deliveryTime: "5 weeks",
+  images: [
+    "https://images.unsplash.com/photo-1595515106864-077d30192c56?w=500&auto=format",
+    "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=500&auto=format", 
+    "https://images.unsplash.com/photo-1595515106864-077d30192c56?w=500&auto=format"
+  ]
+}));
+
+// Generate 15 dining products
+const diningProducts = Array(15).fill(null).map((_, index) => ({
+  id: generateId("furniture", "dining", index),
+  name: [
+    "Reclaimed Wood Dining Table", 
+    "Bamboo Extendable Table & Chairs", 
+    "Organic Cotton Upholstered Set",
+    "Sustainable Teak Dining Set",
+    "Hemp Seat Cushion Chairs",
+    "FSC-Certified Oak Table",
+    "Live Edge Walnut Table",
+    "Recycled Metal & Wood Set",
+    "Round Bamboo Dining Table",
+    "Minimalist Cork Chairs",
+    "Natural Oil Finish Dining Set",
+    "Upcycled Industrial Dining Table",
+    "Zero VOC Pine Dining Set",
+    "Handcrafted Rattan Chair Set",
+    "Modular Sustainable Dining System"
+  ][index],
+  price: 85999 + (index * 7500),
+  description: "Beautiful dining set crafted from sustainable materials. Perfect for eco-conscious entertaining and family meals.",
+  material: "FSC-certified wood, Natural oil finish",
+  deliveryTime: "4-6 weeks",
+  images: [
+    "https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?w=500&auto=format",
+    "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=500&auto=format",
+    "https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?w=500&auto=format"
+  ]
+}));
+
+// Generate 15 office chair products
+const officeChairProducts = Array(15).fill(null).map((_, index) => ({
+  id: generateId("furniture", "office-chairs", index),
+  name: [
+    "Ergonomic Bamboo Office Chair", 
+    "Recycled Fabric Task Chair", 
+    "Hemp Upholstered Desk Chair",
+    "Sustainable Wood & Steel Chair",
+    "Organic Cotton Executive Chair",
+    "Zero-Waste Manufacturing Chair",
+    "Cork Seat Ergonomic Chair",
+    "FSC-Certified Wood Frame Chair",
+    "Adjustable Eco-Friendly Chair",
+    "Recycled Plastic Mesh Back Chair",
+    "Natural Latex Cushion Office Chair",
+    "Biodegradable Components Chair",
+    "Jute & Bamboo Conference Chair",
+    "Minimalist Low-Impact Work Chair",
+    "Upcycled Materials Designer Chair"
+  ][index],
+  price: 32999 + (index * 3000),
+  description: "Ergonomic office chair made from sustainable materials, designed for comfort during long work sessions with minimal environmental impact.",
+  material: "Recycled materials, Ergonomic design",
+  deliveryTime: "2-3 weeks",
+  images: [
+    "https://images.unsplash.com/photo-1518655061710-5ccf392c275a?w=500&auto=format",
+    "https://images.unsplash.com/photo-1518655061710-5ccf392c275a?w=500&auto=format",
+    "https://images.unsplash.com/photo-1518655061710-5ccf392c275a?w=500&auto=format"
+  ]
+}));
+
+// Generate 15 outdoor furniture products
+const outdoorProducts = Array(15).fill(null).map((_, index) => ({
+  id: generateId("furniture", "outdoor", index),
+  name: [
+    "Weather-Resistant Bamboo Set", 
+    "Recycled Plastic Adirondack Chair", 
+    "Sustainable Teak Patio Table",
+    "Hemp Rope Hammock",
+    "Reclaimed Wood Garden Bench",
+    "Solar-Powered Lounge Set",
+    "Biodegradable Rattan Furniture",
+    "FSC-Certified Wooden Lounger",
+    "Upcycled Metal Outdoor Set",
+    "Cork & Bamboo Garden Table",
+    "Rainwater-Collecting Planter Bench",
+    "Natural Oil Finish Deck Chairs",
+    "Recycled Sail Cloth Canopy",
+    "Sustainable Outdoor Kitchen Set",
+    "Non-Toxic Garden Furniture System"
+  ][index],
+  price: 49999 + (index * 4500),
+  description: "Weather-resistant outdoor furniture made from sustainable materials, designed to withstand the elements while maintaining eco-friendly standards.",
+  material: "Weather-resistant sustainable materials",
+  deliveryTime: "3-5 weeks",
+  images: [
+    "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=500&auto=format",
+    "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=500&auto=format",
+    "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=500&auto=format"
+  ]
+}));
+
+// Combine all the furniture products
+const furnitureProducts = {
+  "sofas": sofaProducts,
+  "beds": bedProducts,
+  "wardrobes": wardrobeProducts,
+  "dining": diningProducts,
+  "office-chairs": officeChairProducts,
+  "outdoor": outdoorProducts,
+};
+
+// Combine all products
 const productsData = {
-  "furniture": {
-    "sofas": [
-      { 
-        id: 101, 
-        name: "Organic Cotton Sofa", 
-        price: 43999, 
-        description: "Handcrafted sofa with organic cotton upholstery and sustainable wooden frame. Perfect for eco-conscious homes.",
-        material: "Organic cotton, FSC-certified wood",
-        deliveryTime: "3-4 weeks",
-        images: [
-          "https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=500&auto=format",
-          "https://images.unsplash.com/photo-1560448075-32314de132c0?w=500&auto=format",
-          "https://images.unsplash.com/photo-1550254478-ead40cc54513?w=500&auto=format"
-        ]
-      },
-      { 
-        id: 102, 
-        name: "Bamboo Sectional Sofa", 
-        price: 67999, 
-        description: "Modern sectional sofa with bamboo frame and recycled polyester fabric. Versatile and environmentally friendly.",
-        material: "Bamboo, Recycled polyester",
-        deliveryTime: "4-5 weeks",
-        images: [
-          "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=500&auto=format",
-          "https://images.unsplash.com/photo-1558211583-d26f610c1eb1?w=500&auto=format",
-          "https://images.unsplash.com/photo-1511389026070-a14ae610a1be?w=500&auto=format"
-        ]
-      },
-      // More products...
-    ],
-    "beds": [
-      { 
-        id: 201, 
-        name: "Reclaimed Wood King Bed", 
-        price: 59999, 
-        description: "King-size bed frame crafted from reclaimed wood with a natural finish. Each piece is unique with its own character.",
-        material: "Reclaimed wood, Non-toxic finish",
-        deliveryTime: "4 weeks",
-        images: [
-          "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=500&auto=format",
-          "https://images.unsplash.com/photo-1505693314053-e3e1626c98e6?w=500&auto=format",
-          "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=500&auto=format"
-        ]
-      },
-      // More products...
-    ],
-    // More subcategories with products...
-  },
-  // More categories with products...
+  "furniture": furnitureProducts,
+  "lighting": lightingProducts,
 };
 
 // Helper function to format currency in INR
@@ -92,9 +259,9 @@ const formatINR = (amount: number) => {
 
 const CategoryPage = () => {
   const { categoryName, subCategory } = useParams<{ categoryName: string; subCategory?: string }>();
-  const [shareDialogOpen, setShareDialogOpen] = useState<boolean>(false);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [shareDrawerOpen, setShareDrawerOpen] = useState<boolean>(false);
   const { toast } = useToast();
   const dispatch = useAppDispatch();
   
@@ -132,8 +299,16 @@ const CategoryPage = () => {
   const subcategories = categoryName ? subcategoriesData[categoryName as keyof typeof subcategoriesData] || [] : [];
   
   // Get products for the current subcategory
-  const products = categoryName && subCategory && productsData[categoryName as keyof typeof productsData] ? 
-    productsData[categoryName as keyof typeof productsData][subCategory as keyof typeof productsData[keyof typeof productsData]] || [] : [];
+  const getProducts = () => {
+    if (!categoryName || !subCategory) return [];
+    
+    const categoryProducts = productsData[categoryName as keyof typeof productsData];
+    if (!categoryProducts) return [];
+    
+    return categoryProducts[subCategory as keyof typeof categoryProducts] || [];
+  };
+  
+  const products = getProducts();
 
   const handleAddToCart = (product: any) => {
     dispatch(addToCart({
@@ -152,30 +327,26 @@ const CategoryPage = () => {
     });
   };
 
-  const handleShare = (productOrPlatform?: any) => {
-    // If it's a product object (has id property), set it as selected product and open dialog
+  const handleShare = (productOrPlatform: any) => {
+    // If it's a product object (has id property), set it as selected product
     if (productOrPlatform && typeof productOrPlatform === 'object' && 'id' in productOrPlatform) {
       setSelectedProduct(productOrPlatform);
-      setShareDialogOpen(true);
+      setShareDrawerOpen(true);
       return;
     }
     
     // If it's a string (platform name) and we have a selected product
-    const platform = typeof productOrPlatform === 'string' ? productOrPlatform : null;
+    const platform = typeof productOrPlatform === 'string' ? productOrPlatform : "";
     
-    if (!selectedProduct) return;
-    
-    if (platform) {
+    if (selectedProduct && platform) {
       // Use our utility function to share
       shareProduct(platform, selectedProduct.id, selectedProduct.name);
-      setShareDialogOpen(false);
+      setShareDrawerOpen(false);
       
       toast({
         title: "Link Shared",
         description: platform === 'copy' ? "Product link copied to clipboard." : `Sharing via ${platform}...`,
       });
-    } else {
-      setShareDialogOpen(true);
     }
   };
 
@@ -410,7 +581,9 @@ const CategoryPage = () => {
                       <Button 
                         variant="outline" 
                         className="flex-1 border-eco-sage text-eco-moss"
-                        onClick={() => handleShare(selectedProduct)}
+                        onClick={() => {
+                          setShareDrawerOpen(true);
+                        }}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
                           <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
@@ -427,24 +600,15 @@ const CategoryPage = () => {
           </div>
         )}
         
-        {/* Share Dialog */}
-        {shareDialogOpen && (
-          <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg max-w-md w-full">
-              <div className="p-6">
-                <div className="flex justify-between items-center mb-6">
-                  <h3 className="font-serif text-xl font-medium text-eco-moss">Share Product</h3>
-                  <button 
-                    onClick={() => setShareDialogOpen(false)} 
-                    className="text-eco-bark hover:text-eco-moss"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="18" y1="6" x2="6" y2="18"></line>
-                      <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                  </button>
-                </div>
-                
+        {/* Share Drawer */}
+        <Drawer open={shareDrawerOpen} onOpenChange={setShareDrawerOpen}>
+          <DrawerContent>
+            <div className="mx-auto w-full max-w-sm">
+              <DrawerHeader>
+                <DrawerTitle>Share Product</DrawerTitle>
+                <DrawerDescription>Share this product with friends and family.</DrawerDescription>
+              </DrawerHeader>
+              <div className="p-4">
                 <div className="grid grid-cols-3 gap-4 mb-6">
                   <Button 
                     variant="outline" 
@@ -485,7 +649,7 @@ const CategoryPage = () => {
                   <div className="flex items-center">
                     <input 
                       type="text" 
-                      value={`https://sereneeco.com/product/${selectedProduct?.id}`} 
+                      value={selectedProduct ? `https://sereneeco.com/product/${selectedProduct.id}` : ''}
                       className="flex-1 border border-eco-sand/30 rounded-l px-4 py-2 bg-eco-sand/10 text-eco-bark text-sm"
                       readOnly
                     />
@@ -498,9 +662,14 @@ const CategoryPage = () => {
                   </div>
                 </div>
               </div>
+              <DrawerFooter>
+                <Button variant="outline" onClick={() => setShareDrawerOpen(false)}>
+                  Cancel
+                </Button>
+              </DrawerFooter>
             </div>
-          </div>
-        )}
+          </DrawerContent>
+        </Drawer>
       </div>
     </Layout>
   );

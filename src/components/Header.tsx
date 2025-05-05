@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
@@ -9,29 +10,6 @@ const Header = () => {
   const location = useLocation();
   const menuRef = useRef<HTMLDivElement>(null);
   const cartItems = useAppSelector(state => state.cart.items);
-  
-  // Add event listener for touch scrolling
-  useEffect(() => {
-    const currentMenuRef = menuRef.current;
-    
-    if (currentMenuRef && isMenuOpen) {
-      // Prevent body scrolling when menu is open
-      document.body.style.overflow = 'hidden';
-      
-      // Enable smooth scrolling on the menu
-      currentMenuRef.style.overflowY = 'auto';
-      // Use string assignment for WebKit overflow scrolling instead
-      (currentMenuRef.style as any)["-webkit-overflow-scrolling"] = 'touch';
-    } else {
-      // Reset body scrolling
-      document.body.style.overflow = '';
-    }
-    
-    // Cleanup function
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isMenuOpen]);
   
   // Calculate total items in cart
   const totalCartItems = cartItems.reduce((total, item) => total + item.quantity, 0);
@@ -146,7 +124,7 @@ const Header = () => {
       {isMenuOpen && (
         <div 
           ref={menuRef}
-          className="lg:hidden fixed inset-0 top-[57px] bg-white z-40 animate-fade-in overscroll-contain"
+          className="lg:hidden fixed inset-0 top-[57px] bg-white z-40 animate-fade-in"
           style={{ maxHeight: 'calc(100vh - 57px)' }}
         >
           <nav className="eco-container py-4 flex flex-col space-y-3 pb-24">
