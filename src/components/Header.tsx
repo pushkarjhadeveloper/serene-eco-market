@@ -19,7 +19,8 @@ const Header = () => {
       
       // Enable smooth scrolling on the menu
       currentMenuRef.style.overflowY = 'auto';
-      currentMenuRef.style.WebkitOverflowScrolling = 'touch';
+      // Use string assignment for WebKit overflow scrolling instead
+      (currentMenuRef.style as any)["-webkit-overflow-scrolling"] = 'touch';
     } else {
       // Reset body scrolling
       document.body.style.overflow = '';
