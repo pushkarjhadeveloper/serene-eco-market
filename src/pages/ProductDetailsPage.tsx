@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Layout from "@/components/Layout";
@@ -7,6 +6,8 @@ import { ShoppingCart } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { addToCart } from "@/store/cartSlice";
+import { shareProduct } from "@/utils/shareProduct";
+import { allLightingProducts } from "@/data/lightingProducts";
 
 // Sample products data
 const allProducts = [
@@ -57,6 +58,9 @@ const allProducts = [
   },
 ];
 
+// Combine all products for the product details page
+const combinedProducts = [...allProducts, ...allLightingProducts];
+
 // Helper function to format currency in INR
 const formatINR = (amount: number) => {
   return new Intl.NumberFormat('en-IN', {
@@ -75,8 +79,8 @@ const ProductDetailsPage = () => {
   const dispatch = useAppDispatch();
   
   useEffect(() => {
-    // In a real app, you'd fetch the product from an API
-    const foundProduct = allProducts.find(p => p.id === productId);
+    // Find product from combined products list
+    const foundProduct = combinedProducts.find(p => p.id.toString() === productId);
     setProduct(foundProduct);
     setCurrentImageIndex(0);
   }, [productId]);
@@ -103,30 +107,14 @@ const ProductDetailsPage = () => {
   const handleShare = (platform: string) => {
     if (!product) return;
     
-    const shareUrl = `https://sereneeco.com/product/${product.id}`;
-    const shareTitle = `Check out ${product.name} at SereneEco`;
-    const shareText = `I found this amazing sustainable ${product.name} that I thought you might like!`;
-    
-    switch (platform) {
-      case 'whatsapp':
-        window.open(`https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`, '_blank');
-        break;
-      case 'facebook':
-        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank');
-        break;
-      case 'twitter':
-        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
-        break;
-      default:
-        // Just copy to clipboard as fallback
-        navigator.clipboard.writeText(shareUrl);
-        toast({
-          title: "Link Copied",
-          description: "Product link copied to clipboard.",
-        });
-    }
-    
+    // Use our shared utility function
+    shareProduct(platform, product.id, product.name);
     setShareDialogOpen(false);
+    
+    toast({
+      title: "Link Shared",
+      description: platform === 'copy' ? "Product link copied to clipboard." : `Sharing via ${platform}...`,
+    });
   };
 
   const nextImage = () => {
@@ -283,11 +271,8 @@ const ProductDetailsPage = () => {
                     onClick={() => handleShare('whatsapp')}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-green-600 mb-2">
-                      <path d="M22 4.01v16.97a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4.01a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2Z"></path>
-                      <path d="M22 8H2"></path>
-                      <path d="m19 12-8.5 4.5"></path>
-                      <path d="M5 12v4"></path>
-                      <path d="M19 12v4"></path>
+                      <path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21"></path>
+                      <path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1Zm0 0a5 5 0 0 0 5 5"></path>
                     </svg>
                     <span className="text-sm">WhatsApp</span>
                   </Button>
@@ -298,8 +283,7 @@ const ProductDetailsPage = () => {
                     onClick={() => handleShare('facebook')}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600 mb-2">
-                      <path d="M16 8a6 6 0 0 1 6 6v8H2v-8a6 6 0 0 1 6-6z"></path>
-                      <rect x="10" y="2" width="4" height="6"></rect>
+                      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
                     </svg>
                     <span className="text-sm">Facebook</span>
                   </Button>
@@ -310,7 +294,7 @@ const ProductDetailsPage = () => {
                     onClick={() => handleShare('twitter')}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-sky-400 mb-2">
-                      <path d="M22 2s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 13.5 1.3 8 1.3 8S4.5 9 6.5 8c-1.9-1.3-3-3.4-3-5.5C5.5 4.5 8.8 2 12 2c1 0 1.8.2 2.6.5C17.2 1 22 2 22 2z"></path>
+                      <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
                     </svg>
                     <span className="text-sm">Twitter</span>
                   </Button>
@@ -327,11 +311,7 @@ const ProductDetailsPage = () => {
                     <Button 
                       className="rounded-l-none"
                       onClick={() => {
-                        navigator.clipboard.writeText(`https://sereneeco.com/product/${productId}`);
-                        toast({
-                          title: "Link Copied",
-                          description: "Product link copied to clipboard.",
-                        });
+                        handleShare('copy');
                       }}
                     >
                       Copy

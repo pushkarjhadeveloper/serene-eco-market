@@ -1,81 +1,90 @@
 
 import { Link } from "react-router-dom";
+import { lightingCategories } from "@/data/lightingProducts";
 
-const categories = [
+// Original categories + lighting subcategories
+const allCategories = [
   {
     name: "Furniture",
-    image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=1170&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=1216&auto=format&fit=crop",
     path: "/category/furniture",
-    description: "Sustainable seating, tables, and storage solutions"
   },
   {
     name: "Lighting",
-    image: "https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=1169&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?q=80&w=1170&auto=format&fit=crop",
     path: "/category/lighting",
-    description: "Energy-efficient lamps and fixtures"
-  },
-  {
-    name: "Flooring",
-    image: "https://images.unsplash.com/photo-1581858726788-75bc0f6a952d?q=80&w=1287&auto=format&fit=crop",
-    path: "/category/flooring",
-    description: "Eco-friendly flooring materials and options"
-  },
-  {
-    name: "Kitchen",
-    image: "https://images.unsplash.com/photo-1556912167-f556f1f39fdf?q=80&w=1287&auto=format&fit=crop",
-    path: "/category/kitchen",
-    description: "Sustainable kitchen fixtures and appliances"
-  },
-  {
-    name: "Bathroom",
-    image: "https://images.unsplash.com/photo-1620626011761-996317b8d101?q=80&w=1169&auto=format&fit=crop",
-    path: "/category/bathroom",
-    description: "Water-saving fixtures and eco-friendly accessories"
+    subcategories: lightingCategories.slice(0, 4), // Only show first 4 lighting subcategories
   },
   {
     name: "Decor",
-    image: "https://images.unsplash.com/photo-1586105449897-20b5efeb3233?q=80&w=1287&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1534349762230-e0cadf78f5da?q=80&w=1170&auto=format&fit=crop",
     path: "/category/decor",
-    description: "Sustainable accents and decorative pieces"
+  },
+  {
+    name: "Kitchen",
+    image: "https://images.unsplash.com/photo-1600585152220-90363fe7e115?q=80&w=1469&auto=format&fit=crop",
+    path: "/category/kitchen",
+  },
+  {
+    name: "Outdoors",
+    image: "https://images.unsplash.com/photo-1600210492493-0946911123ea?q=80&w=1474&auto=format&fit=crop",
+    path: "/category/outdoors",
+  },
+  {
+    name: "Themes",
+    image: "https://images.unsplash.com/photo-1602028915047-37269d1a73f7?q=80&w=1287&auto=format&fit=crop",
+    path: "/themes", // This one links to the themes page, not a category
   },
 ];
 
 const Categories = () => {
   return (
-    <section className="bg-eco-sand/20 py-16">
-      <div className="eco-container">
-        <h2 className="section-title text-center">Shop by Category</h2>
-        <p className="text-eco-bark text-center max-w-2xl mx-auto mb-12">
-          Explore our curated collection of sustainable interior essentials, from furniture to home decor.
-        </p>
+    <section className="eco-container py-16">
+      <h2 className="section-title text-center mb-4">Sustainable Living Categories</h2>
+      <p className="text-eco-bark text-center mx-auto max-w-2xl mb-12">
+        Explore our curated collections of eco-friendly home products, all designed with sustainability and style in mind.
+      </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {categories.map((category) => (
-            <Link 
-              key={category.name} 
-              to={category.path}
-              className="group overflow-hidden relative rounded-lg aspect-[4/3] eco-card"
-            >
-              <img 
-                src={category.image} 
-                alt={category.name}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-eco-moss/80 to-eco-moss/0"></div>
-              <div className="absolute bottom-0 left-0 right-0 p-6">
-                <h3 className="font-serif text-xl text-white font-medium">{category.name}</h3>
-                <p className="text-white/90 mt-2 text-sm">{category.description}</p>
-                <div className="mt-4 inline-flex items-center text-white gap-2 text-sm">
-                  <span>Explore</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transform group-hover:translate-x-1 transition-transform">
-                    <path d="M5 12h14"></path>
-                    <path d="m12 5 7 7-7 7"></path>
-                  </svg>
-                </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {allCategories.map((category) => (
+          <div key={category.name} className="eco-card overflow-hidden">
+            <Link to={category.path} className="block group">
+              <div className="aspect-[4/3] relative overflow-hidden">
+                <img 
+                  src={category.image} 
+                  alt={category.name} 
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                <h3 className="absolute bottom-6 left-6 text-white font-serif text-2xl font-medium">{category.name}</h3>
               </div>
             </Link>
-          ))}
-        </div>
+            
+            {/* Display subcategories if they exist */}
+            {category.subcategories && (
+              <div className="p-4 bg-eco-sand/10">
+                <h4 className="text-eco-moss font-medium mb-2">Featured {category.name} Categories</h4>
+                <div className="flex flex-wrap gap-2">
+                  {category.subcategories.map((subcat) => (
+                    <Link
+                      key={subcat.path}
+                      to={`/category/${category.name.toLowerCase()}/${subcat.path}`}
+                      className="text-sm bg-white px-3 py-1 rounded-full border border-eco-sage text-eco-bark hover:bg-eco-sage hover:text-white transition-colors"
+                    >
+                      {subcat.name}
+                    </Link>
+                  ))}
+                  <Link
+                    to={`/category/${category.name.toLowerCase()}`}
+                    className="text-sm bg-white px-3 py-1 rounded-full border border-eco-moss/30 text-eco-moss hover:bg-eco-moss hover:text-white transition-colors"
+                  >
+                    View All →
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
       </div>
     </section>
   );
