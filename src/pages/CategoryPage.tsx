@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import Layout from "@/components/Layout";
@@ -154,7 +155,17 @@ const CategoryPage = () => {
     });
   };
 
-  const handleShare = (platform?: string) => {
+  const handleShare = (productOrPlatform?: any) => {
+    // If it's a product object (has id property), set it as selected product and open dialog
+    if (productOrPlatform && typeof productOrPlatform === 'object' && 'id' in productOrPlatform) {
+      setSelectedProduct(productOrPlatform);
+      setShareDialogOpen(true);
+      return;
+    }
+    
+    // If it's a string (platform name) and we have a selected product
+    const platform = typeof productOrPlatform === 'string' ? productOrPlatform : null;
+    
     if (!selectedProduct) return;
     
     if (platform) {
