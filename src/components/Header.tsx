@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
 import { ShoppingCart, Menu, X } from "lucide-react";
@@ -7,6 +7,29 @@ import { ShoppingCart, Menu, X } from "lucide-react";
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+  const menuRef = useRef<HTMLDivElement>(null);
+  
+  // Add event listener for touch scrolling
+  useEffect(() => {
+    const currentMenuRef = menuRef.current;
+    
+    if (currentMenuRef && isMenuOpen) {
+      // Prevent body scrolling when menu is open
+      document.body.style.overflow = 'hidden';
+      
+      // Enable smooth scrolling on the menu
+      currentMenuRef.style.overflowY = 'auto';
+      currentMenuRef.style.WebkitOverflowScrolling = 'touch';
+    } else {
+      // Reset body scrolling
+      document.body.style.overflow = '';
+    }
+    
+    // Cleanup function
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMenuOpen]);
   
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -114,8 +137,12 @@ const Header = () => {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="lg:hidden bg-white border-t border-eco-sand/30 animate-fade-in">
-          <nav className="eco-container py-4 flex flex-col space-y-3">
+        <div 
+          ref={menuRef}
+          className="lg:hidden fixed inset-0 top-[57px] bg-white z-40 animate-fade-in overscroll-contain"
+          style={{ maxHeight: 'calc(100vh - 57px)' }}
+        >
+          <nav className="eco-container py-4 flex flex-col space-y-3 pb-24">
             <h3 className="font-medium text-eco-moss mb-2">Product Categories</h3>
             {categories.map(category => {
               const active = isActive(category.path);

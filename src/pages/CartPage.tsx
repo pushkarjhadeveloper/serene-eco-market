@@ -6,33 +6,45 @@ import { Link } from "react-router-dom";
 import { Minus, Plus, Trash2, ArrowRight } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-// Sample cart data
+// Sample cart items
 const sampleCartItems = [
   {
     id: 1,
     name: "Bamboo End Table",
     image: "https://images.unsplash.com/photo-1560448204-603b3fc33ddc?w=500&auto=format",
-    price: 129.99,
+    price: 9999,
     quantity: 1,
-    theme: "Earthy Tones"
+    theme: "Earthy Tones",
+    category: "Furniture", // Added category for GST calculation
   },
   {
     id: 2,
     name: "Organic Cotton Throw Pillow",
     image: "/lovable-uploads/09fa2a99-dcb6-44b4-89cc-537a9224092b.png",
-    price: 49.99,
+    price: 3499,
     quantity: 2,
-    theme: "Earthy Tones"
+    theme: "Earthy Tones",
+    category: "Home Decor", // Added category for GST calculation
   },
   {
     id: 3,
     name: "Reclaimed Wood Shelf",
     image: "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=500&auto=format",
-    price: 89.99,
+    price: 6499,
     quantity: 1,
-    theme: "Scandinavian Minimalism"
+    theme: "Scandinavian Minimalism",
+    category: "Furniture", // Added category for GST calculation
   }
 ];
+
+// GST rates based on product categories in India
+const gstRates = {
+  "Furniture": 18, // 18% GST on furniture
+  "Home Decor": 12, // 12% GST on home decor
+  "Lighting": 28, // 28% GST on luxury items
+  "Electronics": 18, // 18% GST on electronics
+  "Kitchen": 12, // 12% GST on kitchenware
+};
 
 const CartPage = () => {
   const [cartItems, setCartItems] = useState(sampleCartItems);
@@ -58,9 +70,30 @@ const CartPage = () => {
   };
 
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const shipping = 15.99;
-  const tax = subtotal * 0.07;
-  const total = subtotal + shipping + tax;
+  const shipping = 299; // Shipping in INR
+  
+  // Calculate GST based on product category
+  const calculateGST = () => {
+    let totalGST = 0;
+    cartItems.forEach(item => {
+      const gstRate = gstRates[item.category as keyof typeof gstRates] || 18; // Default to 18% if category not found
+      const itemGST = (item.price * item.quantity) * (gstRate / 100);
+      totalGST += itemGST;
+    });
+    return totalGST;
+  };
+  
+  const gst = calculateGST();
+  const total = subtotal + shipping + gst;
+
+  // Function to format INR currency
+  const formatINR = (amount: number) => {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
 
   return (
     <Layout>
@@ -95,8 +128,9 @@ const CartPage = () => {
                             <div>
                               <h3 className="font-medium text-eco-moss">{item.name}</h3>
                               <p className="text-sm text-eco-bark mb-2">Theme: {item.theme}</p>
+                              <p className="text-xs text-eco-bark mb-2">Category: {item.category}</p>
                             </div>
-                            <p className="font-medium text-eco-moss">${item.price.toFixed(2)}</p>
+                            <p className="font-medium text-eco-moss">{formatINR(item.price)}</p>
                           </div>
                           
                           <div className="flex justify-between items-center mt-2">
@@ -148,26 +182,28 @@ const CartPage = () => {
                 <div className="space-y-3 text-eco-bark">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
-                    <span>${subtotal.toFixed(2)}</span>
+                    <span>{formatINR(subtotal)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Shipping</span>
-                    <span>${shipping.toFixed(2)}</span>
+                    <span>{formatINR(shipping)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Tax</span>
-                    <span>${tax.toFixed(2)}</span>
+                    <span>GST</span>
+                    <span>{formatINR(gst)}</span>
                   </div>
                   
                   <div className="border-t border-eco-sand/30 pt-3 mt-3 flex justify-between font-medium text-eco-moss">
                     <span>Total</span>
-                    <span>${total.toFixed(2)}</span>
+                    <span>{formatINR(total)}</span>
                   </div>
                 </div>
                 
-                <Button className="eco-button w-full mt-6">
-                  Proceed to Checkout
-                  <ArrowRight size={16} />
+                <Button className="eco-button w-full mt-6" asChild>
+                  <Link to="/checkout">
+                    Proceed to Checkout
+                    <ArrowRight size={16} className="ml-2" />
+                  </Link>
                 </Button>
                 
                 <div className="mt-6 bg-eco-cream/20 p-4 rounded-md">
