@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { lightingCategories } from "@/data/lightingProducts";
 
@@ -22,6 +21,19 @@ const allCategories = [
     image: "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?q=80&w=1170&auto=format&fit=crop",
     path: "/category/lighting",
     subcategories: lightingCategories.slice(0, 6), // Show 6 lighting subcategories
+  },
+  {
+    name: "Flooring",
+    image: "https://images.unsplash.com/photo-1482938289607-e9573fc25ebb?w=500&auto=format",
+    path: "/category/flooring",
+    subcategories: [
+      { name: "Hardwood", path: "hardwood", image: "https://images.unsplash.com/photo-1581858726788-75bc0f6a952d?w=500&auto=format" },
+      { name: "Engineered Wood", path: "engineered-wood", image: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?w=500&auto=format" },
+      { name: "Laminate", path: "laminate", image: "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?w=500&auto=format" },
+      { name: "Vinyl Plank", path: "vinyl-plank", image: "https://images.unsplash.com/photo-1518495973542-4542c06a5843?w=500&auto=format" },
+      { name: "Ceramic Tile", path: "ceramic-tile", image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=500&auto=format" },
+      { name: "Natural Stone", path: "natural-stone", image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=500&auto=format" },
+    ]
   },
   {
     name: "Decor",

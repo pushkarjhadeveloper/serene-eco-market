@@ -8,6 +8,7 @@ import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { addToCart } from "@/store/cartSlice";
 import { shareProduct } from "@/utils/shareProduct";
 import { lightingCategories, lightingProducts } from "@/data/lightingProducts";
+import { flooringCategories, flooringProducts } from "@/data/flooringProducts";
 import {
   Drawer,
   DrawerClose,
@@ -33,11 +34,7 @@ const furnitureSubcategories = [
 const subcategoriesData = {
   "furniture": furnitureSubcategories,
   "lighting": lightingCategories,
-  "flooring": [
-    { name: "Wooden", path: "wooden", image: "https://images.unsplash.com/photo-1581858726788-75bc0f6a952d?w=500&auto=format", description: "Sustainable wooden flooring options" },
-    { name: "Carpets", path: "carpets", image: "https://images.unsplash.com/photo-1584145951017-d9f047e8420c?w=500&auto=format", description: "Eco-friendly carpet solutions" },
-    { name: "Tiles", path: "tiles", image: "https://images.unsplash.com/photo-1635362578680-a95b4c2cef81?w=500&auto=format", description: "Sustainable tile options for flooring" },
-  ],
+  "flooring": flooringCategories,
   // ... other categories with their subcategories
 };
 
@@ -246,6 +243,7 @@ const furnitureProducts = {
 const productsData = {
   "furniture": furnitureProducts,
   "lighting": lightingProducts,
+  "flooring": flooringProducts,
 };
 
 // Helper function to format currency in INR
