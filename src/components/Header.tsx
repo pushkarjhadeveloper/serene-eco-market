@@ -2,21 +2,16 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
-import { ShoppingCart, Menu, X } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { useAppSelector } from "@/hooks/useAppSelector";
+import HamburgerMenu from "./HamburgerMenu";
 
 const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
-  const menuRef = useRef<HTMLDivElement>(null);
   const cartItems = useAppSelector(state => state.cart.items);
   
   // Calculate total items in cart
   const totalCartItems = cartItems.reduce((total, item) => total + item.quantity, 0);
-  
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
   
   const categories = [{
     name: "Furniture",
@@ -39,23 +34,6 @@ const Header = () => {
   }, {
     name: "Decor",
     path: "/category/decor"
-  }];
-  
-  const mainNav = [{
-    name: "Shop Collection",
-    path: "/themes"
-  }, {
-    name: "Design Services",
-    path: "/design-services"
-  }, {
-    name: "Sustainability",
-    path: "/sustainability"
-  }, {
-    name: "About",
-    path: "/about"
-  }, {
-    name: "Contact",
-    path: "/contact"
   }];
   
   // Check if a path is active
@@ -113,77 +91,10 @@ const Header = () => {
             </Button>
           </div>
 
-          {/* Mobile Menu Button */}
-          <Button variant="ghost" size="icon" onClick={toggleMenu} className="lg:hidden">
-            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </Button>
+          {/* Mobile Hamburger Menu */}
+          <HamburgerMenu />
         </div>
       </div>
-
-      {/* Mobile Menu */}
-      {isMenuOpen && (
-        <div 
-          ref={menuRef}
-          className="lg:hidden fixed inset-0 top-[57px] bg-white z-40 animate-fade-in"
-          style={{ maxHeight: 'calc(100vh - 57px)' }}
-        >
-          <nav className="eco-container py-4 flex flex-col space-y-3 pb-24">
-            <h3 className="font-medium text-eco-moss mb-2">Product Categories</h3>
-            {categories.map(category => {
-              const active = isActive(category.path);
-              return (
-                <Link 
-                  key={category.name} 
-                  to={category.path} 
-                  className={`text-eco-bark hover:text-eco-moss transition-colors py-2 px-4 rounded-full 
-                  ${active 
-                    ? 'bg-eco-sage/10 border border-eco-sage/30 text-eco-moss' 
-                    : 'hover:bg-eco-sand/10 border border-transparent hover:border-eco-sand/30'
-                  }`}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {category.name}
-                </Link>
-              );
-            })}
-            
-            <div className="border-t border-eco-sand/30 my-4 pt-4">
-              <h3 className="font-medium text-eco-moss mb-2">Main Navigation</h3>
-              {mainNav.map(item => {
-                const active = isActive(item.path);
-                return (
-                  <Link 
-                    key={item.name} 
-                    to={item.path} 
-                    className={`block text-eco-bark hover:text-eco-moss transition-colors py-2 px-4 rounded-full 
-                    ${active 
-                      ? 'bg-eco-sage/10 border border-eco-sage/30 text-eco-moss' 
-                      : 'hover:bg-eco-sand/10 border border-transparent hover:border-eco-sand/30'
-                    }`}
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {item.name}
-                  </Link>
-                );
-              })}
-            </div>
-            
-            <div className="flex flex-col gap-2 mt-4">
-              <Button variant="ghost" className="eco-button w-full" asChild>
-                <Link to="/signin" onClick={() => setIsMenuOpen(false)}>
-                  Sign In
-                </Link>
-              </Button>
-              
-              <Button variant="default" className="eco-button w-full" asChild>
-                <Link to="/signup" onClick={() => setIsMenuOpen(false)}>
-                  Sign Up
-                </Link>
-              </Button>
-            </div>
-          </nav>
-        </div>
-      )}
     </header>;
 };
 

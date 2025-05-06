@@ -9,6 +9,7 @@ import { addToCart } from "@/store/cartSlice";
 import { shareProduct } from "@/utils/shareProduct";
 import { lightingCategories, lightingProducts } from "@/data/lightingProducts";
 import { flooringCategories, flooringProducts } from "@/data/flooringProducts";
+import { doorsWindowsCategories, doorsWindowsProducts } from "@/data/doorsWindowsProducts";
 import {
   Drawer,
   DrawerClose,
@@ -35,6 +36,7 @@ const subcategoriesData = {
   "furniture": furnitureSubcategories,
   "lighting": lightingCategories,
   "flooring": flooringCategories,
+  "doors-windows": doorsWindowsCategories,
   // ... other categories with their subcategories
 };
 
@@ -244,6 +246,7 @@ const productsData = {
   "furniture": furnitureProducts,
   "lighting": lightingProducts,
   "flooring": flooringProducts,
+  "doors-windows": doorsWindowsProducts,
 };
 
 // Helper function to format currency in INR

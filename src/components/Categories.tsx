@@ -1,5 +1,7 @@
+
 import { Link } from "react-router-dom";
 import { lightingCategories } from "@/data/lightingProducts";
+import { doorsWindowsCategories } from "@/data/doorsWindowsProducts";
 
 // Original categories + lighting subcategories
 const allCategories = [
@@ -21,6 +23,12 @@ const allCategories = [
     image: "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?q=80&w=1170&auto=format&fit=crop",
     path: "/category/lighting",
     subcategories: lightingCategories.slice(0, 6), // Show 6 lighting subcategories
+  },
+  {
+    name: "Doors & Windows",
+    image: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?q=80&w=1170&auto=format&fit=crop",
+    path: "/category/doors-windows",
+    subcategories: doorsWindowsCategories.slice(0, 6), // Show 6 doors & windows subcategories
   },
   {
     name: "Flooring",
@@ -88,14 +96,14 @@ const Categories = () => {
                   {category.subcategories.map((subcat) => (
                     <Link
                       key={subcat.path}
-                      to={`/category/${category.name.toLowerCase()}/${subcat.path}`}
+                      to={`/category/${category.name.toLowerCase().replace(' & ', '-').replace(' ', '-')}/${subcat.path}`}
                       className="text-sm bg-white px-3 py-1 rounded-full border border-eco-sage text-eco-bark hover:bg-eco-sage hover:text-white transition-colors"
                     >
                       {subcat.name}
                     </Link>
                   ))}
                   <Link
-                    to={`/category/${category.name.toLowerCase()}`}
+                    to={`/category/${category.name.toLowerCase().replace(' & ', '-').replace(' ', '-')}`}
                     className="text-sm bg-white px-3 py-1 rounded-full border border-eco-moss/30 text-eco-moss hover:bg-eco-moss hover:text-white transition-colors"
                   >
                     View All →
