@@ -1,7 +1,7 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -84,13 +84,7 @@ const HamburgerMenu = () => {
         </SheetTrigger>
         <SheetContent side="right" className="w-[85vw] max-w-sm py-6 overflow-y-auto">
           <div className="flex flex-col space-y-3 pb-24">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="font-serif text-lg font-medium text-eco-moss">Menu</h2>
-              <Button variant="ghost" size="icon" onClick={() => setOpen(false)}>
-                <X className="h-5 w-5" />
-                <span className="sr-only">Close</span>
-              </Button>
-            </div>
+            <h2 className="font-serif text-lg font-medium text-eco-moss">Menu</h2>
             
             <h3 className="font-medium text-eco-moss mb-2">Product Categories</h3>
             <div className="flex flex-col space-y-2">

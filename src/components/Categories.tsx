@@ -2,66 +2,60 @@
 import { Link } from "react-router-dom";
 import { lightingCategories } from "@/data/lightingProducts";
 import { doorsWindowsCategories } from "@/data/doorsWindowsProducts";
+import { flooringCategories } from "@/data/flooringProducts";
+import { furnitureSubcategories } from "@/data/furnitureProducts";
+import { kitchenCategories } from "@/data/kitchenProducts";
+import { bathroomCategories } from "@/data/bathroomProducts";
+import { decorCategories } from "@/data/decorProducts";
 
-// Original categories + lighting subcategories
+// Original categories + all subcategories
 const allCategories = [
   {
     name: "Furniture",
     image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=1216&auto=format&fit=crop",
     path: "/category/furniture",
-    subcategories: [
-      { name: "Sofas", path: "sofas", image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500&auto=format" },
-      { name: "Beds", path: "beds", image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=500&auto=format" },
-      { name: "Wardrobes", path: "wardrobes", image: "https://images.unsplash.com/photo-1595515106864-077d30192c56?w=500&auto=format" },
-      { name: "Dining", path: "dining", image: "https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?w=500&auto=format" },
-      { name: "Office Chairs", path: "office-chairs", image: "https://images.unsplash.com/photo-1518655061710-5ccf392c275a?w=500&auto=format" },
-      { name: "Outdoor", path: "outdoor", image: "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=500&auto=format" },
-    ]
+    subcategories: furnitureSubcategories.slice(0, 6),
   },
   {
     name: "Lighting",
     image: "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?q=80&w=1170&auto=format&fit=crop",
     path: "/category/lighting",
-    subcategories: lightingCategories.slice(0, 6), // Show 6 lighting subcategories
+    subcategories: lightingCategories.slice(0, 6), 
   },
   {
     name: "Doors & Windows",
     image: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?q=80&w=1170&auto=format&fit=crop",
     path: "/category/doors-windows",
-    subcategories: doorsWindowsCategories.slice(0, 6), // Show 6 doors & windows subcategories
+    subcategories: doorsWindowsCategories.slice(0, 6),
   },
   {
     name: "Flooring",
     image: "https://images.unsplash.com/photo-1482938289607-e9573fc25ebb?w=500&auto=format",
     path: "/category/flooring",
-    subcategories: [
-      { name: "Hardwood", path: "hardwood", image: "https://images.unsplash.com/photo-1581858726788-75bc0f6a952d?w=500&auto=format" },
-      { name: "Engineered Wood", path: "engineered-wood", image: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?w=500&auto=format" },
-      { name: "Laminate", path: "laminate", image: "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?w=500&auto=format" },
-      { name: "Vinyl Plank", path: "vinyl-plank", image: "https://images.unsplash.com/photo-1518495973542-4542c06a5843?w=500&auto=format" },
-      { name: "Ceramic Tile", path: "ceramic-tile", image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=500&auto=format" },
-      { name: "Natural Stone", path: "natural-stone", image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=500&auto=format" },
-    ]
-  },
-  {
-    name: "Decor",
-    image: "https://images.unsplash.com/photo-1534349762230-e0cadf78f5da?q=80&w=1170&auto=format&fit=crop",
-    path: "/category/decor",
+    subcategories: flooringCategories.slice(0, 6),
   },
   {
     name: "Kitchen",
     image: "https://images.unsplash.com/photo-1600585152220-90363fe7e115?q=80&w=1469&auto=format&fit=crop",
     path: "/category/kitchen",
+    subcategories: kitchenCategories.slice(0, 6),
   },
   {
-    name: "Outdoors",
-    image: "https://images.unsplash.com/photo-1600210492493-0946911123ea?q=80&w=1474&auto=format&fit=crop",
-    path: "/category/outdoors",
+    name: "Bathroom",
+    image: "https://images.unsplash.com/photo-1620626011761-996317b8d101?q=80&w=2069&auto=format&fit=crop",
+    path: "/category/bathroom",
+    subcategories: bathroomCategories.slice(0, 6),
+  },
+  {
+    name: "Decor",
+    image: "https://images.unsplash.com/photo-1534349762230-e0cadf78f5da?q=80&w=1170&auto=format&fit=crop",
+    path: "/category/decor",
+    subcategories: decorCategories.slice(0, 6),
   },
   {
     name: "Themes",
     image: "https://images.unsplash.com/photo-1602028915047-37269d1a73f7?q=80&w=1287&auto=format&fit=crop",
-    path: "/themes", // This one links to the themes page, not a category
+    path: "/themes", 
   },
 ];
 
