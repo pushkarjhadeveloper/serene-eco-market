@@ -1,6 +1,7 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { X } from "lucide-react";
+import { X, Send } from "lucide-react";
 import { Button } from "./ui/button";
 import { Dialog, DialogContent } from "./ui/dialog";
 import { useToast } from "@/hooks/use-toast";
@@ -29,17 +30,25 @@ const SubscribeModal = ({ isOpen, onClose }: SubscribeModalProps) => {
       return;
     }
 
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Email",
+        description: "Please enter a valid email address.",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     
     try {
-      // In a real app, this would be an API call to your backend
-      console.log("Sending subscription email to:", email);
+      // Store the email in localStorage for future use
+      localStorage.setItem("subscribedEmail", email);
       
-      // Simulate API call with timeout
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Send confirmation email (simulated)
-      console.log("Sending confirmation email to:", email);
+      // Simulate sending the actual email
+      await sendSubscriptionEmail(email);
       
       // Success notification
       toast({
@@ -47,7 +56,7 @@ const SubscribeModal = ({ isOpen, onClose }: SubscribeModalProps) => {
         description: "A confirmation email has been sent to your inbox.",
       });
       
-      // Navigate to the confirmation page (keeping the existing page)
+      // Navigate to the confirmation page
       navigate("/newsletter-confirmation");
       onClose();
     } catch (error) {
@@ -59,6 +68,47 @@ const SubscribeModal = ({ isOpen, onClose }: SubscribeModalProps) => {
       });
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  // Function to send subscription email
+  const sendSubscriptionEmail = async (email: string) => {
+    try {
+      // In a production environment, this would be an actual API call to your email service
+      console.log(`Sending confirmation email to: ${email}`);
+      
+      // For demonstration, we'll use EmailJS or similar service
+      // You would replace this with your actual email sending logic
+      const emailContent = {
+        to_email: email,
+        subject: "Welcome to EcoHaven - Subscription Confirmation",
+        message: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #4a6741;">Thank You for Subscribing!</h2>
+            <p>Dear Subscriber,</p>
+            <p>Thank you for joining our sustainable design community. We're excited to share interior design recommendations tailored to your style preferences.</p>
+            <p>You'll start receiving our newsletter with:</p>
+            <ul>
+              <li>Eco-friendly design tips</li>
+              <li>Exclusive product recommendations</li>
+              <li>Seasonal decor inspiration</li>
+              <li>Special offers for subscribers</li>
+            </ul>
+            <p>If you have any questions or specific design interests, feel free to reply to this email.</p>
+            <p>Warm regards,</p>
+            <p>The EcoHaven Design Team</p>
+          </div>
+        `
+      };
+      
+      // In a real implementation, you would call your email service here
+      // For now, we'll simulate a successful email send
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      return true;
+    } catch (error) {
+      console.error("Email sending failed:", error);
+      throw new Error("Failed to send confirmation email");
     }
   };
 
@@ -106,10 +156,16 @@ const SubscribeModal = ({ isOpen, onClose }: SubscribeModalProps) => {
               </Button>
               <Button 
                 type="submit" 
-                className="w-full sm:w-1/2 eco-button"
+                className="w-full sm:w-1/2 eco-button flex items-center justify-center"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Subscribing..." : "Subscribe"}
+                {isSubmitting ? (
+                  "Subscribing..."
+                ) : (
+                  <>
+                    Subscribe <Send className="ml-2 h-4 w-4" />
+                  </>
+                )}
               </Button>
             </div>
             

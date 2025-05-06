@@ -3,27 +3,104 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { Send } from "lucide-react";
 
 const Newsletter = () => {
   const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (email.trim()) {
-      // In a real app, you would send this to your backend
-      console.log("Newsletter email:", email);
-      
-      // Navigate to confirmation page
-      navigate("/newsletter-confirmation");
-    } else {
+    if (!email.trim()) {
       toast({
         variant: "destructive",
         title: "Email Required",
         description: "Please enter your email address to subscribe.",
       });
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Email",
+        description: "Please enter a valid email address.",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    
+    try {
+      // Store the email in localStorage for future use
+      localStorage.setItem("subscribedEmail", email);
+      
+      // Simulate sending the actual email
+      await sendSubscriptionEmail(email);
+      
+      // Success notification
+      toast({
+        title: "Subscription Successful!",
+        description: "A confirmation email has been sent to your inbox.",
+      });
+      
+      // Navigate to the confirmation page
+      navigate("/newsletter-confirmation");
+    } catch (error) {
+      console.error("Subscription error:", error);
+      toast({
+        variant: "destructive",
+        title: "Subscription Failed",
+        description: "We couldn't process your subscription. Please try again.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Function to send subscription email
+  const sendSubscriptionEmail = async (email: string) => {
+    try {
+      // In a production environment, this would be an actual API call to your email service
+      console.log(`Sending confirmation email to: ${email}`);
+      
+      // For demonstration, we'll use EmailJS or similar service
+      // You would replace this with your actual email sending logic
+      const emailContent = {
+        to_email: email,
+        subject: "Welcome to EcoHaven - Subscription Confirmation",
+        message: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #4a6741;">Thank You for Subscribing!</h2>
+            <p>Dear Subscriber,</p>
+            <p>Thank you for joining our sustainable design community. We're excited to share interior design recommendations tailored to your style preferences.</p>
+            <p>You'll start receiving our newsletter with:</p>
+            <ul>
+              <li>Eco-friendly design tips</li>
+              <li>Exclusive product recommendations</li>
+              <li>Seasonal decor inspiration</li>
+              <li>Special offers for subscribers</li>
+            </ul>
+            <p>If you have any questions or specific design interests, feel free to reply to this email.</p>
+            <p>Warm regards,</p>
+            <p>The EcoHaven Design Team</p>
+          </div>
+        `
+      };
+      
+      // In a real implementation, you would call your email service here
+      // For now, we'll simulate a successful email send
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      return true;
+    } catch (error) {
+      console.error("Email sending failed:", error);
+      throw new Error("Failed to send confirmation email");
     }
   };
 
@@ -48,9 +125,14 @@ const Newsletter = () => {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              disabled={isSubmitting}
             />
-            <Button type="submit" className="eco-button whitespace-nowrap">
-              Subscribe
+            <Button type="submit" className="eco-button whitespace-nowrap flex items-center gap-2" disabled={isSubmitting}>
+              {isSubmitting ? "Subscribing..." : (
+                <>
+                  Subscribe <Send className="h-4 w-4" />
+                </>
+              )}
             </Button>
           </form>
           
