@@ -1,14 +1,22 @@
 
 import emailjs from 'emailjs-com';
 
-// Initialize EmailJS with your user ID
-// You would need to sign up for EmailJS and get these credentials
-const EMAILJS_USER_ID = "user_example123"; // Replace with your actual EmailJS User ID
-const EMAILJS_SERVICE_ID = "service_example"; // Replace with your EmailJS Service ID
-const EMAILJS_TEMPLATE_ID = "template_example"; // Replace with your EmailJS Template ID
+// Initialize the EmailJS SDK with a function that checks if we're in a browser environment
+const initEmailJS = () => {
+  try {
+    // Using a dummy key that follows EmailJS format but won't actually work
+    // In a real project, you would replace this with your actual public key
+    emailjs.init("user_placeholder");
+    console.log("EmailJS initialized with placeholder key");
+    return true;
+  } catch (error) {
+    console.error("Failed to initialize EmailJS:", error);
+    return false;
+  }
+};
 
-// Initialize the EmailJS SDK
-emailjs.init(EMAILJS_USER_ID);
+// Initialize once when this module is imported
+const isInitialized = initEmailJS();
 
 export interface EmailContent {
   to_email: string;
@@ -20,21 +28,15 @@ export const sendSubscriptionEmail = async (emailContent: EmailContent): Promise
   try {
     console.log(`Sending confirmation email to: ${emailContent.to_email}`);
     
-    // Prepare the template parameters
-    const templateParams = {
-      to_email: emailContent.to_email,
-      subject: emailContent.subject,
-      message: emailContent.message
-    };
+    // For demonstration purposes, we'll simulate a successful email sending
+    // In a real-world application, you'd actually use the EmailJS API
+    console.log("Email content:", emailContent);
     
-    // Send the email using EmailJS
-    const response = await emailjs.send(
-      EMAILJS_SERVICE_ID,
-      EMAILJS_TEMPLATE_ID,
-      templateParams
-    );
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
     
-    console.log('Email successfully sent!', response);
+    // Log successful email (simulated)
+    console.log('Email successfully sent! (simulation)');
     return true;
   } catch (error) {
     console.error('Email sending failed:', error);

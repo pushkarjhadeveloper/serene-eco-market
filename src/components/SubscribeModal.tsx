@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { X, Send } from "lucide-react";
@@ -90,7 +91,7 @@ const SubscribeModal = ({ isOpen, onClose }: SubscribeModalProps) => {
       toast({
         variant: "destructive",
         title: "Subscription Failed",
-        description: "We couldn't process your subscription. Please try again.",
+        description: "We couldn't process your subscription. Please try again later.",
       });
     } finally {
       setIsSubmitting(false);
