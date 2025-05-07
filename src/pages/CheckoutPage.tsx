@@ -50,9 +50,15 @@ const CheckoutPage = () => {
   const [isThankYouOpen, setIsThankYouOpen] = useState<boolean>(false);
   const [upiVerified, setUpiVerified] = useState<boolean>(false);
   const [upiName, setUpiName] = useState<string>("");
+  const [useQrCode, setUseQrCode] = useState<boolean>(true);
   
   const navigate = useNavigate();
   const { toast } = useToast();
+  
+  // Pre-filled UPI ID
+  const predefinedUpiId = "9911258992.wa.ecz@waicici";
+  const upiOwnerName = "SANTOSH KUMAR JHA";
+  const upiMobileNumber = "+91 99112 58992";
 
   // Card payment form
   const cardForm = useForm<CardFormValues>({
@@ -70,7 +76,7 @@ const CheckoutPage = () => {
   const upiForm = useForm<UPIFormValues>({
     resolver: zodResolver(upiFormSchema),
     defaultValues: {
-      upiId: "",
+      upiId: predefinedUpiId,
     }
   });
 
@@ -88,21 +94,14 @@ const CheckoutPage = () => {
     }
   });
 
-  const onVerifyUpi = () => {
-    const upiId = upiForm.getValues("upiId");
-    
-    if (upiId) {
-      // In a real app, you would make an API call to verify the UPI ID
-      // For now, we'll simulate a successful verification
-      setTimeout(() => {
-        setUpiVerified(true);
-        setUpiName("Rahul Kumar"); // Sample name that would come from UPI verification
-        toast({
-          title: "UPI Verified",
-          description: "UPI ID verified successfully.",
-        });
-      }, 1000);
-    }
+  const handleVerifyUpiManually = () => {
+    // Since this is a pre-defined UPI, we'll just set it as verified
+    setUpiVerified(true);
+    setUpiName(upiOwnerName);
+    toast({
+      title: "UPI Verified",
+      description: "UPI ID verified successfully.",
+    });
   };
 
   const handleContinue = () => {
@@ -114,15 +113,19 @@ const CheckoutPage = () => {
       }
       setIsPaymentValid(true);
     } else if (paymentMethod === "upi") {
-      if (!upiVerified) {
+      if (useQrCode) {
+        // QR code scanning is considered pre-verified since it's our own QR code
+        setIsPaymentValid(true);
+      } else if (!upiVerified) {
         toast({
           variant: "destructive",
           title: "UPI not verified",
           description: "Please verify your UPI ID before continuing.",
         });
         return;
+      } else {
+        setIsPaymentValid(true);
       }
-      setIsPaymentValid(true);
     } else if (paymentMethod === "cod") {
       setIsPaymentValid(true);
     }
@@ -369,45 +372,115 @@ const CheckoutPage = () => {
                 </TabsContent>
                 
                 <TabsContent value="upi">
-                  <Form {...upiForm}>
-                    <form className="space-y-4">
-                      <div className="flex items-end gap-4">
-                        <div className="flex-grow">
-                          <FormField
-                            control={upiForm.control}
-                            name="upiId"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>UPI ID</FormLabel>
-                                <FormControl>
-                                  <Input placeholder="name@upi" {...field} disabled={upiVerified} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
+                  <div className="space-y-6">
+                    <div className="flex flex-col md:flex-row gap-4 items-start">
+                      <div className="bg-gray-100 p-4 rounded-lg flex-shrink-0 md:max-w-[280px] w-full">
+                        <div className="text-center">
+                          <h3 className="font-medium text-eco-moss mb-2">Scan QR Code</h3>
+                          <div className="bg-white p-3 rounded-lg mb-3 inline-block">
+                            <img 
+                              src="/lovable-uploads/d669c61b-4b00-4761-9231-2d69541047fb.png" 
+                              alt="UPI QR Code" 
+                              className="w-full max-w-[220px] mx-auto"
+                            />
+                          </div>
+                          <div className="text-sm text-eco-bark">
+                            <p className="font-medium">{upiOwnerName}</p>
+                            <p className="text-xs mb-2">UPI ID: {predefinedUpiId}</p>
+                            <p className="text-xs">{upiMobileNumber}</p>
+                          </div>
                         </div>
-                        <Button 
-                          onClick={onVerifyUpi} 
-                          type="button"
-                          variant="outline"
-                          className="border-eco-sage text-eco-moss"
-                          disabled={upiVerified}
-                        >
-                          {upiVerified ? "Verified" : "Verify"}
-                          {upiVerified && <Check size={16} className="ml-2" />}
-                        </Button>
                       </div>
                       
-                      {upiVerified && (
-                        <div className="bg-eco-sage/10 border border-eco-sage/30 rounded-md p-3">
-                          <p className="text-sm text-eco-moss">
-                            <span className="font-medium">Verified Name:</span> {upiName}
-                          </p>
+                      <div className="flex-grow space-y-4 w-full">
+                        <div className="mb-4">
+                          <div className="flex items-center mb-3">
+                            <input 
+                              type="radio" 
+                              id="scanQr" 
+                              name="upiMethod" 
+                              className="mr-2" 
+                              checked={useQrCode} 
+                              onChange={() => setUseQrCode(true)}
+                            />
+                            <label htmlFor="scanQr" className="text-sm font-medium text-eco-bark">
+                              Scan QR code with any UPI app
+                            </label>
+                          </div>
+                          <div className="flex items-center">
+                            <input 
+                              type="radio" 
+                              id="enterUpi" 
+                              name="upiMethod" 
+                              className="mr-2" 
+                              checked={!useQrCode} 
+                              onChange={() => setUseQrCode(false)}
+                            />
+                            <label htmlFor="enterUpi" className="text-sm font-medium text-eco-bark">
+                              Enter UPI ID manually
+                            </label>
+                          </div>
                         </div>
-                      )}
-                    </form>
-                  </Form>
+                        
+                        {!useQrCode && (
+                          <Form {...upiForm}>
+                            <form className="space-y-4">
+                              <div className="flex items-end gap-4">
+                                <div className="flex-grow">
+                                  <FormField
+                                    control={upiForm.control}
+                                    name="upiId"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>UPI ID</FormLabel>
+                                        <FormControl>
+                                          <Input placeholder="name@upi" {...field} disabled={upiVerified} />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                </div>
+                                <Button 
+                                  onClick={handleVerifyUpiManually} 
+                                  type="button"
+                                  variant="outline"
+                                  className="border-eco-sage text-eco-moss"
+                                  disabled={upiVerified}
+                                >
+                                  {upiVerified ? "Verified" : "Verify"}
+                                  {upiVerified && <Check size={16} className="ml-2" />}
+                                </Button>
+                              </div>
+                              
+                              {upiVerified && (
+                                <div className="bg-eco-sage/10 border border-eco-sage/30 rounded-md p-3">
+                                  <p className="text-sm text-eco-moss">
+                                    <span className="font-medium">Verified Name:</span> {upiName}
+                                  </p>
+                                </div>
+                              )}
+                            </form>
+                          </Form>
+                        )}
+                        
+                        {useQrCode && (
+                          <div className="bg-eco-sage/10 border border-eco-sage/30 rounded-md p-3">
+                            <p className="text-sm text-eco-moss">
+                              <strong>How to pay:</strong>
+                            </p>
+                            <ol className="text-sm text-eco-bark list-decimal ml-5 mt-2 space-y-1">
+                              <li>Open any UPI app on your phone (Google Pay, PhonePe, Paytm, etc.)</li>
+                              <li>Choose "Scan QR" option in your app</li>
+                              <li>Scan the QR code shown</li>
+                              <li>Verify the name ({upiOwnerName}) and complete the payment</li>
+                              <li>Once payment is complete, click "Continue" below</li>
+                            </ol>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </TabsContent>
                 
                 <TabsContent value="cod">
@@ -515,7 +588,7 @@ const CheckoutPage = () => {
                     </p>
                   )}
                   {paymentMethod === "upi" && (
-                    <p>UPI payment - {upiForm.getValues("upiId")}</p>
+                    <p>UPI payment - {useQrCode ? "QR Code scan" : upiForm.getValues("upiId")}</p>
                   )}
                   {paymentMethod === "cod" && (
                     <p>Cash on Delivery</p>
