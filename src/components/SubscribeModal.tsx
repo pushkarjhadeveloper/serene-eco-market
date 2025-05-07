@@ -86,6 +86,7 @@ const SubscribeModal = ({ isOpen, onClose }: SubscribeModalProps) => {
       // Navigate to the confirmation page
       navigate("/newsletter-confirmation");
       onClose();
+      setEmail("");
     } catch (error) {
       console.error("Subscription error:", error);
       toast({

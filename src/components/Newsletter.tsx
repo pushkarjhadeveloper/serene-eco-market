@@ -78,6 +78,7 @@ const Newsletter = () => {
       
       // Navigate to the confirmation page
       navigate("/newsletter-confirmation");
+      setEmail("");
     } catch (error) {
       console.error("Subscription error:", error);
       toast({
