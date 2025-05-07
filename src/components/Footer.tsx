@@ -4,28 +4,91 @@ import { Link, useNavigate } from "react-router-dom";
 import { Instagram, Linkedin } from "lucide-react";
 import ContactForm from "./ContactForm";
 import { useToast } from "@/hooks/use-toast";
+import { sendSubscriptionEmail, getCompanyEmail } from "@/utils/emailService";
 
 const Footer = () => {
   const [showContactForm, setShowContactForm] = useState(false);
   const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (email.trim()) {
-      // In a real app, you would send this to your backend
-      console.log("Subscribing email:", email);
-      
-      // Navigate to confirmation page
-      navigate("/newsletter-confirmation");
-    } else {
+    if (!email.trim()) {
       toast({
         variant: "destructive",
         title: "Email Required",
         description: "Please enter your email address to subscribe.",
       });
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Email",
+        description: "Please enter a valid email address.",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    
+    try {
+      // Store the email in localStorage for future use
+      localStorage.setItem("subscribedEmail", email);
+
+      const companyEmail = getCompanyEmail();
+      
+      // Create email content
+      const emailContent = {
+        to_email: email,
+        subject: "Welcome to EcoHaven - Subscription Confirmation",
+        message: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #4a6741;">Thank You for Subscribing!</h2>
+            <p>Dear Subscriber,</p>
+            <p>Thank you for joining our sustainable design community. We're excited to share interior design recommendations tailored to your style preferences.</p>
+            <p>You'll start receiving our newsletter with:</p>
+            <ul>
+              <li>Eco-friendly design tips</li>
+              <li>Exclusive product recommendations</li>
+              <li>Seasonal decor inspiration</li>
+              <li>Special offers for subscribers</li>
+            </ul>
+            <p>If you have any questions or specific design interests, feel free to reply to this email.</p>
+            <p>Warm regards,</p>
+            <p>The EcoHaven Design Team</p>
+            <p style="color: #888; font-size: 12px;">Sent from: ${companyEmail}</p>
+          </div>
+        `
+      };
+      
+      // Send the actual email
+      await sendSubscriptionEmail(emailContent);
+      
+      // Success notification
+      toast({
+        title: "Subscription Successful!",
+        description: `A confirmation email has been sent to ${email}`,
+      });
+      
+      // Navigate to confirmation page
+      navigate("/newsletter-confirmation");
+      setEmail("");
+    } catch (error) {
+      console.error("Subscription error:", error);
+      toast({
+        variant: "destructive",
+        title: "Subscription Failed",
+        description: "We couldn't process your subscription. Please try again.",
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 

@@ -1,9 +1,9 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Send } from "lucide-react";
+import { sendSubscriptionEmail, getCompanyEmail } from "@/utils/emailService";
 
 const Newsletter = () => {
   const [email, setEmail] = useState("");
@@ -40,37 +40,9 @@ const Newsletter = () => {
       // Store the email in localStorage for future use
       localStorage.setItem("subscribedEmail", email);
       
-      // Simulate sending the actual email
-      await sendSubscriptionEmail(email);
+      const companyEmail = getCompanyEmail();
       
-      // Success notification
-      toast({
-        title: "Subscription Successful!",
-        description: "A confirmation email has been sent to your inbox.",
-      });
-      
-      // Navigate to the confirmation page
-      navigate("/newsletter-confirmation");
-    } catch (error) {
-      console.error("Subscription error:", error);
-      toast({
-        variant: "destructive",
-        title: "Subscription Failed",
-        description: "We couldn't process your subscription. Please try again.",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  // Function to send subscription email
-  const sendSubscriptionEmail = async (email: string) => {
-    try {
-      // In a production environment, this would be an actual API call to your email service
-      console.log(`Sending confirmation email to: ${email}`);
-      
-      // For demonstration, we'll use EmailJS or similar service
-      // You would replace this with your actual email sending logic
+      // Create email content
       const emailContent = {
         to_email: email,
         subject: "Welcome to EcoHaven - Subscription Confirmation",
@@ -89,18 +61,31 @@ const Newsletter = () => {
             <p>If you have any questions or specific design interests, feel free to reply to this email.</p>
             <p>Warm regards,</p>
             <p>The EcoHaven Design Team</p>
+            <p style="color: #888; font-size: 12px;">Sent from: ${companyEmail}</p>
           </div>
         `
       };
       
-      // In a real implementation, you would call your email service here
-      // For now, we'll simulate a successful email send
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Send the actual email using our service
+      await sendSubscriptionEmail(emailContent);
       
-      return true;
+      // Success notification
+      toast({
+        title: "Subscription Successful!",
+        description: `A confirmation email has been sent to ${email}`,
+      });
+      
+      // Navigate to the confirmation page
+      navigate("/newsletter-confirmation");
     } catch (error) {
-      console.error("Email sending failed:", error);
-      throw new Error("Failed to send confirmation email");
+      console.error("Subscription error:", error);
+      toast({
+        variant: "destructive",
+        title: "Subscription Failed",
+        description: "We couldn't process your subscription. Please try again.",
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
