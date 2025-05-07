@@ -1,18 +1,15 @@
-
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
 import { ShoppingCart } from "lucide-react";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import HamburgerMenu from "./HamburgerMenu";
-
 const Header = () => {
   const location = useLocation();
   const cartItems = useAppSelector(state => state.cart.items);
-  
+
   // Calculate total items in cart
   const totalCartItems = cartItems.reduce((total, item) => total + item.quantity, 0);
-  
   const categories = [{
     name: "Furniture",
     path: "/category/furniture"
@@ -35,12 +32,11 @@ const Header = () => {
     name: "Decor",
     path: "/category/decor"
   }];
-  
+
   // Check if a path is active
   const isActive = (path: string) => {
     return location.pathname === path;
   };
-  
   return <header className="border-b border-eco-sand/30 bg-white/90 backdrop-blur-sm sticky top-0 z-50">
       <div className="eco-container flex justify-between items-center py-4">
         <Link to="/" className="flex items-center">
@@ -52,32 +48,20 @@ const Header = () => {
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex space-x-6">
           {categories.map(category => {
-            const active = isActive(category.path);
-            return (
-              <Link 
-                key={category.name} 
-                to={category.path} 
-                className={`text-eco-bark hover:text-eco-moss transition-colors mx-2 my-1 px-4 py-2 rounded-full 
-                ${active 
-                  ? 'bg-eco-sage/10 border border-eco-sage/30 text-eco-moss' 
-                  : 'hover:bg-eco-sand/10 border border-transparent hover:border-eco-sand/30'
-                }`}
-              >
+          const active = isActive(category.path);
+          return <Link key={category.name} to={category.path} className="px-[10px] py-[4px]">
                 {category.name}
-              </Link>
-            );
-          })}
+              </Link>;
+        })}
         </nav>
 
         <div className="flex items-center gap-4">
           <Button variant="outline" size="icon" className="relative" asChild>
             <Link to="/cart">
               <ShoppingCart className="h-5 w-5 text-eco-moss" />
-              {totalCartItems > 0 && (
-                <span className="absolute -top-1 -right-1 bg-eco-sage text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+              {totalCartItems > 0 && <span className="absolute -top-1 -right-1 bg-eco-sage text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                   {totalCartItems}
-                </span>
-              )}
+                </span>}
             </Link>
           </Button>
           
@@ -97,5 +81,4 @@ const Header = () => {
       </div>
     </header>;
 };
-
 export default Header;
