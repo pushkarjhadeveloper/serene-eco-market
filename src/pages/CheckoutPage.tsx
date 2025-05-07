@@ -12,6 +12,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { useAppSelector } from "@/hooks/useAppSelector";
+import { useAppDispatch } from "@/hooks/useAppDispatch";
+import { clearCart } from "@/store/cartSlice";
 
 // Card details form validation schema
 const cardFormSchema = z.object({
@@ -54,11 +57,52 @@ const CheckoutPage = () => {
   
   const navigate = useNavigate();
   const { toast } = useToast();
+  const dispatch = useAppDispatch();
+  
+  // Get cart items from Redux store
+  const cartItems = useAppSelector(state => state.cart.items);
   
   // Pre-filled UPI ID
   const predefinedUpiId = "9911258992.wa.ecz@waicici";
   const upiOwnerName = "SANTOSH KUMAR JHA";
   const upiMobileNumber = "+91 99112 58992";
+
+  // GST rates based on product categories in India
+  const gstRates = {
+    "Furniture": 18, // 18% GST on furniture
+    "Home Decor": 12, // 12% GST on home decor
+    "Lighting": 28, // 28% GST on luxury items
+    "Electronics": 18, // 18% GST on electronics
+    "Kitchen": 12, // 12% GST on kitchenware
+  };
+
+  // Calculate subtotal
+  const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const shipping = 299; // Shipping in INR
+  
+  // Calculate GST based on product category
+  const calculateGST = () => {
+    let totalGST = 0;
+    cartItems.forEach(item => {
+      const gstRate = gstRates[item.category as keyof typeof gstRates] || 18; // Default to 18% if category not found
+      const itemGST = (item.price * item.quantity) * (gstRate / 100);
+      totalGST += itemGST;
+    });
+    return totalGST;
+  };
+  
+  const gst = calculateGST();
+  const total = subtotal + shipping + gst;
+  const totalWithCOD = total + 40; // Add COD fee when applicable
+
+  // Function to format INR currency
+  const formatINR = (amount: number) => {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
 
   // Card payment form
   const cardForm = useForm<CardFormValues>({
@@ -143,19 +187,15 @@ const CheckoutPage = () => {
   const handlePlaceOrder = () => {
     setIsReviewOpen(false);
     setIsThankYouOpen(true);
+    
+    // Clear the cart after successful order
+    dispatch(clearCart());
   };
 
   const closeThankYouDialog = () => {
     setIsThankYouOpen(false);
     navigate("/");
   };
-
-  // Sample cart items for review
-  const cartItems = [
-    { name: "Bamboo End Table", price: "₹9,999", quantity: 1 },
-    { name: "Organic Cotton Throw Pillow", price: "₹3,499", quantity: 2 },
-    { name: "Reclaimed Wood Shelf", price: "₹6,499", quantity: 1 },
-  ];
   
   return (
     <Layout>
@@ -517,7 +557,7 @@ const CheckoutPage = () => {
                     <span className="text-eco-bark">
                       {item.name} <span className="text-eco-sage">x{item.quantity}</span>
                     </span>
-                    <span className="font-medium text-eco-moss">{item.price}</span>
+                    <span className="font-medium text-eco-moss">{formatINR(item.price * item.quantity)}</span>
                   </div>
                 ))}
               </div>
@@ -525,15 +565,15 @@ const CheckoutPage = () => {
               <div className="border-t border-eco-sand/30 pt-4 space-y-3 text-eco-bark">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span>₹19,996</span>
+                  <span>{formatINR(subtotal)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Shipping</span>
-                  <span>₹299</span>
+                  <span>{formatINR(shipping)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>GST</span>
-                  <span>₹3,599</span>
+                  <span>{formatINR(gst)}</span>
                 </div>
                 {paymentMethod === "cod" && (
                   <div className="flex justify-between">
@@ -544,7 +584,7 @@ const CheckoutPage = () => {
                 
                 <div className="border-t border-eco-sand/30 pt-3 mt-3 flex justify-between font-medium text-eco-moss">
                   <span>Total</span>
-                  <span>₹{paymentMethod === "cod" ? "23,934" : "23,894"}</span>
+                  <span>{paymentMethod === "cod" ? formatINR(totalWithCOD) : formatINR(total)}</span>
                 </div>
               </div>
             </div>
@@ -605,13 +645,13 @@ const CheckoutPage = () => {
                         <span>
                           {item.name} x{item.quantity}
                         </span>
-                        <span>{item.price}</span>
+                        <span>{formatINR(item.price * item.quantity)}</span>
                       </div>
                     ))}
                   </div>
                   <div className="border-t border-eco-sand/30 mt-3 pt-3 flex justify-between font-medium">
                     <span>Total</span>
-                    <span>₹{paymentMethod === "cod" ? "23,934" : "23,894"}</span>
+                    <span>{paymentMethod === "cod" ? formatINR(totalWithCOD) : formatINR(total)}</span>
                   </div>
                 </div>
               </div>
