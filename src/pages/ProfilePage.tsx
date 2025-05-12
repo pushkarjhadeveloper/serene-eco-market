@@ -55,7 +55,7 @@ const ProfilePage = () => {
         .update({
           first_name: firstName,
           last_name: lastName,
-          updated_at: new Date(),
+          updated_at: new Date().toISOString(), // Convert Date to ISO string
         })
         .eq('id', user.id);
       
