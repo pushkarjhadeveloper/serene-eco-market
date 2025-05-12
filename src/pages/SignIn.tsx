@@ -1,18 +1,40 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/Layout";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { signIn, user } = useAuth();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, this would handle authentication
-    console.log("Sign in attempt with:", email);
-    // For now, just log the attempt
+    
+    if (!email || !password) {
+      return;
+    }
+    
+    setIsSubmitting(true);
+    
+    try {
+      await signIn(email, password);
+      // Redirect is handled by the useEffect above when user state changes
+    } catch (error) {
+      console.error('Sign in error:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -52,8 +74,12 @@ const SignIn = () => {
               />
             </div>
             
-            <Button type="submit" className="eco-button w-full">
-              Sign In
+            <Button 
+              type="submit" 
+              className="eco-button w-full" 
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Signing in..." : "Sign In"}
             </Button>
           </form>
           

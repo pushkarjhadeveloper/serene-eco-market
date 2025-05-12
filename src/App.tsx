@@ -17,7 +17,10 @@ import NewsletterConfirmation from "./pages/NewsletterConfirmation";
 import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
+import ProfilePage from "./pages/ProfilePage";
 import Chatbot from "./components/Chatbot";
+import { AuthProvider } from "./contexts/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -26,29 +29,40 @@ const App = () => {
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/category/:categoryName" element={<CategoryPage />} />
-              <Route path="/category/:categoryName/:subCategory" element={<CategoryPage />} />
-              <Route path="/product/:productId" element={<ProductDetailsPage />} />
-              <Route path="/signin" element={<SignIn />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="/themes" element={<ThemesPage />} />
-              <Route path="/design-services" element={<RoomVisualizerPage />} />
-              <Route path="/newsletter-confirmation" element={<NewsletterConfirmation />} />
-              <Route path="/cart" element={<CartPage />} />
-              <Route path="/checkout" element={<CheckoutPage />} />
-              <Route path="/about" element={<Index />} />
-              <Route path="/sustainability" element={<Index />} />
-              <Route path="/contact" element={<Index />} />
-              {/* Catch-all route */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-            <Chatbot />
-          </TooltipProvider>
+          <AuthProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/category/:categoryName" element={<CategoryPage />} />
+                <Route path="/category/:categoryName/:subCategory" element={<CategoryPage />} />
+                <Route path="/product/:productId" element={<ProductDetailsPage />} />
+                <Route path="/signin" element={<SignIn />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/themes" element={<ThemesPage />} />
+                <Route path="/design-services" element={<RoomVisualizerPage />} />
+                <Route path="/newsletter-confirmation" element={<NewsletterConfirmation />} />
+                <Route path="/cart" element={<CartPage />} />
+                <Route path="/profile" element={
+                  <ProtectedRoute>
+                    <ProfilePage />
+                  </ProtectedRoute>
+                } />
+                <Route path="/checkout" element={
+                  <ProtectedRoute>
+                    <CheckoutPage />
+                  </ProtectedRoute>
+                } />
+                <Route path="/about" element={<Index />} />
+                <Route path="/sustainability" element={<Index />} />
+                <Route path="/contact" element={<Index />} />
+                {/* Catch-all route */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+              <Chatbot />
+            </TooltipProvider>
+          </AuthProvider>
         </BrowserRouter>
       </QueryClientProvider>
     </Provider>

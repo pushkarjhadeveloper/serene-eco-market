@@ -1,6 +1,6 @@
 
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import Layout from "@/components/Layout";
+import { useAuth } from "@/contexts/AuthContext";
 
 const signUpSchema = z.object({
   firstName: z.string().min(2, "First name must be at least 2 characters"),
@@ -26,6 +27,14 @@ type SignUpValues = z.infer<typeof signUpSchema>;
 const SignUp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { signUp, user } = useAuth();
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    if (user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
   
   const form = useForm<SignUpValues>({
     resolver: zodResolver(signUpSchema),
@@ -41,24 +50,11 @@ const SignUp = () => {
   const onSubmit = async (values: SignUpValues) => {
     setIsLoading(true);
     try {
-      // In a real app, you'd call an API here
-      console.log("Sign up values:", values);
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      toast({
-        title: "Account created!",
-        description: "You have successfully signed up.",
-      });
-      
+      await signUp(values.email, values.password, values.firstName, values.lastName);
       form.reset();
+      // The useEffect above will handle redirection once user state changes
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Something went wrong. Please try again.",
-      });
+      console.error('Sign up error:', error);
     } finally {
       setIsLoading(false);
     }
