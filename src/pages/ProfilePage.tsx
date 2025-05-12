@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
@@ -132,6 +133,16 @@ const ProfilePage = () => {
               {isLoading ? "Saving..." : "Save Changes"}
             </Button>
           </form>
+          
+          {/* Admin section */}
+          <div className="mt-8 pt-6 border-t border-eco-sand/30">
+            <h2 className="font-serif text-xl font-medium text-eco-moss mb-4">Admin Tools</h2>
+            <Link to="/data-migration">
+              <Button variant="outline" className="w-full">
+                Data Migration Tool
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     </Layout>

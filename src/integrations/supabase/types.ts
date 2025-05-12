@@ -15,6 +15,33 @@ export type Database = {
         Update: {}
         Relationships: []
       }
+      categories: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          image: string | null
+          name: string
+          path: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image?: string | null
+          name: string
+          path: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image?: string | null
+          name?: string
+          path?: string
+        }
+        Relationships: []
+      }
       login: {
         Row: {
           created_at: string
@@ -32,6 +59,111 @@ export type Database = {
           login?: string | null
         }
         Relationships: []
+      }
+      product_features: {
+        Row: {
+          created_at: string | null
+          feature: string
+          id: string
+          product_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          feature: string
+          id?: string
+          product_id: string
+        }
+        Update: {
+          created_at?: string | null
+          feature?: string
+          id?: string
+          product_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_features_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_images: {
+        Row: {
+          created_at: string | null
+          id: string
+          image_url: string
+          product_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          image_url: string
+          product_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          image_url?: string
+          product_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_images_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          bulb_type: string | null
+          created_at: string | null
+          delivery_time: string | null
+          description: string | null
+          energy_rating: string | null
+          id: string
+          material: string | null
+          name: string
+          price: number
+          subcategory_id: string
+        }
+        Insert: {
+          bulb_type?: string | null
+          created_at?: string | null
+          delivery_time?: string | null
+          description?: string | null
+          energy_rating?: string | null
+          id?: string
+          material?: string | null
+          name: string
+          price: number
+          subcategory_id: string
+        }
+        Update: {
+          bulb_type?: string | null
+          created_at?: string | null
+          delivery_time?: string | null
+          description?: string | null
+          energy_rating?: string | null
+          id?: string
+          material?: string | null
+          name?: string
+          price?: number
+          subcategory_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_subcategory_id_fkey"
+            columns: ["subcategory_id"]
+            isOneToOne: false
+            referencedRelation: "subcategories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -56,6 +188,44 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      subcategories: {
+        Row: {
+          category_id: string
+          created_at: string | null
+          description: string | null
+          id: string
+          image: string | null
+          name: string
+          path: string
+        }
+        Insert: {
+          category_id: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image?: string | null
+          name: string
+          path: string
+        }
+        Update: {
+          category_id?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image?: string | null
+          name?: string
+          path?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subcategories_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

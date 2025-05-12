@@ -18,6 +18,7 @@ import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
 import ProfilePage from "./pages/ProfilePage";
+import DataMigrationPage from "./pages/DataMigrationPage";
 import Chatbot from "./components/Chatbot";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -44,6 +45,11 @@ const App = () => {
                 <Route path="/design-services" element={<RoomVisualizerPage />} />
                 <Route path="/newsletter-confirmation" element={<NewsletterConfirmation />} />
                 <Route path="/cart" element={<CartPage />} />
+                <Route path="/data-migration" element={
+                  <ProtectedRoute>
+                    <DataMigrationPage />
+                  </ProtectedRoute>
+                } />
                 <Route path="/profile" element={
                   <ProtectedRoute>
                     <ProfilePage />
