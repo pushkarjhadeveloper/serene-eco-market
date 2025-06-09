@@ -56,7 +56,7 @@ const ProfilePage = () => {
         .update({
           first_name: firstName,
           last_name: lastName,
-          updated_at: new Date().toISOString(), // Convert Date to ISO string
+          updated_at: new Date().toISOString(),
         })
         .eq('id', user.id);
       
@@ -80,27 +80,27 @@ const ProfilePage = () => {
 
   return (
     <Layout>
-      <div className="eco-container py-12">
-        <div className="max-w-md mx-auto bg-white p-8 rounded-lg shadow-sm border border-eco-sand/30">
-          <h1 className="font-serif text-3xl font-medium text-eco-moss mb-6">My Profile</h1>
+      <div className="container mx-auto px-4 sm:px-6 md:px-8 py-6 sm:py-8 md:py-12">
+        <div className="max-w-md mx-auto bg-white p-6 sm:p-8 rounded-lg shadow-sm border border-eco-sand/30">
+          <h1 className="font-serif text-2xl sm:text-3xl font-medium text-eco-moss mb-6">My Profile</h1>
           
-          <form onSubmit={updateProfile} className="space-y-6">
+          <form onSubmit={updateProfile} className="space-y-4 sm:space-y-6">
             <div>
-              <label htmlFor="email" className="block text-eco-bark mb-2">
+              <label htmlFor="email" className="block text-eco-bark mb-2 text-sm sm:text-base">
                 Email
               </label>
               <input
                 id="email"
                 type="email"
                 value={user?.email || ''}
-                className="w-full px-4 py-2 rounded-md border border-eco-sand bg-gray-50"
+                className="w-full px-3 sm:px-4 py-2 rounded-md border border-eco-sand bg-gray-50 text-sm sm:text-base"
                 disabled
               />
-              <p className="mt-1 text-sm text-eco-bark/70">Email cannot be changed</p>
+              <p className="mt-1 text-xs sm:text-sm text-eco-bark/70">Email cannot be changed</p>
             </div>
             
             <div>
-              <label htmlFor="firstName" className="block text-eco-bark mb-2">
+              <label htmlFor="firstName" className="block text-eco-bark mb-2 text-sm sm:text-base">
                 First Name
               </label>
               <input
@@ -108,12 +108,12 @@ const ProfilePage = () => {
                 type="text"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
-                className="w-full px-4 py-2 rounded-md border border-eco-sand focus:outline-none focus:ring-2 focus:ring-eco-sage"
+                className="w-full px-3 sm:px-4 py-2 rounded-md border border-eco-sand focus:outline-none focus:ring-2 focus:ring-eco-sage text-sm sm:text-base"
               />
             </div>
             
             <div>
-              <label htmlFor="lastName" className="block text-eco-bark mb-2">
+              <label htmlFor="lastName" className="block text-eco-bark mb-2 text-sm sm:text-base">
                 Last Name
               </label>
               <input
@@ -121,13 +121,13 @@ const ProfilePage = () => {
                 type="text"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
-                className="w-full px-4 py-2 rounded-md border border-eco-sand focus:outline-none focus:ring-2 focus:ring-eco-sage"
+                className="w-full px-3 sm:px-4 py-2 rounded-md border border-eco-sand focus:outline-none focus:ring-2 focus:ring-eco-sage text-sm sm:text-base"
               />
             </div>
             
             <Button 
               type="submit" 
-              className="eco-button w-full"
+              className="eco-button w-full text-sm sm:text-base py-2 sm:py-3"
               disabled={isLoading}
             >
               {isLoading ? "Saving..." : "Save Changes"}
@@ -135,10 +135,10 @@ const ProfilePage = () => {
           </form>
           
           {/* Admin section */}
-          <div className="mt-8 pt-6 border-t border-eco-sand/30">
-            <h2 className="font-serif text-xl font-medium text-eco-moss mb-4">Admin Tools</h2>
+          <div className="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-eco-sand/30">
+            <h2 className="font-serif text-lg sm:text-xl font-medium text-eco-moss mb-3 sm:mb-4">Admin Tools</h2>
             <Link to="/data-migration">
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full text-sm sm:text-base py-2 sm:py-3">
                 Data Migration Tool
               </Button>
             </Link>
