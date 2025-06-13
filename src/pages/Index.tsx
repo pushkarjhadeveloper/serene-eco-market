@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import Hero from "@/components/Hero";
 import Categories from "@/components/Categories";
@@ -12,6 +13,7 @@ import { Button } from "@/components/ui/button";
 
 const Index = () => {
   const [isSubscribeModalOpen, setIsSubscribeModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const openSubscribeModal = () => {
     setIsSubscribeModalOpen(true);
@@ -19,6 +21,10 @@ const Index = () => {
 
   const closeSubscribeModal = () => {
     setIsSubscribeModalOpen(false);
+  };
+
+  const handleShopCollection = () => {
+    navigate('/themes');
   };
 
   return (
@@ -30,9 +36,14 @@ const Index = () => {
             <h3 className="font-serif text-xl font-medium text-eco-moss">Get Personalized Design Ideas</h3>
             <p className="text-eco-bark">Subscribe to receive interior design recommendations tailored to your style.</p>
           </div>
-          <Button onClick={openSubscribeModal} className="eco-button whitespace-nowrap">
-            Subscribe Now
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Button onClick={openSubscribeModal} className="eco-button whitespace-nowrap">
+              Subscribe Now
+            </Button>
+            <Button onClick={handleShopCollection} variant="outline" className="whitespace-nowrap border-eco-sage text-eco-moss hover:bg-eco-sage/10">
+              Shop Collection
+            </Button>
+          </div>
         </div>
       </div>
       <Categories />

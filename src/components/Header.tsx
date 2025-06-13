@@ -24,6 +24,7 @@ const Header = () => {
   // Calculate total items in cart
   const totalCartItems = cartItems.reduce((total, item) => total + item.quantity, 0);
   const categories = [
+    { name: "Themes", path: "/themes" },
     { name: "Furniture", path: "/category/furniture" },
     { name: "Lighting", path: "/category/lighting" },
     { name: "Flooring", path: "/category/flooring" },
