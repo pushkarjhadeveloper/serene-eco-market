@@ -238,11 +238,7 @@ const DesignerSpace = () => {
                 <TabsTrigger 
                   key={key} 
                   value={key}
-                  className="flex items-center gap-2 text-gray-700 data-[state=active]:text-white"
-                  style={{ 
-                    '--tw-data-active-bg': '#03A6A1'
-                  } as React.CSSProperties}
-                  data-[state=active]:bg-[#03A6A1]
+                  className="flex items-center gap-2 text-gray-700 data-[state=active]:text-white data-[state=active]:bg-[#03A6A1]"
                 >
                   {category.icon}
                   <span className="hidden sm:inline">{category.title.split(' ')[0]}</span>
@@ -400,14 +396,7 @@ const DesignerSpace = () => {
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="border-white text-white hover:bg-white"
-                style={{ '--hover-color': '#03A6A1' } as React.CSSProperties}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = '#03A6A1';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = 'white';
-                }}
+                className="border-white text-white hover:bg-white hover:text-[#03A6A1]"
               >
                 Learn More
               </Button>
