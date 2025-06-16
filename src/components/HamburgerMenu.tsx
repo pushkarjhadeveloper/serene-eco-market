@@ -1,6 +1,7 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu, Palette, Zap, Layers, PenTool, Sparkles, Cube, Scan, Brain } from "lucide-react";
+import { Menu, Palette, Zap, Layers, PenTool, Sparkles, Box, Scan, Brain } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
