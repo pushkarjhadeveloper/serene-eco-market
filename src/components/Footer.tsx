@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Instagram, Linkedin } from "lucide-react";
+import { Instagram, Linkedin, PenTool } from "lucide-react";
 import ContactForm from "./ContactForm";
 import { useToast } from "@/hooks/use-toast";
 import { sendSubscriptionEmail, getCompanyEmail } from "@/utils/emailService";
@@ -175,6 +175,17 @@ const Footer = () => {
                 >
                   Contact Us
                 </button>
+              </li>
+              <li>
+                <Link 
+                  to="/designer-space" 
+                  className="flex items-center gap-2 text-eco-bark hover:text-eco-moss transition-colors group"
+                >
+                  <PenTool className="h-4 w-4 text-eco-sage" />
+                  <span className="bg-gradient-to-r from-eco-sage to-eco-moss bg-clip-text text-transparent font-medium">
+                    Designer Space
+                  </span>
+                </Link>
               </li>
             </ul>
           </div>

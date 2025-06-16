@@ -19,6 +19,7 @@ import CheckoutPage from "./pages/CheckoutPage";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
 import ProfilePage from "./pages/ProfilePage";
 import DataMigrationPage from "./pages/DataMigrationPage";
+import DesignerSpace from "./pages/DesignerSpace";
 import Chatbot from "./components/Chatbot";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -43,6 +44,7 @@ const App = () => {
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/themes" element={<ThemesPage />} />
                 <Route path="/design-services" element={<RoomVisualizerPage />} />
+                <Route path="/designer-space" element={<DesignerSpace />} />
                 <Route path="/newsletter-confirmation" element={<NewsletterConfirmation />} />
                 <Route path="/cart" element={<CartPage />} />
                 <Route path="/data-migration" element={
