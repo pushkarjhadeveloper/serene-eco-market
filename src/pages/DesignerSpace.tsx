@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
@@ -5,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { 
   PenTool, 
   Palette, 
@@ -12,17 +14,18 @@ import {
   Box, 
   Brain, 
   Scan, 
-  Sparkles, 
-  Zap, 
-  Monitor,
-  Save,
-  Share2,
-  Download,
+  User, 
   Upload,
-  Eye
+  Download,
+  FolderOpen,
+  Eye,
+  Share2,
+  ExternalLink,
+  FileTransfer
 } from "lucide-react";
 
 const DesignerSpace = () => {
+  const [isRegistered, setIsRegistered] = useState(false);
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
   const [projects, setProjects] = useState<any[]>([]);
 
@@ -32,25 +35,22 @@ const DesignerSpace = () => {
       icon: <Palette className="h-6 w-6" />,
       tools: [
         {
-          name: "SereneEco AI Canvas",
-          description: "AI-powered sustainable design moodboards",
-          originalTool: "Canva AI",
-          features: ["Eco-friendly templates", "Smart color palettes", "Sustainable material suggestions"],
-          color: "from-green-500 to-teal-600"
+          name: "Canva AI",
+          description: "AI-powered design platform with smart suggestions",
+          url: "https://canva.com",
+          features: ["Smart templates", "AI image generation", "Brand kit integration"],
         },
         {
-          name: "EcoBoard Studio",
-          description: "Professional interior moodboard creation",
-          originalTool: "Morpholio Board",
+          name: "Morpholio Board",
+          description: "Professional moodboard creation for designers",
+          url: "https://morpholio.com/board",
           features: ["Real-time collaboration", "Material libraries", "Client presentation mode"],
-          color: "from-blue-500 to-indigo-600"
         },
         {
-          name: "Serene3D Mood",
-          description: "3D moodboard visualization",
-          originalTool: "Foyr Neo",
+          name: "Foyr Neo",
+          description: "3D design and moodboard visualization",
+          url: "https://foyr.com",
           features: ["3D mood scenes", "Virtual staging", "Photorealistic renders"],
-          color: "from-purple-500 to-pink-600"
         }
       ]
     },
@@ -59,18 +59,16 @@ const DesignerSpace = () => {
       icon: <Brain className="h-6 w-6" />,
       tools: [
         {
-          name: "SereneEco AI Advisor",
-          description: "GPT-4o powered design consultant",
-          originalTool: "GPT-4o Design Plugin",
+          name: "GPT-4o Design Plugin",
+          description: "Advanced AI design consultant",
+          url: "https://openai.com/gpt-4",
           features: ["Style recommendations", "Trend analysis", "Quick sketch generation"],
-          color: "from-emerald-500 to-green-600"
         },
         {
-          name: "EcoDesign Claude",
-          description: "Claude-powered sustainable design assistant",
-          originalTool: "Claude Design Plugin",
-          features: ["Eco-material suggestions", "Energy efficiency tips", "Sustainability scoring"],
-          color: "from-teal-500 to-cyan-600"
+          name: "Claude Design Assistant",
+          description: "Claude-powered design guidance",
+          url: "https://claude.ai",
+          features: ["Design critiques", "Creative brainstorming", "Project planning"],
         }
       ]
     },
@@ -79,39 +77,40 @@ const DesignerSpace = () => {
       icon: <Box className="h-6 w-6" />,
       tools: [
         {
-          name: "SereneEco Revit AI",
-          description: "AI-enhanced architectural modeling",
-          originalTool: "Autodesk Revit with AI plugins",
-          features: ["Smart building components", "Energy analysis", "Sustainable design optimization"],
-          color: "from-orange-500 to-red-600"
+          name: "Autodesk Revit (with AI plugins)",
+          description: "Professional BIM software with AI enhancements",
+          url: "https://autodesk.com/revit",
+          features: ["Smart building components", "Energy analysis", "Collaborative design"],
         },
         {
-          name: "EcoSketch Pro",
-          description: "Quick modeling with VR rendering",
-          originalTool: "SketchUp2025 + Enscape",
+          name: "SketchUp 2025 + Enscape",
+          description: "Quick modeling with real-time VR rendering",
+          url: "https://sketchup.com",
           features: ["Real-time VR preview", "Quick prototyping", "Material visualization"],
-          color: "from-violet-500 to-purple-600"
         },
         {
-          name: "Serene Blender AI",
+          name: "Blender (with AI add-ons)",
           description: "Open-source 3D creation suite",
-          originalTool: "Blender with AI add-ons",
+          url: "https://blender.org",
           features: ["Custom interior modeling", "AI-assisted texturing", "Photorealistic rendering"],
-          color: "from-indigo-500 to-blue-600"
         },
         {
-          name: "EcoRender Studio",
+          name: "D5 Render",
           description: "Real-time photorealistic rendering",
-          originalTool: "D5 Render/Lumion 2025",
+          url: "https://d5render.com",
           features: ["Instant visualization", "Weather simulation", "360° panoramas"],
-          color: "from-yellow-500 to-orange-600"
         },
         {
-          name: "Serene Rhino",
+          name: "Lumion 2025",
+          description: "Architectural visualization software",
+          url: "https://lumion.com",
+          features: ["Quick rendering", "Animation tools", "Landscape design"],
+        },
+        {
+          name: "Rhino + Grasshopper",
           description: "Parametric design platform",
-          originalTool: "Rhino + Grasshopper",
+          url: "https://rhino3d.com",
           features: ["Complex geometry", "Parametric modeling", "Algorithm-based design"],
-          color: "from-pink-500 to-rose-600"
         }
       ]
     },
@@ -120,79 +119,125 @@ const DesignerSpace = () => {
       icon: <Scan className="h-6 w-6" />,
       tools: [
         {
-          name: "EcoMeasure Pro",
+          name: "Magicplan",
           description: "AI-powered floor plan creation",
-          originalTool: "Magicplan",
+          url: "https://magicplan.app",
           features: ["Auto room detection", "Furniture placement", "Area calculations"],
-          color: "from-cyan-500 to-blue-600"
         },
         {
-          name: "SereneEco Scan",
+          name: "CubiCasa",
           description: "Property scanning and modeling",
-          originalTool: "CubiCasa",
+          url: "https://cubicasa.com",
           features: ["3D space scanning", "Instant floor plans", "Property analytics"],
-          color: "from-green-500 to-emerald-600"
         }
       ]
     }
   };
 
-  const handleToolLaunch = (toolName: string) => {
+  const handleToolLaunch = (toolName: string, url: string) => {
     setSelectedTool(toolName);
-    // Simulate tool opening - in real implementation, this would launch the actual tool
-    console.log(`Launching ${toolName}`);
+    window.open(url, '_blank');
   };
 
-  const handleSaveProject = () => {
-    const newProject = {
-      id: Date.now(),
-      name: `Project ${projects.length + 1}`,
-      tool: selectedTool,
-      date: new Date().toLocaleDateString(),
-      status: "In Progress"
-    };
-    setProjects([...projects, newProject]);
+  const handleRegistration = () => {
+    setIsRegistered(true);
   };
+
+  const RegistrationDialog = () => (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button className="bg-navy-900 hover:bg-navy-800 text-white">
+          <User className="h-4 w-4 mr-2" />
+          Register as Designer
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="bg-white border-navy-200">
+        <DialogHeader>
+          <DialogTitle className="text-navy-900">Designer Registration</DialogTitle>
+          <DialogDescription className="text-gray-600">
+            Join our professional designer community and access premium features.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="space-y-4 py-4">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-navy-900">Full Name</label>
+            <input className="w-full p-2 border border-gray-300 rounded-md" placeholder="Enter your full name" />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-navy-900">Professional Title</label>
+            <input className="w-full p-2 border border-gray-300 rounded-md" placeholder="e.g., Interior Designer, Architect" />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-navy-900">Years of Experience</label>
+            <select className="w-full p-2 border border-gray-300 rounded-md">
+              <option>Select experience level</option>
+              <option>0-2 years</option>
+              <option>3-5 years</option>
+              <option>6-10 years</option>
+              <option>10+ years</option>
+            </select>
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-navy-900">Specialization</label>
+            <select className="w-full p-2 border border-gray-300 rounded-md">
+              <option>Select specialization</option>
+              <option>Interior Design</option>
+              <option>Architecture</option>
+              <option>3D Visualization</option>
+              <option>Landscape Design</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <Button 
+            onClick={handleRegistration}
+            className="w-full bg-navy-900 hover:bg-navy-800 text-white"
+          >
+            Complete Registration
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
 
   return (
     <Layout>
-      <div className="min-h-screen bg-gradient-to-br from-eco-cream via-white to-eco-sand/20">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
         {/* Hero Section */}
         <div className="eco-container py-16">
           <div className="text-center mb-12">
-            <h1 className="font-serif text-4xl md:text-6xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-eco-sage via-eco-moss to-eco-leaf bg-clip-text text-transparent">
-                Designer Space
-              </span>
+            <h1 className="font-serif text-4xl md:text-6xl font-bold mb-6 text-navy-900">
+              Designer Space
             </h1>
-            <p className="text-xl text-eco-bark max-w-3xl mx-auto mb-8">
+            <p className="text-xl text-gray-700 max-w-3xl mx-auto mb-8">
               Professional design tools and workspace for architects, interior designers, and freelancers. 
-              Create, collaborate, and bring your sustainable design vision to life.
+              Access industry-leading tools and manage your projects seamlessly.
             </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <Badge variant="outline" className="px-4 py-2 text-eco-moss border-eco-sage">
-                <Sparkles className="h-4 w-4 mr-2" />
-                AI-Powered Tools
+            <div className="flex flex-wrap justify-center gap-4 mb-8">
+              <Badge variant="outline" className="px-4 py-2 text-navy-900 border-navy-200">
+                <PenTool className="h-4 w-4 mr-2" />
+                Professional Tools
               </Badge>
-              <Badge variant="outline" className="px-4 py-2 text-eco-moss border-eco-sage">
-                <Save className="h-4 w-4 mr-2" />
-                Cloud Workspace
+              <Badge variant="outline" className="px-4 py-2 text-navy-900 border-navy-200">
+                <FileTransfer className="h-4 w-4 mr-2" />
+                File Transfer
               </Badge>
-              <Badge variant="outline" className="px-4 py-2 text-eco-moss border-eco-sage">
-                <Share2 className="h-4 w-4 mr-2" />
-                Client Collaboration
+              <Badge variant="outline" className="px-4 py-2 text-navy-900 border-navy-200">
+                <FolderOpen className="h-4 w-4 mr-2" />
+                Portfolio Management
               </Badge>
             </div>
+            
+            {!isRegistered && <RegistrationDialog />}
           </div>
 
           {/* Tool Categories */}
           <Tabs defaultValue="moodboard" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 mb-8">
+            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 mb-8 bg-gray-100">
               {Object.entries(toolCategories).map(([key, category]) => (
                 <TabsTrigger 
                   key={key} 
                   value={key}
-                  className="flex items-center gap-2 data-[state=active]:bg-eco-sage/10"
+                  className="flex items-center gap-2 data-[state=active]:bg-navy-900 data-[state=active]:text-white"
                 >
                   {category.icon}
                   <span className="hidden sm:inline">{category.title.split(' ')[0]}</span>
@@ -203,7 +248,7 @@ const DesignerSpace = () => {
             {Object.entries(toolCategories).map(([key, category]) => (
               <TabsContent key={key} value={key} className="space-y-6">
                 <div className="text-center mb-8">
-                  <h2 className="font-serif text-3xl font-bold text-eco-moss mb-4 flex items-center justify-center gap-3">
+                  <h2 className="font-serif text-3xl font-bold text-navy-900 mb-4 flex items-center justify-center gap-3">
                     {category.icon}
                     {category.title}
                   </h2>
@@ -211,34 +256,31 @@ const DesignerSpace = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {category.tools.map((tool, index) => (
-                    <Card key={index} className="hover:shadow-xl transition-all duration-300 border-eco-sand/30 overflow-hidden group">
-                      <div className={`h-2 bg-gradient-to-r ${tool.color}`} />
-                      <CardHeader>
+                    <Card key={index} className="hover:shadow-xl transition-all duration-300 border-gray-200 overflow-hidden group">
+                      <CardHeader className="bg-navy-50">
                         <CardTitle className="flex items-center justify-between">
-                          <span className="text-eco-moss">{tool.name}</span>
-                          <Badge variant="secondary" className="text-xs">
-                            {tool.originalTool}
-                          </Badge>
+                          <span className="text-navy-900">{tool.name}</span>
+                          <ExternalLink className="h-4 w-4 text-gray-500" />
                         </CardTitle>
-                        <CardDescription className="text-eco-bark">
+                        <CardDescription className="text-gray-600">
                           {tool.description}
                         </CardDescription>
                       </CardHeader>
-                      <CardContent>
+                      <CardContent className="pt-4">
                         <ul className="space-y-2 mb-4">
                           {tool.features.map((feature, idx) => (
-                            <li key={idx} className="flex items-center gap-2 text-sm text-eco-bark">
-                              <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${tool.color}`} />
+                            <li key={idx} className="flex items-center gap-2 text-sm text-gray-600">
+                              <div className="w-2 h-2 rounded-full bg-navy-900" />
                               {feature}
                             </li>
                           ))}
                         </ul>
                         <Button 
-                          onClick={() => handleToolLaunch(tool.name)}
-                          className={`w-full bg-gradient-to-r ${tool.color} text-white hover:scale-105 transition-transform`}
+                          onClick={() => handleToolLaunch(tool.name, tool.url)}
+                          className="w-full bg-navy-900 hover:bg-navy-800 text-white"
                         >
-                          <Zap className="h-4 w-4 mr-2" />
-                          Launch Tool
+                          <ExternalLink className="h-4 w-4 mr-2" />
+                          Open Tool
                         </Button>
                       </CardContent>
                     </Card>
@@ -249,95 +291,108 @@ const DesignerSpace = () => {
           </Tabs>
 
           {/* Workspace Section */}
-          <div className="mt-16 bg-white rounded-2xl shadow-lg border border-eco-sand/30 p-8">
-            <h3 className="font-serif text-2xl font-bold text-eco-moss mb-6 flex items-center gap-3">
-              <Monitor className="h-6 w-6" />
-              Your Workspace
+          <div className="mt-16 bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
+            <h3 className="font-serif text-2xl font-bold text-navy-900 mb-6 flex items-center gap-3">
+              <Layers className="h-6 w-6" />
+              Your Professional Workspace
             </h3>
             
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Active Tool */}
-              <Card className="border-eco-sage/30">
+              {/* File Transfer */}
+              <Card className="border-gray-200">
                 <CardHeader>
-                  <CardTitle className="text-eco-moss">Active Tool</CardTitle>
+                  <CardTitle className="text-navy-900 flex items-center gap-2">
+                    <FileTransfer className="h-5 w-5" />
+                    File Transfer Hub
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {selectedTool ? (
-                    <div className="space-y-3">
-                      <p className="font-medium">{selectedTool}</p>
-                      <div className="flex gap-2">
-                        <Button size="sm" onClick={handleSaveProject}>
-                          <Save className="h-4 w-4 mr-1" />
-                          Save
-                        </Button>
-                        <Button size="sm" variant="outline">
-                          <Share2 className="h-4 w-4 mr-1" />
-                          Share
-                        </Button>
-                      </div>
-                    </div>
-                  ) : (
-                    <p className="text-eco-bark">No tool selected</p>
-                  )}
+                  <p className="text-gray-600 mb-4">Import projects from other platforms seamlessly</p>
+                  <div className="space-y-2">
+                    <Button size="sm" variant="outline" className="w-full justify-start border-gray-300">
+                      <Upload className="h-4 w-4 mr-2" />
+                      Import from AutoCAD
+                    </Button>
+                    <Button size="sm" variant="outline" className="w-full justify-start border-gray-300">
+                      <Upload className="h-4 w-4 mr-2" />
+                      Import from SketchUp
+                    </Button>
+                    <Button size="sm" variant="outline" className="w-full justify-start border-gray-300">
+                      <Upload className="h-4 w-4 mr-2" />
+                      Import from Revit
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
 
-              {/* Recent Projects */}
-              <Card className="border-eco-sage/30">
+              {/* Portfolio */}
+              <Card className="border-gray-200">
                 <CardHeader>
-                  <CardTitle className="text-eco-moss">Recent Projects</CardTitle>
+                  <CardTitle className="text-navy-900 flex items-center gap-2">
+                    <FolderOpen className="h-5 w-5" />
+                    Portfolio Manager
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {projects.length > 0 ? (
-                    <div className="space-y-2">
-                      {projects.slice(-3).map((project) => (
-                        <div key={project.id} className="p-2 bg-eco-cream rounded border">
-                          <p className="font-medium text-sm">{project.name}</p>
-                          <p className="text-xs text-eco-bark">{project.date}</p>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-eco-bark">No projects yet</p>
-                  )}
+                  <p className="text-gray-600 mb-4">Showcase your professional work</p>
+                  <div className="space-y-2">
+                    <Button size="sm" variant="outline" className="w-full justify-start border-gray-300">
+                      <Eye className="h-4 w-4 mr-2" />
+                      View Portfolio
+                    </Button>
+                    <Button size="sm" variant="outline" className="w-full justify-start border-gray-300">
+                      <Upload className="h-4 w-4 mr-2" />
+                      Add Project
+                    </Button>
+                    <Button size="sm" variant="outline" className="w-full justify-start border-gray-300">
+                      <Share2 className="h-4 w-4 mr-2" />
+                      Share with Clients
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
 
-              {/* Quick Actions */}
-              <Card className="border-eco-sage/30">
+              {/* Project Management */}
+              <Card className="border-gray-200">
                 <CardHeader>
-                  <CardTitle className="text-eco-moss">Quick Actions</CardTitle>
+                  <CardTitle className="text-navy-900 flex items-center gap-2">
+                    <Layers className="h-5 w-5" />
+                    Project Management
+                  </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-2">
-                  <Button variant="outline" size="sm" className="w-full justify-start">
-                    <Upload className="h-4 w-4 mr-2" />
-                    Import Files
-                  </Button>
-                  <Button variant="outline" size="sm" className="w-full justify-start">
-                    <Download className="h-4 w-4 mr-2" />
-                    Export Project
-                  </Button>
-                  <Button variant="outline" size="sm" className="w-full justify-start">
-                    <Eye className="h-4 w-4 mr-2" />
-                    Preview
-                  </Button>
+                <CardContent>
+                  <p className="text-gray-600 mb-4">Organize and track your projects</p>
+                  <div className="space-y-2">
+                    <Button size="sm" variant="outline" className="w-full justify-start border-gray-300">
+                      <FolderOpen className="h-4 w-4 mr-2" />
+                      Active Projects
+                    </Button>
+                    <Button size="sm" variant="outline" className="w-full justify-start border-gray-300">
+                      <Download className="h-4 w-4 mr-2" />
+                      Export Files
+                    </Button>
+                    <Button size="sm" variant="outline" className="w-full justify-start border-gray-300">
+                      <Share2 className="h-4 w-4 mr-2" />
+                      Client Collaboration
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             </div>
           </div>
 
           {/* CTA Section */}
-          <div className="mt-16 text-center bg-gradient-to-r from-eco-sage to-eco-moss rounded-2xl p-8 text-white">
-            <h3 className="font-serif text-3xl font-bold mb-4">Ready to Transform Your Design Process?</h3>
+          <div className="mt-16 text-center bg-navy-900 rounded-2xl p-8 text-white">
+            <h3 className="font-serif text-3xl font-bold mb-4">Elevate Your Design Practice</h3>
             <p className="text-xl mb-6 opacity-90">
-              Join thousands of designers already using our comprehensive toolkit
+              Access professional tools and streamline your workflow
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" variant="secondary" className="bg-white text-eco-moss hover:bg-gray-100">
-                Start Free Trial
+              <Button size="lg" variant="secondary" className="bg-white text-navy-900 hover:bg-gray-100">
+                Get Premium Access
               </Button>
               <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
-                View Pricing
+                Learn More
               </Button>
             </div>
           </div>
