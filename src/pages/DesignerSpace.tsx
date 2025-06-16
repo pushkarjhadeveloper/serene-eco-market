@@ -76,7 +76,7 @@ const DesignerSpace = () => {
     },
     modeling: {
       title: "3D Modeling & Rendering",
-      icon: <Cube className="h-6 w-6" />,
+      icon: <Box className="h-6 w-6" />,
       tools: [
         {
           name: "SereneEco Revit AI",
