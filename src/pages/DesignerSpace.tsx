@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
@@ -145,29 +146,29 @@ const DesignerSpace = () => {
   const RegistrationDialog = () => (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-navy-900 hover:bg-navy-800 text-white">
+        <Button style={{ backgroundColor: '#03A6A1' }} className="hover:opacity-90 text-white">
           <User className="h-4 w-4 mr-2" />
           Register as Designer
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-white border-navy-200">
+      <DialogContent className="bg-white border-gray-200">
         <DialogHeader>
-          <DialogTitle className="text-navy-900">Designer Registration</DialogTitle>
+          <DialogTitle style={{ color: '#03A6A1' }}>Designer Registration</DialogTitle>
           <DialogDescription className="text-gray-600">
             Join our professional designer community and access premium features.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-navy-900">Full Name</label>
+            <label className="text-sm font-medium" style={{ color: '#03A6A1' }}>Full Name</label>
             <input className="w-full p-2 border border-gray-300 rounded-md" placeholder="Enter your full name" />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-navy-900">Professional Title</label>
+            <label className="text-sm font-medium" style={{ color: '#03A6A1' }}>Professional Title</label>
             <input className="w-full p-2 border border-gray-300 rounded-md" placeholder="e.g., Interior Designer, Architect" />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-navy-900">Years of Experience</label>
+            <label className="text-sm font-medium" style={{ color: '#03A6A1' }}>Years of Experience</label>
             <select className="w-full p-2 border border-gray-300 rounded-md">
               <option>Select experience level</option>
               <option>0-2 years</option>
@@ -177,7 +178,7 @@ const DesignerSpace = () => {
             </select>
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-navy-900">Specialization</label>
+            <label className="text-sm font-medium" style={{ color: '#03A6A1' }}>Specialization</label>
             <select className="w-full p-2 border border-gray-300 rounded-md">
               <option>Select specialization</option>
               <option>Interior Design</option>
@@ -189,7 +190,8 @@ const DesignerSpace = () => {
           </div>
           <Button 
             onClick={handleRegistration}
-            className="w-full bg-navy-900 hover:bg-navy-800 text-white"
+            className="w-full text-white hover:opacity-90"
+            style={{ backgroundColor: '#03A6A1' }}
           >
             Complete Registration
           </Button>
@@ -200,11 +202,11 @@ const DesignerSpace = () => {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
+      <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #FFE3BB 0%, #ffffff 100%)' }}>
         {/* Hero Section */}
         <div className="eco-container py-16">
           <div className="text-center mb-12">
-            <h1 className="font-serif text-4xl md:text-6xl font-bold mb-6 text-navy-900">
+            <h1 className="font-serif text-4xl md:text-6xl font-bold mb-6" style={{ color: '#03A6A1' }}>
               Designer Space
             </h1>
             <p className="text-xl text-gray-700 max-w-3xl mx-auto mb-8">
@@ -212,15 +214,15 @@ const DesignerSpace = () => {
               Access industry-leading tools and manage your projects seamlessly.
             </p>
             <div className="flex flex-wrap justify-center gap-4 mb-8">
-              <Badge variant="outline" className="px-4 py-2 text-navy-900 border-navy-200">
+              <Badge variant="outline" className="px-4 py-2 border-2" style={{ color: '#03A6A1', borderColor: '#03A6A1' }}>
                 <PenTool className="h-4 w-4 mr-2" />
                 Professional Tools
               </Badge>
-              <Badge variant="outline" className="px-4 py-2 text-navy-900 border-navy-200">
+              <Badge variant="outline" className="px-4 py-2 border-2" style={{ color: '#FF4F0F', borderColor: '#FF4F0F' }}>
                 <ArrowUpDown className="h-4 w-4 mr-2" />
                 File Transfer
               </Badge>
-              <Badge variant="outline" className="px-4 py-2 text-navy-900 border-navy-200">
+              <Badge variant="outline" className="px-4 py-2 border-2" style={{ color: '#FFA673', borderColor: '#FFA673' }}>
                 <FolderOpen className="h-4 w-4 mr-2" />
                 Portfolio Management
               </Badge>
@@ -231,12 +233,16 @@ const DesignerSpace = () => {
 
           {/* Tool Categories */}
           <Tabs defaultValue="moodboard" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 mb-8 bg-gray-100">
+            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 mb-8" style={{ backgroundColor: '#FFE3BB' }}>
               {Object.entries(toolCategories).map(([key, category]) => (
                 <TabsTrigger 
                   key={key} 
                   value={key}
-                  className="flex items-center gap-2 data-[state=active]:bg-navy-900 data-[state=active]:text-white"
+                  className="flex items-center gap-2 text-gray-700 data-[state=active]:text-white"
+                  style={{ 
+                    '--tw-data-active-bg': '#03A6A1'
+                  } as React.CSSProperties}
+                  data-[state=active]:bg-[#03A6A1]
                 >
                   {category.icon}
                   <span className="hidden sm:inline">{category.title.split(' ')[0]}</span>
@@ -247,7 +253,7 @@ const DesignerSpace = () => {
             {Object.entries(toolCategories).map(([key, category]) => (
               <TabsContent key={key} value={key} className="space-y-6">
                 <div className="text-center mb-8">
-                  <h2 className="font-serif text-3xl font-bold text-navy-900 mb-4 flex items-center justify-center gap-3">
+                  <h2 className="font-serif text-3xl font-bold mb-4 flex items-center justify-center gap-3" style={{ color: '#03A6A1' }}>
                     {category.icon}
                     {category.title}
                   </h2>
@@ -256,9 +262,9 @@ const DesignerSpace = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {category.tools.map((tool, index) => (
                     <Card key={index} className="hover:shadow-xl transition-all duration-300 border-gray-200 overflow-hidden group">
-                      <CardHeader className="bg-navy-50">
+                      <CardHeader style={{ backgroundColor: '#FFE3BB' }}>
                         <CardTitle className="flex items-center justify-between">
-                          <span className="text-navy-900">{tool.name}</span>
+                          <span style={{ color: '#03A6A1' }}>{tool.name}</span>
                           <ExternalLink className="h-4 w-4 text-gray-500" />
                         </CardTitle>
                         <CardDescription className="text-gray-600">
@@ -269,14 +275,15 @@ const DesignerSpace = () => {
                         <ul className="space-y-2 mb-4">
                           {tool.features.map((feature, idx) => (
                             <li key={idx} className="flex items-center gap-2 text-sm text-gray-600">
-                              <div className="w-2 h-2 rounded-full bg-navy-900" />
+                              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#FF4F0F' }} />
                               {feature}
                             </li>
                           ))}
                         </ul>
                         <Button 
                           onClick={() => handleToolLaunch(tool.name, tool.url)}
-                          className="w-full bg-navy-900 hover:bg-navy-800 text-white"
+                          className="w-full text-white hover:opacity-90"
+                          style={{ backgroundColor: '#03A6A1' }}
                         >
                           <ExternalLink className="h-4 w-4 mr-2" />
                           Open Tool
@@ -291,7 +298,7 @@ const DesignerSpace = () => {
 
           {/* Workspace Section */}
           <div className="mt-16 bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
-            <h3 className="font-serif text-2xl font-bold text-navy-900 mb-6 flex items-center gap-3">
+            <h3 className="font-serif text-2xl font-bold mb-6 flex items-center gap-3" style={{ color: '#03A6A1' }}>
               <Layers className="h-6 w-6" />
               Your Professional Workspace
             </h3>
@@ -300,7 +307,7 @@ const DesignerSpace = () => {
               {/* File Transfer */}
               <Card className="border-gray-200">
                 <CardHeader>
-                  <CardTitle className="text-navy-900 flex items-center gap-2">
+                  <CardTitle className="flex items-center gap-2" style={{ color: '#03A6A1' }}>
                     <ArrowUpDown className="h-5 w-5" />
                     File Transfer Hub
                   </CardTitle>
@@ -327,7 +334,7 @@ const DesignerSpace = () => {
               {/* Portfolio */}
               <Card className="border-gray-200">
                 <CardHeader>
-                  <CardTitle className="text-navy-900 flex items-center gap-2">
+                  <CardTitle className="flex items-center gap-2" style={{ color: '#03A6A1' }}>
                     <FolderOpen className="h-5 w-5" />
                     Portfolio Manager
                   </CardTitle>
@@ -354,7 +361,7 @@ const DesignerSpace = () => {
               {/* Project Management */}
               <Card className="border-gray-200">
                 <CardHeader>
-                  <CardTitle className="text-navy-900 flex items-center gap-2">
+                  <CardTitle className="flex items-center gap-2" style={{ color: '#03A6A1' }}>
                     <Layers className="h-5 w-5" />
                     Project Management
                   </CardTitle>
@@ -381,16 +388,27 @@ const DesignerSpace = () => {
           </div>
 
           {/* CTA Section */}
-          <div className="mt-16 text-center bg-navy-900 rounded-2xl p-8 text-white">
+          <div className="mt-16 text-center rounded-2xl p-8 text-white" style={{ backgroundColor: '#03A6A1' }}>
             <h3 className="font-serif text-3xl font-bold mb-4">Elevate Your Design Practice</h3>
             <p className="text-xl mb-6 opacity-90">
               Access professional tools and streamline your workflow
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" variant="secondary" className="bg-white text-navy-900 hover:bg-gray-100">
+              <Button size="lg" className="bg-white hover:bg-gray-100" style={{ color: '#03A6A1' }}>
                 Get Premium Access
               </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="border-white text-white hover:bg-white"
+                style={{ '--hover-color': '#03A6A1' } as React.CSSProperties}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#03A6A1';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'white';
+                }}
+              >
                 Learn More
               </Button>
             </div>
