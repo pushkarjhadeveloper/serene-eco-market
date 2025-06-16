@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
@@ -21,7 +20,7 @@ import {
   Eye,
   Share2,
   ExternalLink,
-  FileTransfer
+  ArrowUpDown
 } from "lucide-react";
 
 const DesignerSpace = () => {
@@ -218,7 +217,7 @@ const DesignerSpace = () => {
                 Professional Tools
               </Badge>
               <Badge variant="outline" className="px-4 py-2 text-navy-900 border-navy-200">
-                <FileTransfer className="h-4 w-4 mr-2" />
+                <ArrowUpDown className="h-4 w-4 mr-2" />
                 File Transfer
               </Badge>
               <Badge variant="outline" className="px-4 py-2 text-navy-900 border-navy-200">
@@ -302,7 +301,7 @@ const DesignerSpace = () => {
               <Card className="border-gray-200">
                 <CardHeader>
                   <CardTitle className="text-navy-900 flex items-center gap-2">
-                    <FileTransfer className="h-5 w-5" />
+                    <ArrowUpDown className="h-5 w-5" />
                     File Transfer Hub
                   </CardTitle>
                 </CardHeader>
