@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu } from "lucide-react";
+import { Menu, Palette, Zap, Layers, PenTool, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -15,20 +15,37 @@ type MenuItemProps = {
   path: string;
   isActive?: boolean;
   onClick: () => void;
+  external?: boolean;
 };
 
-const MenuItem = ({ name, path, isActive = false, onClick }: MenuItemProps) => (
-  <Link 
-    to={path} 
-    className={`text-eco-bark hover:text-eco-moss transition-colors py-3 px-4 rounded-lg block
-    ${isActive 
-      ? 'bg-eco-sage/10 border border-eco-sage/30 text-eco-moss' 
-      : 'hover:bg-eco-sand/10 border border-transparent hover:border-eco-sand/30'
-    }`}
-    onClick={onClick}
-  >
-    {name}
-  </Link>
+const MenuItem = ({ name, path, isActive = false, onClick, external = false }: MenuItemProps) => (
+  external ? (
+    <a 
+      href={path}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`text-eco-bark hover:text-eco-moss transition-colors py-3 px-4 rounded-lg block
+      ${isActive 
+        ? 'bg-eco-sage/10 border border-eco-sage/30 text-eco-moss' 
+        : 'hover:bg-eco-sand/10 border border-transparent hover:border-eco-sand/30'
+      }`}
+      onClick={onClick}
+    >
+      {name}
+    </a>
+  ) : (
+    <Link 
+      to={path} 
+      className={`text-eco-bark hover:text-eco-moss transition-colors py-3 px-4 rounded-lg block
+      ${isActive 
+        ? 'bg-eco-sage/10 border border-eco-sage/30 text-eco-moss' 
+        : 'hover:bg-eco-sand/10 border border-transparent hover:border-eco-sand/30'
+      }`}
+      onClick={onClick}
+    >
+      {name}
+    </Link>
+  )
 );
 
 const HamburgerMenu = () => {
@@ -75,6 +92,45 @@ const HamburgerMenu = () => {
     path: "/contact"
   }];
 
+  const designerTools = [
+    {
+      name: "Figma (UI/UX Design)",
+      description: "Free collaborative design platform",
+      path: "https://figma.com",
+      icon: <PenTool className="h-4 w-4" />
+    },
+    {
+      name: "Canva Pro (Graphics)",
+      description: "AI-powered design suite",
+      path: "https://canva.com",
+      icon: <Palette className="h-4 w-4" />
+    },
+    {
+      name: "Spline (3D Design)",
+      description: "Browser-based 3D modeling",
+      path: "https://spline.design",
+      icon: <Layers className="h-4 w-4" />
+    },
+    {
+      name: "Adobe Creative Cloud",
+      description: "Industry standard design tools",
+      path: "https://adobe.com/creativecloud",
+      icon: <Sparkles className="h-4 w-4" />
+    },
+    {
+      name: "Framer (Web Design)",
+      description: "Advanced web design & prototyping",
+      path: "https://framer.com",
+      icon: <Zap className="h-4 w-4" />
+    },
+    {
+      name: "Notion (Project Management)",
+      description: "All-in-one workspace for designers",
+      path: "https://notion.so",
+      icon: <Menu className="h-4 w-4" />
+    }
+  ];
+
   const handleLogout = async () => {
     await signOut();
     setOpen(false);
@@ -118,6 +174,41 @@ const HamburgerMenu = () => {
                     onClick={() => setOpen(false)}
                   />
                 ))}
+              </div>
+            </div>
+
+            <div className="border-t border-eco-sand/30 pt-4">
+              <h3 className="font-medium text-eco-moss mb-3 flex items-center gap-2">
+                <PenTool className="h-4 w-4" />
+                Designer Tools 2025
+              </h3>
+              <div className="flex flex-col space-y-2">
+                {designerTools.map(tool => (
+                  <div key={tool.name} className="group">
+                    <a
+                      href={tool.path}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-eco-bark hover:text-eco-moss transition-colors py-3 px-4 rounded-lg block hover:bg-eco-sand/10 border border-transparent hover:border-eco-sand/30"
+                      onClick={() => setOpen(false)}
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className="text-eco-sage mt-0.5">
+                          {tool.icon}
+                        </div>
+                        <div>
+                          <div className="font-medium text-sm">{tool.name}</div>
+                          <div className="text-xs text-eco-bark/70 mt-1">{tool.description}</div>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-3 p-3 bg-eco-sage/5 rounded-lg border border-eco-sage/20">
+                <p className="text-xs text-eco-bark/80">
+                  💡 Pro Tip: Most tools offer free student plans or trials perfect for freelancers getting started!
+                </p>
               </div>
             </div>
             
