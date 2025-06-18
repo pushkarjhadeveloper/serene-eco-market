@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
@@ -21,27 +22,58 @@ import {
   Share2,
   ExternalLink,
   ArrowUpDown,
-  Clock
+  Clock,
+  Plus,
+  Grid3X3,
+  MessageSquare,
+  Users,
+  Award,
+  Bookmark,
+  Settings,
+  Search,
+  Filter,
+  Heart,
+  Star,
+  Camera,
+  Image,
+  FileText,
+  Calendar,
+  TrendingUp
 } from "lucide-react";
 
 interface Project {
   id: string;
   name: string;
-  tool: string;
-  url: string;
+  type: string;
+  status: 'in-progress' | 'completed' | 'draft';
+  images: string[];
+  tags: string[];
   timestamp: Date;
+  likes: number;
+  views: number;
+  description: string;
+}
+
+interface Designer {
+  id: string;
+  name: string;
+  avatar: string;
+  specialization: string;
+  location: string;
+  followers: number;
+  projects: number;
+  verified: boolean;
 }
 
 const DesignerSpace = () => {
   const [isRegistered, setIsRegistered] = useState(false);
-  const [selectedTool, setSelectedTool] = useState<string | null>(null);
-  const [recentProjects, setRecentProjects] = useState<Project[]>([]);
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [projects, setProjects] = useState<Project[]>([]);
   const [isVisible, setIsVisible] = useState({
     hero: false,
-    badges: false,
-    tools: false,
-    workspace: false,
-    cta: false
+    features: false,
+    community: false,
+    portfolio: false
   });
   const [scrollY, setScrollY] = useState(0);
 
@@ -66,7 +98,6 @@ const DesignerSpace = () => {
       { threshold: 0.1 }
     );
 
-    // Observe sections with a slight delay for staggered animation
     setTimeout(() => setIsVisible(prev => ({ ...prev, hero: true })), 100);
     
     const sections = document.querySelectorAll('[data-section]');
@@ -75,198 +106,66 @@ const DesignerSpace = () => {
     return () => observer.disconnect();
   }, []);
 
-  const toolCategories = {
-    moodboard: {
-      title: "AI-Based Moodboard Generators",
-      icon: <Palette className="h-6 w-6" />,
-      tools: [
-        {
-          name: "Canva AI",
-          description: "AI-powered design platform with smart suggestions",
-          url: "https://canva.com",
-          features: ["Smart templates", "AI image generation", "Brand kit integration"],
-        },
-        {
-          name: "Morpholio Board",
-          description: "Professional moodboard creation for designers",
-          url: "https://morpholio.com/board",
-          features: ["Real-time collaboration", "Material libraries", "Client presentation mode"],
-        },
-        {
-          name: "Foyr Neo",
-          description: "3D design and moodboard visualization",
-          url: "https://foyr.com",
-          features: ["3D mood scenes", "Virtual staging", "Photorealistic renders"],
-        }
-      ]
+  const mockProjects: Project[] = [
+    {
+      id: '1',
+      name: 'Modern Living Room Redesign',
+      type: 'Residential',
+      status: 'completed',
+      images: ['/placeholder.svg', '/placeholder.svg'],
+      tags: ['Modern', 'Minimalist', 'Living Room'],
+      timestamp: new Date('2024-01-15'),
+      likes: 234,
+      views: 1200,
+      description: 'Complete transformation of a traditional living space into a modern, minimalist haven.'
     },
-    assistant: {
-      title: "Virtual Design Advisors",
-      icon: <Brain className="h-6 w-6" />,
-      tools: [
-        {
-          name: "GPT-4o Design Plugin",
-          description: "Advanced AI design consultant",
-          url: "https://openai.com/gpt-4",
-          features: ["Style recommendations", "Trend analysis", "Quick sketch generation"],
-        },
-        {
-          name: "Claude Design Assistant",
-          description: "Claude-powered design guidance",
-          url: "https://claude.ai",
-          features: ["Design critiques", "Creative brainstorming", "Project planning"],
-        }
-      ]
-    },
-    modeling: {
-      title: "3D Modeling & Rendering",
-      icon: <Box className="h-6 w-6" />,
-      tools: [
-        {
-          name: "Autodesk Revit (with AI plugins)",
-          description: "Professional BIM software with AI enhancements",
-          url: "https://autodesk.com/revit",
-          features: ["Smart building components", "Energy analysis", "Collaborative design"],
-        },
-        {
-          name: "SketchUp 2025 + Enscape",
-          description: "Quick modeling with real-time VR rendering",
-          url: "https://sketchup.com",
-          features: ["Real-time VR preview", "Quick prototyping", "Material visualization"],
-        },
-        {
-          name: "Blender (with AI add-ons)",
-          description: "Open-source 3D creation suite",
-          url: "https://blender.org",
-          features: ["Custom interior modeling", "AI-assisted texturing", "Photorealistic rendering"],
-        },
-        {
-          name: "D5 Render",
-          description: "Real-time photorealistic rendering",
-          url: "https://d5render.com",
-          features: ["Instant visualization", "Weather simulation", "360° panoramas"],
-        },
-        {
-          name: "Lumion 2025",
-          description: "Architectural visualization software",
-          url: "https://lumion.com",
-          features: ["Quick rendering", "Animation tools", "Landscape design"],
-        },
-        {
-          name: "Rhino + Grasshopper",
-          description: "Parametric design platform",
-          url: "https://rhino3d.com",
-          features: ["Complex geometry", "Parametric modeling", "Algorithm-based design"],
-        }
-      ]
-    },
-    measurement: {
-      title: "Measurement & Scanning Tools",
-      icon: <Scan className="h-6 w-6" />,
-      tools: [
-        {
-          name: "Magicplan",
-          description: "AI-powered floor plan creation",
-          url: "https://magicplan.app",
-          features: ["Auto room detection", "Furniture placement", "Area calculations"],
-        },
-        {
-          name: "CubiCasa",
-          description: "Property scanning and modeling",
-          url: "https://cubicasa.com",
-          features: ["3D space scanning", "Instant floor plans", "Property analytics"],
-        }
-      ]
+    {
+      id: '2',
+      name: 'Office Space Innovation',
+      type: 'Commercial',
+      status: 'in-progress',
+      images: ['/placeholder.svg'],
+      tags: ['Office', 'Productivity', 'Workspace'],
+      timestamp: new Date('2024-01-20'),
+      likes: 89,
+      views: 456,
+      description: 'Creating an innovative workspace that boosts creativity and collaboration.'
     }
-  };
+  ];
 
-  const handleToolLaunch = (toolName: string, url: string) => {
-    setSelectedTool(toolName);
-    
-    // Track the project
-    const newProject: Project = {
-      id: Date.now().toString(),
-      name: `${toolName} Project`,
-      tool: toolName,
-      url: url,
-      timestamp: new Date()
-    };
-    
-    setRecentProjects(prev => [newProject, ...prev.slice(0, 4)]); // Keep only 5 recent projects
-    window.open(url, '_blank');
-  };
+  const mockCommunityPosts = [
+    { id: 1, title: 'Weekly Design Challenge: Sustainable Interiors', replies: 45, author: 'Sarah Chen' },
+    { id: 2, title: 'Critique My Kitchen Design', replies: 23, author: 'Mike Johnson' },
+    { id: 3, title: 'Color Psychology in Interior Design', replies: 78, author: 'Emma Davis' }
+  ];
 
-  const handleRegistration = () => {
-    setIsRegistered(true);
-  };
-
-  const RegistrationDialog = () => (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button 
-          className="bg-eco-sage hover:bg-eco-moss text-white transform hover:scale-105 transition-all duration-300 relative overflow-hidden group"
-          style={{
-            transform: `translateY(${scrollY * 0.1}px)`,
-            transition: 'transform 0.3s ease-out'
-          }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-eco-moss to-eco-sage opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-          <User className="h-4 w-4 mr-2 relative z-10" />
-          <span className="relative z-10">Register as Designer</span>
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="bg-eco-cream border-eco-sand">
-        <DialogHeader>
-          <DialogTitle className="text-eco-moss">Designer Registration</DialogTitle>
-          <DialogDescription className="text-eco-bark">
-            Join our professional designer community and access premium features.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="space-y-4 py-4">
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-eco-moss">Full Name</label>
-            <input className="w-full p-2 border border-eco-sand rounded-md bg-white focus:border-eco-sage focus:ring-1 focus:ring-eco-sage transition-colors" placeholder="Enter your full name" />
-          </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-eco-moss">Professional Title</label>
-            <input className="w-full p-2 border border-eco-sand rounded-md bg-white focus:border-eco-sage focus:ring-1 focus:ring-eco-sage transition-colors" placeholder="e.g., Interior Designer, Architect" />
-          </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-eco-moss">Years of Experience</label>
-            <select className="w-full p-2 border border-eco-sand rounded-md bg-white focus:border-eco-sage focus:ring-1 focus:ring-eco-sage transition-colors">
-              <option>Select experience level</option>
-              <option>0-2 years</option>
-              <option>3-5 years</option>
-              <option>6-10 years</option>
-              <option>10+ years</option>
-            </select>
-          </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-eco-moss">Specialization</label>
-            <select className="w-full p-2 border border-eco-sand rounded-md bg-white focus:border-eco-sage focus:ring-1 focus:ring-eco-sage transition-colors">
-              <option>Select specialization</option>
-              <option>Interior Design</option>
-              <option>Architecture</option>
-              <option>3D Visualization</option>
-              <option>Landscape Design</option>
-              <option>Other</option>
-            </select>
-          </div>
-          <Button 
-            onClick={handleRegistration}
-            className="w-full bg-eco-sage hover:bg-eco-moss text-white transition-colors duration-300"
-          >
-            Complete Registration
-          </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
+  const featuredDesigners: Designer[] = [
+    {
+      id: '1',
+      name: 'Alexandra Rodriguez',
+      avatar: '/placeholder.svg',
+      specialization: 'Interior Design',
+      location: 'New York, NY',
+      followers: 15600,
+      projects: 87,
+      verified: true
+    },
+    {
+      id: '2',
+      name: 'James Mitchell',
+      avatar: '/placeholder.svg',
+      specialization: 'Architecture',
+      location: 'Los Angeles, CA',
+      followers: 12300,
+      projects: 64,
+      verified: true
+    }
+  ];
 
   const rotatingTexts = [
-    "Professional Tools",
-    "Creative Solutions", 
-    "Design Excellence"
+    "Professional Studio",
+    "Creative Portfolio", 
+    "Design Community"
   ];
 
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
@@ -278,284 +177,442 @@ const DesignerSpace = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const RegistrationDialog = () => (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button 
+          className="bg-eco-sage hover:bg-eco-moss text-white transform hover:scale-105 transition-all duration-300 relative overflow-hidden group"
+          style={{
+            transform: `translateY(${scrollY * -0.1}px)`,
+            transition: 'transform 0.3s ease-out'
+          }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-eco-moss to-eco-sage opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <User className="h-4 w-4 mr-2 relative z-10" />
+          <span className="relative z-10">Join Designer Community</span>
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="bg-eco-cream border-eco-sand max-w-md">
+        <DialogHeader>
+          <DialogTitle className="text-eco-moss">Create Your Designer Profile</DialogTitle>
+          <DialogDescription className="text-eco-bark">
+            Join thousands of designers showcasing their work and connecting with clients.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="space-y-4 py-4">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-eco-moss">Display Name</label>
+            <input className="w-full p-3 border border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all" placeholder="Your professional name" />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-eco-moss">Specialization</label>
+            <select className="w-full p-3 border border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all">
+              <option>Interior Design</option>
+              <option>Architecture</option>
+              <option>3D Visualization</option>
+              <option>Landscape Design</option>
+              <option>Product Design</option>
+            </select>
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-eco-moss">Location</label>
+            <input className="w-full p-3 border border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all" placeholder="City, State/Country" />
+          </div>
+          <Button 
+            onClick={() => setIsRegistered(true)}
+            className="w-full bg-eco-sage hover:bg-eco-moss text-white transition-colors duration-300 p-3 rounded-lg"
+          >
+            Create Profile
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+
   return (
     <Layout>
       <div className="min-h-screen bg-eco-cream">
-        {/* Hero Section with Enhanced Animations */}
-        <div className="eco-container py-16">
-          <div className={`text-center mb-12 transition-all duration-1000 ${isVisible.hero ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            {/* Shiny Gradient Text */}
-            <h1 className="font-serif text-4xl md:text-6xl font-bold mb-6 relative">
-              <span 
-                className="bg-gradient-to-r from-eco-sage via-eco-moss to-eco-leaf bg-clip-text text-transparent animate-pulse relative shine-text"
-              >
-                Designer Space
+        {/* Hero Section */}
+        <div className="eco-container py-20">
+          <div className={`text-center mb-16 transition-all duration-1000 ${isVisible.hero ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <h1 className="font-serif text-5xl md:text-7xl font-bold mb-8 relative">
+              <span className="bg-gradient-to-r from-eco-sage via-eco-moss to-eco-leaf bg-clip-text text-transparent shine-text">
+                Designer Studio
               </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-eco-sage via-eco-moss to-eco-leaf bg-clip-text text-transparent opacity-50 blur-sm -z-10"></div>
             </h1>
             
-            {/* Variable Proximity Text */}
-            <div className="space-y-4 max-w-3xl mx-auto mb-8">
-              <p className="text-xl text-eco-moss transition-all duration-700 hover:scale-105 hover:text-eco-moss/80">
-                Professional design tools and workspace for architects,
+            <div className="space-y-6 max-w-4xl mx-auto mb-10">
+              <p className="text-2xl text-eco-moss transition-all duration-700 hover:scale-105">
+                Where creativity meets opportunity.
               </p>
-              <p className="text-lg text-eco-bark transition-all duration-700 delay-100 hover:scale-105 hover:text-eco-bark/80">
-                interior designers, and freelancers.
+              <p className="text-xl text-eco-bark transition-all duration-700 delay-100">
+                Showcase your work, connect with clients, and grow your design practice.
               </p>
-              <p className="text-base text-eco-stone transition-all duration-700 delay-200 hover:scale-105 hover:text-eco-stone/80">
-                Access industry-leading tools and manage your projects seamlessly.
+              <p className="text-lg text-eco-stone transition-all duration-700 delay-200">
+                Join a community of professional designers and architects.
               </p>
             </div>
-            
-            {/* Rotating Text Badges */}
-            <div 
-              className={`flex flex-wrap justify-center gap-4 mb-8 transition-all duration-1000 delay-300 ${isVisible.badges ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-              data-section="badges"
-            >
-              <Badge variant="outline" className="px-4 py-2 border-2 border-eco-sage text-eco-sage hover:scale-105 transition-transform">
-                <PenTool className="h-4 w-4 mr-2" />
+
+            <div className="flex flex-wrap justify-center gap-4 mb-12">
+              <Badge variant="outline" className="px-6 py-3 border-2 border-eco-sage text-eco-sage hover:scale-105 transition-transform text-lg">
+                <PenTool className="h-5 w-5 mr-2" />
                 <span className="inline-block transition-all duration-500">
                   {rotatingTexts[currentTextIndex]}
                 </span>
               </Badge>
-              <Badge variant="outline" className="px-4 py-2 border-2 border-eco-moss text-eco-moss hover:scale-105 transition-transform">
-                <ArrowUpDown className="h-4 w-4 mr-2" />
-                <span className="inline-block animate-pulse">File Transfer</span>
+              <Badge variant="outline" className="px-6 py-3 border-2 border-eco-moss text-eco-moss hover:scale-105 transition-transform text-lg">
+                <Users className="h-5 w-5 mr-2" />
+                <span className="inline-block animate-pulse">15K+ Designers</span>
               </Badge>
-              <Badge variant="outline" className="px-4 py-2 border-2 border-eco-leaf text-eco-leaf hover:scale-105 transition-transform">
-                <FolderOpen className="h-4 w-4 mr-2" />
-                <span className="inline-block animate-bounce">Portfolio Management</span>
+              <Badge variant="outline" className="px-6 py-3 border-2 border-eco-leaf text-eco-leaf hover:scale-105 transition-transform text-lg">
+                <Award className="h-5 w-5 mr-2" />
+                <span className="inline-block animate-bounce">Featured Work</span>
               </Badge>
             </div>
             
             {!isRegistered && <RegistrationDialog />}
           </div>
 
-          {/* Recent Projects Section */}
-          {recentProjects.length > 0 && (
-            <div className="mb-16 bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-eco-sand">
-              <h3 className="font-serif text-2xl font-bold mb-4 flex items-center gap-3 text-eco-moss">
-                <Clock className="h-6 w-6 animate-spin" />
-                Recent Work
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {recentProjects.map((project, index) => (
-                  <Card 
-                    key={project.id} 
-                    className="hover:shadow-md transition-all duration-300 hover:scale-105 border-eco-sand bg-eco-cream"
-                    style={{
-                      animationDelay: `${index * 0.1}s`,
-                      animation: 'fade-in 0.6s ease-out forwards'
-                    }}
-                  >
-                    <CardContent className="p-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="font-medium text-eco-moss">{project.name}</h4>
-                          <p className="text-sm text-eco-bark">{project.tool}</p>
-                          <p className="text-xs text-eco-stone">{project.timestamp.toLocaleDateString()}</p>
-                        </div>
-                        <Button 
-                          size="sm" 
-                          variant="outline"
-                          onClick={() => window.open(project.url, '_blank')}
-                          className="border-eco-sage text-eco-sage hover:bg-eco-sage hover:text-white transition-colors"
-                        >
-                          <ExternalLink className="h-3 w-3" />
-                        </Button>
+          {/* Main Platform Features */}
+          <div 
+            className={`transition-all duration-1000 delay-300 ${isVisible.features ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+            data-section="features"
+          >
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 mb-12 bg-white/90 backdrop-blur-sm shadow-lg border border-eco-sand p-2">
+                <TabsTrigger 
+                  value="dashboard"
+                  className="flex items-center gap-2 text-eco-bark data-[state=active]:text-white data-[state=active]:bg-eco-sage hover:scale-105 transition-all duration-300 p-3"
+                >
+                  <Grid3X3 className="h-5 w-5 animate-pulse" />
+                  <span className="hidden sm:inline">Dashboard</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="portfolio"
+                  className="flex items-center gap-2 text-eco-bark data-[state=active]:text-white data-[state=active]:bg-eco-sage hover:scale-105 transition-all duration-300 p-3"
+                >
+                  <FolderOpen className="h-5 w-5 animate-bounce" />
+                  <span className="hidden sm:inline">Portfolio</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="community"
+                  className="flex items-center gap-2 text-eco-bark data-[state=active]:text-white data-[state=active]:bg-eco-sage hover:scale-105 transition-all duration-300 p-3"
+                >
+                  <MessageSquare className="h-5 w-5 animate-spin" />
+                  <span className="hidden sm:inline">Community</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="tools"
+                  className="flex items-center gap-2 text-eco-bark data-[state=active]:text-white data-[state=active]:bg-eco-sage hover:scale-105 transition-all duration-300 p-3"
+                >
+                  <Box className="h-5 w-5 animate-pulse" />
+                  <span className="hidden sm:inline">Tools</span>
+                </TabsTrigger>
+              </TabsList>
+
+              {/* Dashboard Tab */}
+              <TabsContent value="dashboard" className="space-y-8">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                  {/* Project Overview */}
+                  <Card className="lg:col-span-2 border-eco-sand bg-white/90 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+                    <CardHeader className="flex flex-row items-center justify-between">
+                      <div>
+                        <CardTitle className="text-eco-moss flex items-center gap-2">
+                          <FolderOpen className="h-6 w-6" />
+                          Your Projects
+                        </CardTitle>
+                        <CardDescription className="text-eco-bark">Manage and track your design projects</CardDescription>
+                      </div>
+                      <Button className="bg-eco-sage hover:bg-eco-moss text-white">
+                        <Plus className="h-4 w-4 mr-2" />
+                        New Project
+                      </Button>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {mockProjects.map((project, index) => (
+                          <Card key={project.id} className="border-eco-sand hover:shadow-md transition-all duration-300 hover:scale-105">
+                            <CardContent className="p-4">
+                              <div className="aspect-video bg-eco-cream rounded-lg mb-3 relative overflow-hidden group">
+                                <div className="absolute inset-0 bg-gradient-to-br from-eco-sage/20 to-eco-moss/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                <div className="absolute bottom-2 right-2 bg-white/90 px-2 py-1 rounded text-xs font-medium text-eco-moss">
+                                  {project.status}
+                                </div>
+                              </div>
+                              <h4 className="font-semibold text-eco-moss mb-1">{project.name}</h4>
+                              <p className="text-sm text-eco-bark mb-2">{project.type}</p>
+                              <div className="flex items-center justify-between text-xs text-eco-stone">
+                                <div className="flex items-center gap-3">
+                                  <span className="flex items-center gap-1">
+                                    <Heart className="h-3 w-3" />
+                                    {project.likes}
+                                  </span>
+                                  <span className="flex items-center gap-1">
+                                    <Eye className="h-3 w-3" />
+                                    {project.views}
+                                  </span>
+                                </div>
+                                <span>{project.timestamp.toLocaleDateString()}</span>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
                       </div>
                     </CardContent>
                   </Card>
-                ))}
-              </div>
-            </div>
-          )}
 
-          {/* Tool Categories */}
-          <div 
-            className={`transition-all duration-1000 delay-500 ${isVisible.tools ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-            data-section="tools"
-          >
-            <Tabs defaultValue="moodboard" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 mb-8 bg-white/80 backdrop-blur-sm shadow-lg border border-eco-sand">
-                {Object.entries(toolCategories).map(([key, category]) => (
-                  <TabsTrigger 
-                    key={key} 
-                    value={key}
-                    className="flex items-center gap-2 text-eco-bark data-[state=active]:text-white data-[state=active]:bg-eco-sage hover:scale-105 transition-all duration-300"
-                  >
-                    <div className="animate-pulse">{category.icon}</div>
-                    <span className="hidden sm:inline">{category.title.split(' ')[0]}</span>
-                  </TabsTrigger>
-                ))}
-              </TabsList>
+                  {/* Quick Stats */}
+                  <div className="space-y-4">
+                    <Card className="border-eco-sand bg-white/90 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+                      <CardContent className="p-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="font-semibold text-eco-moss">Profile Views</h3>
+                          <TrendingUp className="h-5 w-5 text-eco-sage" />
+                        </div>
+                        <div className="text-3xl font-bold text-eco-moss mb-2">2,847</div>
+                        <p className="text-sm text-eco-bark">+12% from last month</p>
+                      </CardContent>
+                    </Card>
 
-              {Object.entries(toolCategories).map(([key, category]) => (
-                <TabsContent key={key} value={key} className="space-y-6">
-                  <div className="text-center mb-8">
-                    <h2 className="font-serif text-3xl font-bold mb-4 flex items-center justify-center gap-3 text-eco-moss">
-                      <div className="animate-bounce">{category.icon}</div>
-                      {category.title}
-                    </h2>
+                    <Card className="border-eco-sand bg-white/90 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+                      <CardContent className="p-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="font-semibold text-eco-moss">Project Likes</h3>
+                          <Heart className="h-5 w-5 text-eco-sage" />
+                        </div>
+                        <div className="text-3xl font-bold text-eco-moss mb-2">1,523</div>
+                        <p className="text-sm text-eco-bark">Across all projects</p>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="border-eco-sand bg-white/90 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+                      <CardContent className="p-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="font-semibold text-eco-moss">Followers</h3>
+                          <Users className="h-5 w-5 text-eco-sage" />
+                        </div>
+                        <div className="text-3xl font-bold text-eco-moss mb-2">456</div>
+                        <p className="text-sm text-eco-bark">Growing community</p>
+                      </CardContent>
+                    </Card>
                   </div>
+                </div>
+              </TabsContent>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {category.tools.map((tool, index) => (
-                      <Card 
-                        key={index} 
-                        className="hover:shadow-xl hover:scale-105 transition-all duration-300 border-eco-sand overflow-hidden group bg-white/90 backdrop-blur-sm"
-                        style={{
-                          animationDelay: `${index * 0.1}s`,
-                          animation: 'fade-in 0.6s ease-out forwards'
-                        }}
-                      >
-                        <CardHeader className="bg-eco-cream/60">
-                          <CardTitle className="flex items-center justify-between">
-                            <span className="text-eco-moss">{tool.name}</span>
-                            <ExternalLink className="h-4 w-4 text-eco-stone group-hover:text-eco-sage transition-colors animate-pulse" />
-                          </CardTitle>
-                          <CardDescription className="text-eco-bark">
-                            {tool.description}
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent className="pt-4">
-                          <ul className="space-y-2 mb-4">
-                            {tool.features.map((feature, idx) => (
-                              <li key={idx} className="flex items-center gap-2 text-sm text-eco-bark">
-                                <div className="w-2 h-2 rounded-full bg-eco-sage animate-pulse" />
-                                {feature}
-                              </li>
-                            ))}
-                          </ul>
-                          <Button 
-                            onClick={() => handleToolLaunch(tool.name, tool.url)}
-                            className="w-full bg-eco-sage hover:bg-eco-moss text-white hover:scale-105 transition-all duration-300"
-                          >
-                            <ExternalLink className="h-4 w-4 mr-2" />
-                            Open Tool
-                          </Button>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                </TabsContent>
-              ))}
-            </Tabs>
-          </div>
-
-          {/* Workspace Section */}
-          <div 
-            className={`mt-16 bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-eco-sand p-8 transition-all duration-1000 delay-700 ${isVisible.workspace ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-            data-section="workspace"
-          >
-            <h3 className="font-serif text-2xl font-bold mb-6 flex items-center gap-3 text-eco-moss">
-              <Layers className="h-6 w-6 animate-spin" />
-              Your Professional Workspace
-            </h3>
-            
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <Card className="border-eco-sand hover:shadow-lg transition-all duration-300 hover:scale-105 bg-eco-cream">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-eco-moss">
-                    <ArrowUpDown className="h-5 w-5 animate-bounce" />
-                    File Transfer Hub
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-eco-bark mb-4">Import projects from other platforms seamlessly</p>
-                  <div className="space-y-2">
-                    <Button size="sm" variant="outline" className="w-full justify-start border-eco-sand hover:bg-eco-sage hover:text-white hover:scale-105 transition-all">
-                      <Upload className="h-4 w-4 mr-2" />
-                      Import from AutoCAD
+              {/* Portfolio Tab */}
+              <TabsContent value="portfolio" className="space-y-8">
+                <div className="flex items-center justify-between mb-8">
+                  <h2 className="font-serif text-3xl font-bold text-eco-moss">Public Portfolio</h2>
+                  <div className="flex gap-3">
+                    <Button variant="outline" className="border-eco-sand hover:bg-eco-sage hover:text-white">
+                      <Settings className="h-4 w-4 mr-2" />
+                      Settings
                     </Button>
-                    <Button size="sm" variant="outline" className="w-full justify-start border-eco-sand hover:bg-eco-sage hover:text-white hover:scale-105 transition-all">
-                      <Upload className="h-4 w-4 mr-2" />
-                      Import from SketchUp
-                    </Button>
-                    <Button size="sm" variant="outline" className="w-full justify-start border-eco-sand hover:bg-eco-sage hover:text-white hover:scale-105 transition-all">
-                      <Upload className="h-4 w-4 mr-2" />
-                      Import from Revit
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-eco-sand hover:shadow-lg transition-all duration-300 hover:scale-105 bg-eco-cream">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-eco-moss">
-                    <FolderOpen className="h-5 w-5 animate-pulse" />
-                    Portfolio Manager
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-eco-bark mb-4">Showcase your professional work</p>
-                  <div className="space-y-2">
-                    <Button size="sm" variant="outline" className="w-full justify-start border-eco-sand hover:bg-eco-sage hover:text-white hover:scale-105 transition-all">
+                    <Button className="bg-eco-sage hover:bg-eco-moss text-white">
                       <Eye className="h-4 w-4 mr-2" />
-                      View Portfolio
-                    </Button>
-                    <Button size="sm" variant="outline" className="w-full justify-start border-eco-sand hover:bg-eco-sage hover:text-white hover:scale-105 transition-all">
-                      <Upload className="h-4 w-4 mr-2" />
-                      Add Project
-                    </Button>
-                    <Button size="sm" variant="outline" className="w-full justify-start border-eco-sand hover:bg-eco-sage hover:text-white hover:scale-105 transition-all">
-                      <Share2 className="h-4 w-4 mr-2" />
-                      Share with Clients
+                      Preview
                     </Button>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
 
-              <Card className="border-eco-sand hover:shadow-lg transition-all duration-300 hover:scale-105 bg-eco-cream">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-eco-moss">
-                    <Layers className="h-5 w-5 animate-spin" />
-                    Project Management
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-eco-bark mb-4">Organize and track your projects</p>
-                  <div className="space-y-2">
-                    <Button size="sm" variant="outline" className="w-full justify-start border-eco-sand hover:bg-eco-sage hover:text-white hover:scale-105 transition-all">
-                      <FolderOpen className="h-4 w-4 mr-2" />
-                      Active Projects
-                    </Button>
-                    <Button size="sm" variant="outline" className="w-full justify-start border-eco-sand hover:bg-eco-sage hover:text-white hover:scale-105 transition-all">
-                      <Download className="h-4 w-4 mr-2" />
-                      Export Files
-                    </Button>
-                    <Button size="sm" variant="outline" className="w-full justify-start border-eco-sand hover:bg-eco-sage hover:text-white hover:scale-105 transition-all">
-                      <Share2 className="h-4 w-4 mr-2" />
-                      Client Collaboration
-                    </Button>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {mockProjects.map((project, index) => (
+                    <Card key={project.id} className="border-eco-sand hover:shadow-xl transition-all duration-300 hover:scale-105 group overflow-hidden">
+                      <div className="aspect-[4/3] bg-eco-cream relative overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-br from-eco-sage/30 to-eco-moss/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div className="absolute top-3 right-3 bg-white/90 px-2 py-1 rounded-full text-xs font-medium text-eco-moss opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          {project.type}
+                        </div>
+                      </div>
+                      <CardContent className="p-6">
+                        <h3 className="font-semibold text-eco-moss mb-2 group-hover:text-eco-sage transition-colors">{project.name}</h3>
+                        <p className="text-sm text-eco-bark mb-4 line-clamp-2">{project.description}</p>
+                        <div className="flex flex-wrap gap-1 mb-4">
+                          {project.tags.map((tag, tagIndex) => (
+                            <Badge key={tagIndex} variant="outline" className="text-xs border-eco-sand text-eco-stone">
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+                        <div className="flex items-center justify-between text-sm text-eco-stone">
+                          <div className="flex items-center gap-4">
+                            <span className="flex items-center gap-1">
+                              <Heart className="h-4 w-4" />
+                              {project.likes}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <Eye className="h-4 w-4" />
+                              {project.views}
+                            </span>
+                          </div>
+                          <span>{project.timestamp.toLocaleDateString()}</span>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </TabsContent>
+
+              {/* Community Tab */}
+              <TabsContent value="community" className="space-y-8">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                  <div className="lg:col-span-2 space-y-6">
+                    <Card className="border-eco-sand bg-white/90 backdrop-blur-sm">
+                      <CardHeader>
+                        <CardTitle className="text-eco-moss flex items-center gap-2">
+                          <MessageSquare className="h-6 w-6" />
+                          Community Discussions
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        {mockCommunityPosts.map((post, index) => (
+                          <div key={post.id} className="flex items-center justify-between p-4 border border-eco-sand rounded-lg hover:bg-eco-cream/50 transition-colors cursor-pointer">
+                            <div>
+                              <h4 className="font-medium text-eco-moss hover:text-eco-sage transition-colors">{post.title}</h4>
+                              <p className="text-sm text-eco-bark">by {post.author}</p>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm text-eco-stone">
+                              <MessageSquare className="h-4 w-4" />
+                              {post.replies}
+                            </div>
+                          </div>
+                        ))}
+                      </CardContent>
+                    </Card>
+
+                    <Card className="border-eco-sand bg-white/90 backdrop-blur-sm">
+                      <CardHeader>
+                        <CardTitle className="text-eco-moss flex items-center gap-2">
+                          <Calendar className="h-6 w-6" />
+                          Upcoming Events
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="p-4 border border-eco-sand rounded-lg">
+                          <h4 className="font-medium text-eco-moss">Design Trends 2024 Webinar</h4>
+                          <p className="text-sm text-eco-bark">January 25, 2024 • 2:00 PM EST</p>
+                          <Button size="sm" className="mt-2 bg-eco-sage hover:bg-eco-moss text-white">Register</Button>
+                        </div>
+                        <div className="p-4 border border-eco-sand rounded-lg">
+                          <h4 className="font-medium text-eco-moss">Virtual Design Expo</h4>
+                          <p className="text-sm text-eco-bark">February 10-12, 2024</p>
+                          <Button size="sm" className="mt-2 bg-eco-sage hover:bg-eco-moss text-white">Learn More</Button>
+                        </div>
+                      </CardContent>
+                    </Card>
                   </div>
-                </CardContent>
-              </Card>
-            </div>
+
+                  <div className="space-y-6">
+                    <Card className="border-eco-sand bg-white/90 backdrop-blur-sm">
+                      <CardHeader>
+                        <CardTitle className="text-eco-moss flex items-center gap-2">
+                          <Star className="h-6 w-6" />
+                          Featured Designers
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        {featuredDesigners.map((designer, index) => (
+                          <div key={designer.id} className="flex items-center gap-3 p-3 border border-eco-sand rounded-lg hover:bg-eco-cream/50 transition-colors cursor-pointer">
+                            <div className="w-12 h-12 bg-eco-cream rounded-full flex items-center justify-center">
+                              <User className="h-6 w-6 text-eco-sage" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2">
+                                <h4 className="font-medium text-eco-moss truncate">{designer.name}</h4>
+                                {designer.verified && <Award className="h-4 w-4 text-eco-sage" />}
+                              </div>
+                              <p className="text-sm text-eco-bark">{designer.specialization}</p>
+                              <p className="text-xs text-eco-stone">{designer.location}</p>
+                              <div className="flex items-center gap-3 text-xs text-eco-stone mt-1">
+                                <span>{designer.followers.toLocaleString()} followers</span>
+                                <span>{designer.projects} projects</span>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              </TabsContent>
+
+              {/* Tools Tab */}
+              <TabsContent value="tools" className="space-y-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <Card className="border-eco-sand hover:shadow-lg transition-all duration-300 hover:scale-105 bg-white/90 backdrop-blur-sm">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2 text-eco-moss">
+                        <Palette className="h-6 w-6" />
+                        Moodboard Creator
+                      </CardTitle>
+                      <CardDescription className="text-eco-bark">Create stunning visual boards</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-sm text-eco-bark mb-4">Drag-and-drop interface with product integration</p>
+                      <Button className="w-full bg-eco-sage hover:bg-eco-moss text-white">
+                        Create Moodboard
+                      </Button>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border-eco-sand hover:shadow-lg transition-all duration-300 hover:scale-105 bg-white/90 backdrop-blur-sm">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2 text-eco-moss">
+                        <Upload className="h-6 w-6" />
+                        File Manager
+                      </CardTitle>
+                      <CardDescription className="text-eco-bark">Organize project files</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-sm text-eco-bark mb-4">Upload, organize, and share design files</p>
+                      <Button className="w-full bg-eco-sage hover:bg-eco-moss text-white">
+                        Manage Files
+                      </Button>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border-eco-sand hover:shadow-lg transition-all duration-300 hover:scale-105 bg-white/90 backdrop-blur-sm">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2 text-eco-moss">
+                        <Users className="h-6 w-6" />
+                        Client Collaboration
+                      </CardTitle>
+                      <CardDescription className="text-eco-bark">Share and get feedback</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-sm text-eco-bark mb-4">Invite clients to review and approve designs</p>
+                      <Button className="w-full bg-eco-sage hover:bg-eco-moss text-white">
+                        Collaborate
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
+            </Tabs>
           </div>
 
           {/* CTA Section */}
           <div 
-            className={`mt-16 text-center rounded-2xl p-8 text-white shadow-2xl transition-all duration-1000 delay-900 bg-gradient-to-r from-eco-sage to-eco-moss ${isVisible.cta ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-            data-section="cta"
+            className={`mt-20 text-center rounded-2xl p-12 text-white shadow-2xl transition-all duration-1000 delay-700 bg-gradient-to-r from-eco-sage to-eco-moss ${isVisible.portfolio ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+            data-section="portfolio"
           >
-            <h3 className="font-serif text-3xl font-bold mb-4 animate-pulse">Elevate Your Design Practice</h3>
-            <p className="text-xl mb-6 opacity-90">
-              Access professional tools and streamline your workflow
+            <h3 className="font-serif text-4xl font-bold mb-6 shine-text">Ready to Showcase Your Work?</h3>
+            <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
+              Join thousands of designers who have transformed their careers with our platform
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Button 
                 size="lg" 
-                className="bg-white text-eco-moss hover:bg-eco-cream hover:scale-105 transition-all duration-300"
+                className="bg-white text-eco-moss hover:bg-eco-cream hover:scale-105 transition-all duration-300 px-8 py-4 text-lg"
               >
-                Get Premium Access
+                Start Your Portfolio
               </Button>
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="border-white text-white hover:bg-white hover:text-eco-moss hover:scale-105 transition-all duration-300"
+                className="border-2 border-white text-white hover:bg-white hover:text-eco-moss hover:scale-105 transition-all duration-300 px-8 py-4 text-lg"
               >
-                Learn More
+                Explore Community
               </Button>
             </div>
           </div>
@@ -578,6 +635,13 @@ const DesignerSpace = () => {
           100% {
             background-position: 0% 50%;
           }
+        }
+
+        .line-clamp-2 {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
         }
       `}</style>
     </Layout>
