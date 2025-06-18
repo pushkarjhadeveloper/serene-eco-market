@@ -1,7 +1,7 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
+import MetallicPaint, { parseLogoImage } from "@/components/MetallicPaint";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -69,6 +69,7 @@ const DesignerSpace = () => {
   const [isRegistered, setIsRegistered] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [projects, setProjects] = useState<Project[]>([]);
+  const [imageData, setImageData] = useState<ImageData | null>(null);
   const [isVisible, setIsVisible] = useState({
     hero: false,
     features: false,
@@ -104,6 +105,33 @@ const DesignerSpace = () => {
     sections.forEach(section => observer.observe(section));
 
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    async function createTextImage() {
+      try {
+        // Create a canvas to generate text as image
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        canvas.width = 800;
+        canvas.height = 200;
+        
+        ctx.fillStyle = 'black';
+        ctx.font = 'bold 72px serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('Designers Space', canvas.width / 2, canvas.height / 2);
+        
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        setImageData(imageData);
+      } catch (err) {
+        console.error("Error creating text image:", err);
+      }
+    }
+
+    createTextImage();
   }, []);
 
   const mockProjects: Project[] = [
@@ -235,11 +263,30 @@ const DesignerSpace = () => {
         {/* Hero Section */}
         <div className="eco-container py-20">
           <div className={`text-center mb-16 transition-all duration-1000 ${isVisible.hero ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <h1 className="font-serif text-5xl md:text-7xl font-bold mb-8 relative">
-              <span className="bg-gradient-to-r from-eco-sage via-eco-moss to-eco-leaf bg-clip-text text-transparent shine-text">
-                Designer Studio
-              </span>
-            </h1>
+            <div className="relative mb-8">
+              <h1 className="font-serif text-5xl md:text-7xl font-bold mb-8 relative">
+                {imageData ? (
+                  <div className="inline-block w-full max-w-4xl h-32 md:h-40">
+                    <MetallicPaint 
+                      imageData={imageData} 
+                      params={{ 
+                        edge: 2, 
+                        patternBlur: 0.005, 
+                        patternScale: 2, 
+                        refraction: 0.015, 
+                        speed: 0.3, 
+                        liquid: 0.07 
+                      }}
+                      className="metallic-title"
+                    />
+                  </div>
+                ) : (
+                  <span className="bg-gradient-to-r from-eco-sage via-eco-moss to-eco-leaf bg-clip-text text-transparent shine-text">
+                    Designers Space
+                  </span>
+                )}
+              </h1>
+            </div>
             
             <div className="space-y-6 max-w-4xl mx-auto mb-10">
               <p className="text-2xl text-eco-moss transition-all duration-700 hover:scale-105">
@@ -642,6 +689,10 @@ const DesignerSpace = () => {
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
           overflow: hidden;
+        }
+
+        .metallic-title {
+          filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
         }
       `}</style>
     </Layout>
