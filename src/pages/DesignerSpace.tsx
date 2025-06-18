@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
@@ -288,11 +287,7 @@ const DesignerSpace = () => {
             {/* Shiny Gradient Text */}
             <h1 className="font-serif text-4xl md:text-6xl font-bold mb-6 relative">
               <span 
-                className="bg-gradient-to-r from-eco-sage via-eco-moss to-eco-leaf bg-clip-text text-transparent animate-pulse relative"
-                style={{
-                  backgroundSize: '200% 100%',
-                  animation: 'shine 3s ease-in-out infinite'
-                }}
+                className="bg-gradient-to-r from-eco-sage via-eco-moss to-eco-leaf bg-clip-text text-transparent animate-pulse relative shine-text"
               >
                 Designer Space
               </span>
@@ -567,7 +562,12 @@ const DesignerSpace = () => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
+        .shine-text {
+          background-size: 200% 100%;
+          animation: shine 3s ease-in-out infinite;
+        }
+        
         @keyframes shine {
           0% {
             background-position: 0% 50%;
