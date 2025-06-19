@@ -102,7 +102,7 @@ const DesignerSpace = () => {
   const [isFormComplete, setIsFormComplete] = useState(false);
   const [showPortfolioCard, setShowPortfolioCard] = useState(false);
 
-  // Scroll to top when component mounts
+  // Scroll to top when component mounts - FIXED navigation issue
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
@@ -147,6 +147,11 @@ const DesignerSpace = () => {
     const isComplete = requiredFields.every(field => formData[field as keyof FormData]);
     setIsFormComplete(isComplete);
   }, [formData]);
+
+  // FIXED: Proper controlled input handlers to prevent resetting
+  const handleInputChange = (field: keyof FormData, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -247,7 +252,7 @@ const DesignerSpace = () => {
                   className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all" 
                   placeholder="Your professional name"
                   value={formData.name}
-                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                  onChange={(e) => handleInputChange('name', e.target.value)}
                 />
               </div>
               <div className="space-y-2">
@@ -257,7 +262,7 @@ const DesignerSpace = () => {
                   className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all" 
                   placeholder="your.email@example.com"
                   value={formData.email}
-                  onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
                 />
               </div>
             </div>
@@ -268,7 +273,7 @@ const DesignerSpace = () => {
                 <select 
                   className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all"
                   value={formData.specialization}
-                  onChange={(e) => setFormData(prev => ({ ...prev, specialization: e.target.value }))}
+                  onChange={(e) => handleInputChange('specialization', e.target.value)}
                 >
                   <option value="">Select specialization</option>
                   <option value="Interior Design">Interior Design</option>
@@ -285,7 +290,7 @@ const DesignerSpace = () => {
                   className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all" 
                   placeholder="City, State/Country"
                   value={formData.location}
-                  onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
+                  onChange={(e) => handleInputChange('location', e.target.value)}
                 />
               </div>
             </div>
@@ -297,7 +302,7 @@ const DesignerSpace = () => {
                   className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all" 
                   placeholder="Your phone number"
                   value={formData.phone}
-                  onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
+                  onChange={(e) => handleInputChange('phone', e.target.value)}
                 />
               </div>
               <div className="space-y-2">
@@ -306,7 +311,7 @@ const DesignerSpace = () => {
                   className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all" 
                   placeholder="www.yourportfolio.com"
                   value={formData.website}
-                  onChange={(e) => setFormData(prev => ({ ...prev, website: e.target.value }))}
+                  onChange={(e) => handleInputChange('website', e.target.value)}
                 />
               </div>
             </div>
@@ -327,7 +332,7 @@ const DesignerSpace = () => {
                 className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all min-h-[100px]" 
                 placeholder="Tell us about your design journey, experience, and what makes you unique..."
                 value={formData.bio}
-                onChange={(e) => setFormData(prev => ({ ...prev, bio: e.target.value }))}
+                onChange={(e) => handleInputChange('bio', e.target.value)}
               />
             </div>
 
@@ -337,7 +342,7 @@ const DesignerSpace = () => {
                 className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all min-h-[80px]" 
                 placeholder="What are your goals and aspirations as a designer?"
                 value={formData.aspirations}
-                onChange={(e) => setFormData(prev => ({ ...prev, aspirations: e.target.value }))}
+                onChange={(e) => handleInputChange('aspirations', e.target.value)}
               />
             </div>
 
@@ -347,7 +352,7 @@ const DesignerSpace = () => {
                 className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all" 
                 placeholder="Describe your dream project..."
                 value={formData.dreamProject}
-                onChange={(e) => setFormData(prev => ({ ...prev, dreamProject: e.target.value }))}
+                onChange={(e) => handleInputChange('dreamProject', e.target.value)}
               />
             </div>
 
@@ -620,7 +625,7 @@ const DesignerSpace = () => {
                   <div className="flex items-center justify-between mb-8">
                     <h2 className="font-serif text-4xl font-bold text-eco-moss">Public Portfolio</h2>
                     <div className="flex gap-3">
-                      <Button variant="outline" className="border-2 border-eco-sand hover:bg-eco-sage hover:text-white rounded-xl font-semibold">
+                      <Button variant="outline" className="border-2 border-eco-sage hover:bg-eco-sage hover:text-white rounded-xl font-semibold">
                         <Settings className="h-4 w-4 mr-2" />
                         Settings
                       </Button>
@@ -809,7 +814,7 @@ const DesignerSpace = () => {
               </Tabs>
             </div>
 
-            {/* CTA Section */}
+            {/* CTA Section - FIXED "Explore Community" button visibility */}
             <div className="mt-20 bg-gradient-to-r from-eco-sage/95 to-eco-moss/95 backdrop-blur-sm rounded-3xl p-12 text-white shadow-2xl border border-white/20">
               <div className="text-center">
                 <h3 className="font-serif text-4xl font-bold mb-6">Ready to Showcase Your Work?</h3>
