@@ -3,11 +3,13 @@ import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import MetallicPaint from "@/components/MetallicPaint";
 import DesignerTutorial from "@/components/DesignerTutorial";
+import PortfolioCard from "@/components/PortfolioCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 import { 
   PenTool, 
   Palette, 
@@ -66,11 +68,44 @@ interface Designer {
   verified: boolean;
 }
 
+interface FormData {
+  name: string;
+  specialization: string;
+  location: string;
+  bio: string;
+  dreamProject: string;
+  aspirations: string;
+  profileImage: string | null;
+  email: string;
+  phone: string;
+  website: string;
+}
+
 const DesignerSpace = () => {
   const [isRegistered, setIsRegistered] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [imageData, setImageData] = useState<ImageData | null>(null);
   const [showTutorial, setShowTutorial] = useState(false);
+  const [showPortfolioDialog, setShowPortfolioDialog] = useState(false);
+  const [formData, setFormData] = useState<FormData>({
+    name: '',
+    specialization: '',
+    location: '',
+    bio: '',
+    dreamProject: '',
+    aspirations: '',
+    profileImage: null,
+    email: '',
+    phone: '',
+    website: ''
+  });
+  const [isFormComplete, setIsFormComplete] = useState(false);
+  const [showPortfolioCard, setShowPortfolioCard] = useState(false);
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
 
   useEffect(() => {
     // Check if user has completed tutorial
@@ -92,7 +127,7 @@ const DesignerSpace = () => {
         canvas.height = 200;
         
         ctx.fillStyle = 'black';
-        ctx.font = 'bold 72px serif';
+        ctx.font = 'bold 72px "Aurora", serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText('Designers Space', canvas.width / 2, canvas.height / 2);
@@ -106,6 +141,35 @@ const DesignerSpace = () => {
 
     createTextImage();
   }, []);
+
+  useEffect(() => {
+    const requiredFields = ['name', 'specialization', 'location', 'bio', 'aspirations', 'email'];
+    const isComplete = requiredFields.every(field => formData[field as keyof FormData]);
+    setIsFormComplete(isComplete);
+  }, [formData]);
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setFormData(prev => ({ ...prev, profileImage: e.target?.result as string }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleFormSubmit = () => {
+    if (isFormComplete) {
+      setShowPortfolioCard(true);
+      setShowPortfolioDialog(false);
+      
+      // Show card with animation
+      setTimeout(() => {
+        setIsRegistered(true);
+      }, 2000);
+    }
+  };
 
   const mockProjects: Project[] = [
     {
@@ -158,45 +222,149 @@ const DesignerSpace = () => {
   ];
 
   const RegistrationDialog = () => (
-    <Dialog>
+    <Dialog open={showPortfolioDialog} onOpenChange={setShowPortfolioDialog}>
       <DialogTrigger asChild>
         <Button className="bg-eco-sage hover:bg-eco-moss text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
           <User className="h-5 w-5 mr-2" />
           Join Designer Community
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-white border-2 border-eco-sage max-w-md rounded-2xl">
+      <DialogContent className="bg-white border-2 border-eco-sage max-w-4xl rounded-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl font-serif text-eco-moss">Create Your Designer Profile</DialogTitle>
           <DialogDescription className="text-eco-bark">
-            Join thousands of designers showcasing their work and connecting with clients.
+            Build your professional portfolio card and join thousands of designers.
           </DialogDescription>
         </DialogHeader>
-        <div className="space-y-4 py-4">
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-eco-moss">Display Name</label>
-            <input className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all" placeholder="Your professional name" />
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 py-4">
+          {/* Form Section */}
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-eco-moss">Full Name *</label>
+                <input 
+                  className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all" 
+                  placeholder="Your professional name"
+                  value={formData.name}
+                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-eco-moss">Email *</label>
+                <input 
+                  type="email"
+                  className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all" 
+                  placeholder="your.email@example.com"
+                  value={formData.email}
+                  onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-eco-moss">Specialization *</label>
+                <select 
+                  className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all"
+                  value={formData.specialization}
+                  onChange={(e) => setFormData(prev => ({ ...prev, specialization: e.target.value }))}
+                >
+                  <option value="">Select specialization</option>
+                  <option value="Interior Design">Interior Design</option>
+                  <option value="Architecture">Architecture</option>
+                  <option value="3D Visualization">3D Visualization</option>
+                  <option value="Landscape Design">Landscape Design</option>
+                  <option value="Product Design">Product Design</option>
+                  <option value="Graphic Design">Graphic Design</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-eco-moss">Location *</label>
+                <input 
+                  className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all" 
+                  placeholder="City, State/Country"
+                  value={formData.location}
+                  onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-eco-moss">Phone</label>
+                <input 
+                  className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all" 
+                  placeholder="Your phone number"
+                  value={formData.phone}
+                  onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-eco-moss">Website</label>
+                <input 
+                  className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all" 
+                  placeholder="www.yourportfolio.com"
+                  value={formData.website}
+                  onChange={(e) => setFormData(prev => ({ ...prev, website: e.target.value }))}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-eco-moss">Profile Picture</label>
+              <input 
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-eco-moss">Professional Bio *</label>
+              <Textarea 
+                className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all min-h-[100px]" 
+                placeholder="Tell us about your design journey, experience, and what makes you unique..."
+                value={formData.bio}
+                onChange={(e) => setFormData(prev => ({ ...prev, bio: e.target.value }))}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-eco-moss">Career Aspirations *</label>
+              <Textarea 
+                className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all min-h-[80px]" 
+                placeholder="What are your goals and aspirations as a designer?"
+                value={formData.aspirations}
+                onChange={(e) => setFormData(prev => ({ ...prev, aspirations: e.target.value }))}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-eco-moss">Dream Project</label>
+              <input 
+                className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all" 
+                placeholder="Describe your dream project..."
+                value={formData.dreamProject}
+                onChange={(e) => setFormData(prev => ({ ...prev, dreamProject: e.target.value }))}
+              />
+            </div>
+
+            <Button 
+              onClick={handleFormSubmit}
+              disabled={!isFormComplete}
+              className="w-full bg-eco-sage hover:bg-eco-moss text-white font-semibold py-3 rounded-lg disabled:opacity-50"
+            >
+              Create Portfolio Card
+            </Button>
           </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-eco-moss">Specialization</label>
-            <select className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all">
-              <option>Interior Design</option>
-              <option>Architecture</option>
-              <option>3D Visualization</option>
-              <option>Landscape Design</option>
-              <option>Product Design</option>
-            </select>
+
+          {/* Live Preview Section */}
+          <div className="lg:sticky lg:top-4">
+            <h3 className="text-lg font-semibold text-eco-moss mb-4">Live Preview</h3>
+            <PortfolioCard formData={formData} isAnimating={false} />
           </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-eco-moss">Location</label>
-            <input className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all" placeholder="City, State/Country" />
-          </div>
-          <Button 
-            onClick={() => setIsRegistered(true)}
-            className="w-full bg-eco-sage hover:bg-eco-moss text-white font-semibold py-3 rounded-lg"
-          >
-            Create Profile
-          </Button>
         </div>
       </DialogContent>
     </Dialog>
@@ -213,16 +381,15 @@ const DesignerSpace = () => {
           backgroundAttachment: 'fixed'
         }}
       >
-        {/* Clear overlay for better text readability */}
-        <div className="absolute inset-0 bg-white/10 backdrop-blur-none"></div>
+        <div className="absolute inset-0 bg-white/5"></div>
         
         <div className="relative z-10">
           {/* Hero Section */}
           <div className="container mx-auto px-6 py-20">
             <div className="text-center mb-16">
-              {/* Metallic Title */}
+              {/* Metallic Title with Aurora font and eco-sage color */}
               <div className="relative mb-8">
-                <h1 className="font-serif text-5xl md:text-7xl font-bold mb-8 relative">
+                <h1 className="font-['Aurora',serif] text-5xl md:text-7xl font-bold mb-8 relative text-eco-sage">
                   {imageData ? (
                     <div className="inline-block w-full max-w-4xl h-32 md:h-40">
                       <MetallicPaint 
@@ -239,7 +406,7 @@ const DesignerSpace = () => {
                       />
                     </div>
                   ) : (
-                    <span className="bg-gradient-to-r from-eco-sage via-eco-moss to-eco-leaf bg-clip-text text-transparent">
+                    <span className="text-eco-sage drop-shadow-2xl">
                       Designers Space
                     </span>
                   )}
@@ -305,6 +472,17 @@ const DesignerSpace = () => {
                 </div>
               </div>
             </div>
+
+            {/* Show Portfolio Card if created */}
+            {showPortfolioCard && (
+              <div className="mb-16">
+                <div className="text-center mb-8">
+                  <h2 className="text-3xl font-serif text-eco-moss font-bold mb-4">Your Portfolio Card</h2>
+                  <p className="text-eco-bark">Your professional designer portfolio card is ready!</p>
+                </div>
+                <PortfolioCard formData={formData} isAnimating={true} />
+              </div>
+            )}
 
             {/* Platform Features */}
             <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/20">
@@ -438,8 +616,6 @@ const DesignerSpace = () => {
                   </div>
                 </TabsContent>
 
-                
-                
                 <TabsContent value="portfolio" className="space-y-8">
                   <div className="flex items-center justify-between mb-8">
                     <h2 className="font-serif text-4xl font-bold text-eco-moss">Public Portfolio</h2>
@@ -642,6 +818,7 @@ const DesignerSpace = () => {
                 </p>
                 <div className="flex flex-col sm:flex-row gap-6 justify-center">
                   <Button 
+                    onClick={() => setShowPortfolioDialog(true)}
                     size="lg" 
                     className="bg-white text-eco-moss hover:bg-eco-cream hover:scale-105 transition-all duration-300 px-8 py-4 text-lg font-semibold rounded-xl"
                   >
@@ -680,6 +857,8 @@ const DesignerSpace = () => {
         .metallic-title {
           filter: drop-shadow(0 8px 16px rgba(0,0,0,0.4));
         }
+
+        @import url('https://fonts.googleapis.com/css2?family=Aurora:wght@400;700&display=swap');
       `}</style>
     </Layout>
   );

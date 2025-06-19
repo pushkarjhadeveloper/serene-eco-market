@@ -7,7 +7,6 @@ import { Badge } from '@/components/ui/badge';
 import { 
   ArrowRight, 
   ArrowLeft, 
-  X, 
   PenTool, 
   Upload, 
   Users, 
@@ -154,9 +153,6 @@ const DesignerTutorial: React.FC<DesignerTutorialProps> = ({ isOpen, onClose }) 
                 </DialogDescription>
               </div>
             </div>
-            <Button variant="ghost" onClick={onClose} className="text-eco-stone hover:text-eco-moss">
-              <X className="h-5 w-5" />
-            </Button>
           </div>
         </DialogHeader>
 
