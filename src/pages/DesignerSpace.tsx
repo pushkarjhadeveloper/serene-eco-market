@@ -259,7 +259,15 @@ const DesignerSpace = () => {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-eco-cream">
+      <div 
+        className="min-h-screen relative"
+        style={{
+          backgroundImage: `linear-gradient(rgba(245, 243, 239, 0.9), rgba(245, 243, 239, 0.8)), url('/lovable-uploads/3771b0b4-c49d-460f-8a2e-fb20c0e2eb23.png')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed'
+        }}
+      >
         {/* Hero Section */}
         <div className="eco-container py-20">
           <div className={`text-center mb-16 transition-all duration-1000 ${isVisible.hero ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
@@ -289,29 +297,29 @@ const DesignerSpace = () => {
             </div>
             
             <div className="space-y-6 max-w-4xl mx-auto mb-10">
-              <p className="text-2xl text-eco-moss transition-all duration-700 hover:scale-105">
+              <p className="text-2xl text-eco-moss transition-all duration-700 hover:scale-105 drop-shadow-lg">
                 Where creativity meets opportunity.
               </p>
-              <p className="text-xl text-eco-bark transition-all duration-700 delay-100">
+              <p className="text-xl text-eco-bark transition-all duration-700 delay-100 drop-shadow-md">
                 Showcase your work, connect with clients, and grow your design practice.
               </p>
-              <p className="text-lg text-eco-stone transition-all duration-700 delay-200">
+              <p className="text-lg text-eco-stone transition-all duration-700 delay-200 drop-shadow-md">
                 Join a community of professional designers and architects.
               </p>
             </div>
 
             <div className="flex flex-wrap justify-center gap-4 mb-12">
-              <Badge variant="outline" className="px-6 py-3 border-2 border-eco-sage text-eco-sage hover:scale-105 transition-transform text-lg">
+              <Badge variant="outline" className="px-6 py-3 border-2 border-eco-sage text-eco-sage hover:scale-105 transition-transform text-lg bg-white/90 backdrop-blur-sm">
                 <PenTool className="h-5 w-5 mr-2" />
                 <span className="inline-block transition-all duration-500">
                   {rotatingTexts[currentTextIndex]}
                 </span>
               </Badge>
-              <Badge variant="outline" className="px-6 py-3 border-2 border-eco-moss text-eco-moss hover:scale-105 transition-transform text-lg">
+              <Badge variant="outline" className="px-6 py-3 border-2 border-eco-moss text-eco-moss hover:scale-105 transition-transform text-lg bg-white/90 backdrop-blur-sm">
                 <Users className="h-5 w-5 mr-2" />
                 <span className="inline-block animate-pulse">15K+ Designers</span>
               </Badge>
-              <Badge variant="outline" className="px-6 py-3 border-2 border-eco-leaf text-eco-leaf hover:scale-105 transition-transform text-lg">
+              <Badge variant="outline" className="px-6 py-3 border-2 border-eco-leaf text-eco-leaf hover:scale-105 transition-transform text-lg bg-white/90 backdrop-blur-sm">
                 <Award className="h-5 w-5 mr-2" />
                 <span className="inline-block animate-bounce">Featured Work</span>
               </Badge>
@@ -326,7 +334,7 @@ const DesignerSpace = () => {
             data-section="features"
           >
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 mb-12 bg-white/90 backdrop-blur-sm shadow-lg border border-eco-sand p-2">
+              <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 mb-12 bg-white/95 backdrop-blur-sm shadow-lg border border-eco-sand p-2">
                 <TabsTrigger 
                   value="dashboard"
                   className="flex items-center gap-2 text-eco-bark data-[state=active]:text-white data-[state=active]:bg-eco-sage hover:scale-105 transition-all duration-300 p-3"
@@ -361,7 +369,7 @@ const DesignerSpace = () => {
               <TabsContent value="dashboard" className="space-y-8">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                   {/* Project Overview */}
-                  <Card className="lg:col-span-2 border-eco-sand bg-white/90 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+                  <Card className="lg:col-span-2 border-eco-sand bg-white/95 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
                     <CardHeader className="flex flex-row items-center justify-between">
                       <div>
                         <CardTitle className="text-eco-moss flex items-center gap-2">
@@ -410,7 +418,7 @@ const DesignerSpace = () => {
 
                   {/* Quick Stats */}
                   <div className="space-y-4">
-                    <Card className="border-eco-sand bg-white/90 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+                    <Card className="border-eco-sand bg-white/95 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
                       <CardContent className="p-6">
                         <div className="flex items-center justify-between mb-4">
                           <h3 className="font-semibold text-eco-moss">Profile Views</h3>
@@ -421,7 +429,7 @@ const DesignerSpace = () => {
                       </CardContent>
                     </Card>
 
-                    <Card className="border-eco-sand bg-white/90 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+                    <Card className="border-eco-sand bg-white/95 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
                       <CardContent className="p-6">
                         <div className="flex items-center justify-between mb-4">
                           <h3 className="font-semibold text-eco-moss">Project Likes</h3>
@@ -432,7 +440,7 @@ const DesignerSpace = () => {
                       </CardContent>
                     </Card>
 
-                    <Card className="border-eco-sand bg-white/90 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+                    <Card className="border-eco-sand bg-white/95 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
                       <CardContent className="p-6">
                         <div className="flex items-center justify-between mb-4">
                           <h3 className="font-semibold text-eco-moss">Followers</h3>
@@ -504,7 +512,7 @@ const DesignerSpace = () => {
               <TabsContent value="community" className="space-y-8">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                   <div className="lg:col-span-2 space-y-6">
-                    <Card className="border-eco-sand bg-white/90 backdrop-blur-sm">
+                    <Card className="border-eco-sand bg-white/95 backdrop-blur-sm">
                       <CardHeader>
                         <CardTitle className="text-eco-moss flex items-center gap-2">
                           <MessageSquare className="h-6 w-6" />
@@ -527,7 +535,7 @@ const DesignerSpace = () => {
                       </CardContent>
                     </Card>
 
-                    <Card className="border-eco-sand bg-white/90 backdrop-blur-sm">
+                    <Card className="border-eco-sand bg-white/95 backdrop-blur-sm">
                       <CardHeader>
                         <CardTitle className="text-eco-moss flex items-center gap-2">
                           <Calendar className="h-6 w-6" />
@@ -550,7 +558,7 @@ const DesignerSpace = () => {
                   </div>
 
                   <div className="space-y-6">
-                    <Card className="border-eco-sand bg-white/90 backdrop-blur-sm">
+                    <Card className="border-eco-sand bg-white/95 backdrop-blur-sm">
                       <CardHeader>
                         <CardTitle className="text-eco-moss flex items-center gap-2">
                           <Star className="h-6 w-6" />
@@ -586,7 +594,7 @@ const DesignerSpace = () => {
               {/* Tools Tab */}
               <TabsContent value="tools" className="space-y-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  <Card className="border-eco-sand hover:shadow-lg transition-all duration-300 hover:scale-105 bg-white/90 backdrop-blur-sm">
+                  <Card className="border-eco-sand hover:shadow-lg transition-all duration-300 hover:scale-105 bg-white/95 backdrop-blur-sm">
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2 text-eco-moss">
                         <Palette className="h-6 w-6" />
@@ -602,7 +610,7 @@ const DesignerSpace = () => {
                     </CardContent>
                   </Card>
 
-                  <Card className="border-eco-sand hover:shadow-lg transition-all duration-300 hover:scale-105 bg-white/90 backdrop-blur-sm">
+                  <Card className="border-eco-sand hover:shadow-lg transition-all duration-300 hover:scale-105 bg-white/95 backdrop-blur-sm">
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2 text-eco-moss">
                         <Upload className="h-6 w-6" />
@@ -618,7 +626,7 @@ const DesignerSpace = () => {
                     </CardContent>
                   </Card>
 
-                  <Card className="border-eco-sand hover:shadow-lg transition-all duration-300 hover:scale-105 bg-white/90 backdrop-blur-sm">
+                  <Card className="border-eco-sand hover:shadow-lg transition-all duration-300 hover:scale-105 bg-white/95 backdrop-blur-sm">
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2 text-eco-moss">
                         <Users className="h-6 w-6" />
@@ -640,7 +648,7 @@ const DesignerSpace = () => {
 
           {/* CTA Section */}
           <div 
-            className={`mt-20 text-center rounded-2xl p-12 text-white shadow-2xl transition-all duration-1000 delay-700 bg-gradient-to-r from-eco-sage to-eco-moss ${isVisible.portfolio ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+            className={`mt-20 text-center rounded-2xl p-12 text-white shadow-2xl transition-all duration-1000 delay-700 bg-gradient-to-r from-eco-sage/90 to-eco-moss/90 backdrop-blur-sm ${isVisible.portfolio ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
             data-section="portfolio"
           >
             <h3 className="font-serif text-4xl font-bold mb-6 shine-text">Ready to Showcase Your Work?</h3>
