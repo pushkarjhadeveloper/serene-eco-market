@@ -22,25 +22,9 @@ interface PortfolioCardProps {
 }
 
 const PortfolioCard: React.FC<PortfolioCardProps> = ({ formData, isAnimating }) => {
-  const [displayData, setDisplayData] = useState(formData);
-
-  useEffect(() => {
-    if (isAnimating) {
-      // Animate data update with staggered delays
-      const fields = Object.keys(formData);
-      fields.forEach((field, index) => {
-        setTimeout(() => {
-          setDisplayData(prev => ({
-            ...prev,
-            [field]: formData[field as keyof typeof formData]
-          }));
-        }, index * 200);
-      });
-    } else {
-      setDisplayData(formData);
-    }
-  }, [formData, isAnimating]);
-
+  // Remove the animated data update effect that was causing glitches
+  // Now we just use formData directly for live preview
+  
   return (
     <div className={`relative transform transition-all duration-1000 ${isAnimating ? 'scale-105 rotate-1' : 'scale-100 rotate-0'}`}>
       {/* Metallic background effect */}
@@ -52,22 +36,22 @@ const PortfolioCard: React.FC<PortfolioCardProps> = ({ formData, isAnimating }) 
         {/* Header with avatar and basic info */}
         <div className="flex items-start gap-6 mb-6">
           <Avatar className="w-20 h-20 border-4 border-eco-sage shadow-lg">
-            <AvatarImage src={displayData.profileImage || undefined} />
+            <AvatarImage src={formData.profileImage || undefined} />
             <AvatarFallback className="bg-eco-sage text-white text-2xl font-bold">
-              {displayData.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+              {formData.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
             </AvatarFallback>
           </Avatar>
           
           <div className="flex-1 min-w-0">
             <h2 className="text-2xl font-bold text-eco-moss font-serif mb-1 truncate">
-              {displayData.name || 'Designer Name'}
+              {formData.name || 'Designer Name'}
             </h2>
             <p className="text-eco-sage font-semibold mb-2">
-              {displayData.specialization || 'Specialization'}
+              {formData.specialization || 'Specialization'}
             </p>
             <div className="flex items-center gap-1 text-eco-bark text-sm">
               <MapPin className="h-4 w-4" />
-              <span className="truncate">{displayData.location || 'Location'}</span>
+              <span className="truncate">{formData.location || 'Location'}</span>
             </div>
           </div>
         </div>
@@ -76,7 +60,7 @@ const PortfolioCard: React.FC<PortfolioCardProps> = ({ formData, isAnimating }) 
         <div className="mb-6">
           <h3 className="text-sm font-bold text-eco-moss mb-2 uppercase tracking-wide">About</h3>
           <p className="text-eco-bark text-sm leading-relaxed line-clamp-3">
-            {displayData.bio || 'Professional bio will appear here...'}
+            {formData.bio || 'Professional bio will appear here...'}
           </p>
         </div>
 
@@ -87,7 +71,7 @@ const PortfolioCard: React.FC<PortfolioCardProps> = ({ formData, isAnimating }) 
             Aspirations
           </h3>
           <p className="text-eco-bark text-sm leading-relaxed">
-            {displayData.aspirations || 'Career aspirations will appear here...'}
+            {formData.aspirations || 'Career aspirations will appear here...'}
           </p>
         </div>
 
@@ -95,7 +79,7 @@ const PortfolioCard: React.FC<PortfolioCardProps> = ({ formData, isAnimating }) 
         <div className="mb-6">
           <h3 className="text-sm font-bold text-eco-moss mb-2 uppercase tracking-wide">Dream Project</h3>
           <Badge variant="outline" className="border-eco-sage text-eco-moss bg-eco-sage/10 text-xs px-3 py-1">
-            {displayData.dreamProject || 'Dream project...'}
+            {formData.dreamProject || 'Dream project...'}
           </Badge>
         </div>
 
@@ -103,18 +87,18 @@ const PortfolioCard: React.FC<PortfolioCardProps> = ({ formData, isAnimating }) 
         <div className="space-y-2 pt-4 border-t border-eco-sand">
           <div className="flex items-center gap-2 text-xs text-eco-bark">
             <Mail className="h-3 w-3" />
-            <span className="truncate">{displayData.email || 'email@example.com'}</span>
+            <span className="truncate">{formData.email || 'email@example.com'}</span>
           </div>
-          {displayData.phone && (
+          {formData.phone && (
             <div className="flex items-center gap-2 text-xs text-eco-bark">
               <Phone className="h-3 w-3" />
-              <span>{displayData.phone}</span>
+              <span>{formData.phone}</span>
             </div>
           )}
-          {displayData.website && (
+          {formData.website && (
             <div className="flex items-center gap-2 text-xs text-eco-bark">
               <Globe className="h-3 w-3" />
-              <span className="truncate">{displayData.website}</span>
+              <span className="truncate">{formData.website}</span>
             </div>
           )}
         </div>
