@@ -1,8 +1,7 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
-import MetallicPaint from "@/components/MetallicPaint";
+import GradientText from "@/components/GradientText";
 import DesignerTutorial from "@/components/DesignerTutorial";
 import PortfolioCard from "@/components/PortfolioCard";
 import { Button } from "@/components/ui/button";
@@ -85,7 +84,6 @@ interface FormData {
 const DesignerSpace = () => {
   const [isRegistered, setIsRegistered] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [imageData, setImageData] = useState<ImageData | null>(null);
   const [showTutorial, setShowTutorial] = useState(false);
   const [showPortfolioDialog, setShowPortfolioDialog] = useState(false);
   const [formData, setFormData] = useState<FormData>({
@@ -115,32 +113,6 @@ const DesignerSpace = () => {
       // Show tutorial after a brief delay for better UX
       setTimeout(() => setShowTutorial(true), 2000);
     }
-  }, []);
-
-  useEffect(() => {
-    async function createTextImage() {
-      try {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return;
-
-        canvas.width = 800;
-        canvas.height = 200;
-        
-        ctx.fillStyle = 'black';
-        ctx.font = 'bold 72px "Aurora", serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('Designers Space', canvas.width / 2, canvas.height / 2);
-        
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        setImageData(imageData);
-      } catch (err) {
-        console.error("Error creating text image:", err);
-      }
-    }
-
-    createTextImage();
   }, []);
 
   useEffect(() => {
@@ -350,7 +322,7 @@ const DesignerSpace = () => {
             <div className="space-y-2">
               <label className="text-sm font-medium text-eco-moss">Dream Project</label>
               <input 
-                className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all" 
+                className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20" 
                 placeholder="Describe your dream project..."
                 value={formData.dreamProject}
                 onChange={(e) => handleInputChange('dreamProject', e.target.value)}
@@ -393,29 +365,17 @@ const DesignerSpace = () => {
           {/* Hero Section */}
           <div className="container mx-auto px-6 py-20">
             <div className="text-center mb-16">
-              {/* Metallic Title with Aurora font and eco-sage color */}
+              {/* Updated Gradient Title with Aurora font */}
               <div className="relative mb-8">
-                <h1 className="font-['Aurora',serif] text-5xl md:text-7xl font-bold mb-8 relative text-eco-sage">
-                  {imageData ? (
-                    <div className="inline-block w-full max-w-4xl h-32 md:h-40">
-                      <MetallicPaint 
-                        imageData={imageData} 
-                        params={{ 
-                          edge: 2, 
-                          patternBlur: 0.005, 
-                          patternScale: 2, 
-                          refraction: 0.015, 
-                          speed: 0.3, 
-                          liquid: 0.07 
-                        }}
-                        className="metallic-title drop-shadow-2xl"
-                      />
-                    </div>
-                  ) : (
-                    <span className="text-eco-sage drop-shadow-2xl">
-                      Designers Space
-                    </span>
-                  )}
+                <h1 className="font-['Aurora',serif] text-5xl md:text-7xl font-bold mb-8 relative">
+                  <GradientText
+                    colors={["#40ffaa", "#4079ff", "#40ffaa", "#4079ff", "#40ffaa"]}
+                    animationSpeed={3}
+                    showBorder={false}
+                    className="drop-shadow-2xl"
+                  >
+                    Designer Space
+                  </GradientText>
                 </h1>
               </div>
               
@@ -857,10 +817,6 @@ const DesignerSpace = () => {
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
           overflow: hidden;
-        }
-
-        .metallic-title {
-          filter: drop-shadow(0 8px 16px rgba(0,0,0,0.4));
         }
 
         @import url('https://fonts.googleapis.com/css2?family=Aurora:wght@400;700&display=swap');
