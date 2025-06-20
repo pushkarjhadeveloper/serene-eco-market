@@ -365,11 +365,11 @@ const DesignerSpace = () => {
           {/* Hero Section */}
           <div className="container mx-auto px-6 py-20">
             <div className="text-center mb-16">
-              {/* Updated Gradient Title with Aurora font */}
+              {/* Updated Gradient Title with Aurora font and serene eco colors */}
               <div className="relative mb-8">
                 <h1 className="font-['Aurora',serif] text-5xl md:text-7xl font-bold mb-8 relative">
                   <GradientText
-                    colors={["#40ffaa", "#4079ff", "#40ffaa", "#4079ff", "#40ffaa"]}
+                    colors={["#7D9D8C", "#5E8B6F", "#4A6952", "#7D9D8C", "#5E8B6F"]}
                     animationSpeed={3}
                     showBorder={false}
                     className="drop-shadow-2xl"
