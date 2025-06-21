@@ -4,8 +4,8 @@ import Layout from "@/components/Layout";
 import GradientText from "@/components/GradientText";
 import DesignerTutorial from "@/components/DesignerTutorial";
 import PortfolioCard from "@/components/PortfolioCard";
-import SplitText from "@/components/SplitText";
-import SpotlightCard from "@/components/SpotlightCard";
+import ProfileCard from "@/components/ProfileCard";
+import Stepper, { Step } from "@/components/Stepper";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -88,6 +88,22 @@ const DesignerSpace = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [showTutorial, setShowTutorial] = useState(false);
   const [showPortfolioDialog, setShowPortfolioDialog] = useState(false);
+  const [showStepperForm, setShowStepperForm] = useState(false);
+  const [showProfileCard, setShowProfileCard] = useState(false);
+  const [stepperFormData, setStepperFormData] = useState({
+    name: '',
+    title: '',
+    handle: '',
+    email: '',
+    phone: '',
+    website: '',
+    location: '',
+    bio: '',
+    specialization: '',
+    experience: '',
+    portfolio: '',
+    profileImage: null as string | null
+  });
   const [formData, setFormData] = useState<FormData>({
     name: '',
     specialization: '',
@@ -149,6 +165,29 @@ const DesignerSpace = () => {
         setIsRegistered(true);
       }, 2000);
     }
+  };
+
+  const handleStepperInputChange = (field: string, value: string) => {
+    setStepperFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleStepperImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setStepperFormData(prev => ({ ...prev, profileImage: e.target?.result as string }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleStepperFormComplete = () => {
+    setShowStepperForm(false);
+    setShowProfileCard(true);
+    setTimeout(() => {
+      setIsRegistered(true);
+    }, 2000);
   };
 
   const mockProjects: Project[] = [
@@ -350,6 +389,194 @@ const DesignerSpace = () => {
     </Dialog>
   );
 
+  const StepperFormDialog = () => (
+    <Dialog open={showStepperForm} onOpenChange={setShowStepperForm}>
+      <DialogContent className="bg-white border-2 border-eco-sage max-w-4xl rounded-2xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="text-2xl font-serif text-eco-moss">Create Your Designer Profile</DialogTitle>
+          <DialogDescription className="text-eco-bark">
+            Complete the steps below to build your professional profile card.
+          </DialogDescription>
+        </DialogHeader>
+        
+        <div className="py-4">
+          <Stepper
+            initialStep={1}
+            onStepChange={(step) => console.log('Current step:', step)}
+            onFinalStepCompleted={handleStepperFormComplete}
+            backButtonText="Previous"
+            nextButtonText="Next"
+          >
+            <Step>
+              <div className="space-y-4">
+                <h2 className="text-2xl font-serif text-eco-moss mb-4">Welcome to Designer Community!</h2>
+                <p className="text-eco-bark mb-6">Let's create your professional profile in just a few steps.</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-eco-moss">Full Name *</label>
+                    <input 
+                      className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all" 
+                      placeholder="Your professional name"
+                      value={stepperFormData.name}
+                      onChange={(e) => handleStepperInputChange('name', e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-eco-moss">Professional Title *</label>
+                    <input 
+                      className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all" 
+                      placeholder="e.g., Interior Designer, Architect"
+                      value={stepperFormData.title}
+                      onChange={(e) => handleStepperInputChange('title', e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-eco-moss">Username/Handle *</label>
+                  <input 
+                    className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all" 
+                    placeholder="@yourhandle"
+                    value={stepperFormData.handle}
+                    onChange={(e) => handleStepperInputChange('handle', e.target.value)}
+                  />
+                </div>
+              </div>
+            </Step>
+            
+            <Step>
+              <div className="space-y-4">
+                <h2 className="text-2xl font-serif text-eco-moss mb-4">Contact Information</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-eco-moss">Email *</label>
+                    <input 
+                      type="email"
+                      className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all" 
+                      placeholder="your.email@example.com"
+                      value={stepperFormData.email}
+                      onChange={(e) => handleStepperInputChange('email', e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-eco-moss">Phone</label>
+                    <input 
+                      className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all" 
+                      placeholder="Your phone number"
+                      value={stepperFormData.phone}
+                      onChange={(e) => handleStepperInputChange('phone', e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-eco-moss">Location *</label>
+                    <input 
+                      className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all" 
+                      placeholder="City, State/Country"
+                      value={stepperFormData.location}
+                      onChange={(e) => handleStepperInputChange('location', e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-eco-moss">Website</label>
+                    <input 
+                      className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all" 
+                      placeholder="www.yourportfolio.com"
+                      value={stepperFormData.website}
+                      onChange={(e) => handleStepperInputChange('website', e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+            </Step>
+            
+            <Step>
+              <div className="space-y-4">
+                <h2 className="text-2xl font-serif text-eco-moss mb-4">Professional Details</h2>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-eco-moss">Specialization *</label>
+                    <select 
+                      className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all"
+                      value={stepperFormData.specialization}
+                      onChange={(e) => handleStepperInputChange('specialization', e.target.value)}
+                    >
+                      <option value="">Select specialization</option>
+                      <option value="Interior Design">Interior Design</option>
+                      <option value="Architecture">Architecture</option>
+                      <option value="3D Visualization">3D Visualization</option>
+                      <option value="Landscape Design">Landscape Design</option>
+                      <option value="Product Design">Product Design</option>
+                      <option value="Graphic Design">Graphic Design</option>
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-eco-moss">Experience Level</label>
+                    <select 
+                      className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all"
+                      value={stepperFormData.experience}
+                      onChange={(e) => handleStepperInputChange('experience', e.target.value)}
+                    >
+                      <option value="">Select experience level</option>
+                      <option value="Entry Level (0-2 years)">Entry Level (0-2 years)</option>
+                      <option value="Mid Level (3-5 years)">Mid Level (3-5 years)</option>
+                      <option value="Senior Level (6-10 years)">Senior Level (6-10 years)</option>
+                      <option value="Expert Level (10+ years)">Expert Level (10+ years)</option>
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-eco-moss">Professional Bio *</label>
+                    <Textarea 
+                      className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all min-h-[120px]" 
+                      placeholder="Tell us about your design journey, experience, and what makes you unique..."
+                      value={stepperFormData.bio}
+                      onChange={(e) => handleStepperInputChange('bio', e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+            </Step>
+            
+            <Step>
+              <div className="space-y-4">
+                <h2 className="text-2xl font-serif text-eco-moss mb-4">Profile Picture & Final Details</h2>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-eco-moss">Profile Picture</label>
+                    <input 
+                      type="file"
+                      accept="image/*"
+                      onChange={handleStepperImageUpload}
+                      className="w-full p-3 border-2 border-eco-sand rounded-lg bg-white focus:border-eco-sage focus:ring-2 focus:ring-eco-sage/20 transition-all"
+                    />
+                  </div>
+                  {stepperFormData.profileImage && (
+                    <div className="flex justify-center">
+                      <img 
+                        src={stepperFormData.profileImage} 
+                        alt="Profile preview" 
+                        className="w-24 h-24 rounded-full object-cover border-4 border-eco-sage"
+                      />
+                    </div>
+                  )}
+                  <div className="bg-eco-cream/50 p-6 rounded-xl">
+                    <h3 className="font-semibold text-eco-moss mb-2">Profile Summary</h3>
+                    <p className="text-sm text-eco-bark">
+                      <strong>Name:</strong> {stepperFormData.name || 'Not provided'}<br/>
+                      <strong>Title:</strong> {stepperFormData.title || 'Not provided'}<br/>
+                      <strong>Specialization:</strong> {stepperFormData.specialization || 'Not provided'}<br/>
+                      <strong>Location:</strong> {stepperFormData.location || 'Not provided'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </Step>
+          </Stepper>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+
   return (
     <Layout>
       <div 
@@ -382,7 +609,7 @@ const DesignerSpace = () => {
               </div>
               
               {/* Hero Content */}
-              <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-12 shadow-2xl border border-white/20 max-w-5xl mx-auto">
+              <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-12 shadow-2xl border border-white/20">
                 <div className="space-y-6">
                   <p className="text-3xl font-serif text-eco-moss font-semibold">
                     Where creativity meets opportunity.
@@ -391,66 +618,56 @@ const DesignerSpace = () => {
                     Showcase your work, connect with clients, and grow your design practice in a community of thousands of professional designers and architects.
                   </p>
                   
-                  {/* Feature Highlights with SpotlightCard */}
+                  {/* Feature Highlights */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-                    <SpotlightCard className="p-4 bg-eco-sage/10 rounded-2xl" spotlightColor="rgba(125, 157, 140, 0.3)">
+                    <div className="p-4 bg-eco-sage/10 rounded-2xl">
                       <div className="flex items-center gap-3">
                         <div className="p-3 bg-eco-sage rounded-xl">
                           <PenTool className="h-6 w-6 text-white" />
                         </div>
                         <div>
-                          <SplitText 
-                            text="Professional Studio"
-                            className="font-semibold text-eco-moss"
-                            delay={50}
-                            duration={0.4}
-                            splitType="chars"
-                          />
+                          <p className="font-semibold text-eco-moss">Professional Studio</p>
                           <p className="text-sm text-eco-bark">Complete toolkit for designers</p>
                         </div>
                       </div>
-                    </SpotlightCard>
+                    </div>
                     
-                    <SpotlightCard className="p-4 bg-eco-moss/10 rounded-2xl" spotlightColor="rgba(94, 139, 111, 0.3)">
+                    <div className="p-4 bg-eco-moss/10 rounded-2xl">
                       <div className="flex items-center gap-3">
                         <div className="p-3 bg-eco-moss rounded-xl">
                           <Users className="h-6 w-6 text-white" />
                         </div>
                         <div>
-                          <SplitText 
-                            text="15K+ Designers"
-                            className="font-semibold text-eco-moss"
-                            delay={50}
-                            duration={0.4}
-                            splitType="chars"
-                          />
+                          <p className="font-semibold text-eco-moss">15K+ Designers</p>
                           <p className="text-sm text-eco-bark">Vibrant creative community</p>
                         </div>
                       </div>
-                    </SpotlightCard>
+                    </div>
                     
-                    <SpotlightCard className="p-4 bg-eco-leaf/10 rounded-2xl" spotlightColor="rgba(125, 157, 140, 0.3)">
+                    <div className="p-4 bg-eco-leaf/10 rounded-2xl">
                       <div className="flex items-center gap-3">
                         <div className="p-3 bg-eco-leaf rounded-xl">
                           <Award className="h-6 w-6 text-white" />
                         </div>
                         <div>
-                          <SplitText 
-                            text="Featured Work"
-                            className="font-semibold text-eco-moss"
-                            delay={50}
-                            duration={0.4}
-                            splitType="chars"
-                          />
+                          <p className="font-semibold text-eco-moss">Featured Work</p>
                           <p className="text-sm text-eco-bark">Get recognized globally</p>
                         </div>
                       </div>
-                    </SpotlightCard>
+                    </div>
                   </div>
                   
                   {/* CTA Buttons */}
                   <div className="flex flex-col sm:flex-row gap-6 justify-center mt-10">
-                    {!isRegistered && <RegistrationDialog />}
+                    {!isRegistered && (
+                      <Button 
+                        onClick={() => setShowStepperForm(true)}
+                        className="bg-eco-sage hover:bg-eco-moss text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                      >
+                        <User className="h-5 w-5 mr-2" />
+                        Join Designer Community
+                      </Button>
+                    )}
                     
                     <Button 
                       onClick={() => setShowTutorial(true)}
@@ -464,6 +681,33 @@ const DesignerSpace = () => {
                 </div>
               </div>
             </div>
+
+            {/* Show Profile Card if created via stepper */}
+            {showProfileCard && (
+              <div className="mb-16">
+                <div className="text-center mb-8">
+                  <h2 className="text-3xl font-serif text-eco-moss font-bold mb-4">Your Designer Profile</h2>
+                  <p className="text-eco-bark">Your professional designer profile card is ready!</p>
+                </div>
+                <ProfileCard
+                  name={stepperFormData.name}
+                  title={stepperFormData.title}
+                  handle={stepperFormData.handle}
+                  status="Online"
+                  contactText="Contact Me"
+                  avatarUrl={stepperFormData.profileImage || ''}
+                  showUserInfo={true}
+                  enableTilt={true}
+                  location={stepperFormData.location}
+                  email={stepperFormData.email}
+                  phone={stepperFormData.phone}
+                  website={stepperFormData.website}
+                  bio={stepperFormData.bio}
+                  specialization={stepperFormData.specialization}
+                  onContactClick={() => console.log('Contact clicked')}
+                />
+              </div>
+            )}
 
             {/* Show Portfolio Card if created */}
             {showPortfolioCard && (
@@ -844,36 +1088,27 @@ const DesignerSpace = () => {
             {/* CTA Section - FIXED "Explore Community" button visibility */}
             <div className="mt-20 bg-gradient-to-r from-eco-sage/95 to-eco-moss/95 backdrop-blur-sm rounded-3xl p-12 text-white shadow-2xl border border-white/20">
               <div className="text-center">
-                <SplitText 
-                  text="Ready to Showcase Your Work?"
-                  className="font-serif text-4xl font-bold mb-6"
-                  delay={80}
-                  duration={0.5}
-                  splitType="chars"
-                />
+                <h2 className="font-serif text-4xl font-bold mb-6">Ready to Showcase Your Work?</h2>
                 <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
                   Join thousands of designers who have transformed their careers with our platform
                 </p>
                 <div className="flex flex-col sm:flex-row gap-6 justify-center">
-                  <SpotlightCard className="bg-white text-eco-moss hover:bg-eco-cream hover:scale-105 transition-all duration-300 px-8 py-4 text-lg font-semibold rounded-xl" spotlightColor="rgba(255, 255, 255, 0.3)">
-                    <Button 
-                      onClick={() => setShowPortfolioDialog(true)}
-                      size="lg" 
-                      className="bg-transparent hover:bg-transparent text-eco-moss"
-                    >
-                      <Sparkles className="h-5 w-5 mr-2" />
-                      Start Your Portfolio
-                    </Button>
-                  </SpotlightCard>
-                  <SpotlightCard className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-eco-moss hover:scale-105 transition-all duration-300 px-8 py-4 text-lg font-semibold rounded-xl" spotlightColor="rgba(255, 255, 255, 0.2)">
-                    <Button 
-                      size="lg" 
-                      className="bg-transparent hover:bg-transparent border-0"
-                    >
-                      <Users className="h-5 w-5 mr-2" />
-                      Explore Community
-                    </Button>
-                  </SpotlightCard>
+                  <Button 
+                    onClick={() => setShowStepperForm(true)}
+                    size="lg" 
+                    className="bg-white text-eco-moss hover:bg-eco-cream hover:scale-105 transition-all duration-300 px-8 py-4 text-lg font-semibold rounded-xl"
+                  >
+                    <Sparkles className="h-5 w-5 mr-2" />
+                    Start Your Portfolio
+                  </Button>
+                  <Button 
+                    size="lg" 
+                    variant="outline"
+                    className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-eco-moss hover:scale-105 transition-all duration-300 px-8 py-4 text-lg font-semibold rounded-xl"
+                  >
+                    <Users className="h-5 w-5 mr-2" />
+                    Explore Community
+                  </Button>
                 </div>
               </div>
             </div>
@@ -886,6 +1121,12 @@ const DesignerSpace = () => {
         isOpen={showTutorial} 
         onClose={() => setShowTutorial(false)} 
       />
+
+      {/* Registration Dialog */}
+      <RegistrationDialog />
+
+      {/* Stepper Form Dialog */}
+      <StepperFormDialog />
 
       <style>{`
         .line-clamp-2 {
