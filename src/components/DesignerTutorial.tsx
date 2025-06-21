@@ -1,9 +1,9 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
+import ShinyText from './ShinyText';
 import { 
   ArrowRight, 
   ArrowLeft, 
@@ -213,7 +213,7 @@ const DesignerTutorial: React.FC<DesignerTutorialProps> = ({ isOpen, onClose }) 
                 onClick={handleFinish}
                 className="bg-eco-sage hover:bg-eco-moss text-white"
               >
-                Get Started
+                <ShinyText text="Get Started" speed={2} />
                 <Award className="h-4 w-4 ml-2" />
               </Button>
             ) : (

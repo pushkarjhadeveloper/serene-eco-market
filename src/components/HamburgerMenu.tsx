@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu, Palette, Zap, Layers, PenTool, Sparkles, Box, Scan, Brain } from "lucide-react";
@@ -9,6 +8,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useAuth } from "@/contexts/AuthContext";
+import ShinyText from "./ShinyText";
 
 type MenuItemProps = {
   name: string;
@@ -149,8 +149,8 @@ const HamburgerMenu = () => {
                     <PenTool className="h-5 w-5" />
                   </div>
                   <div>
-                    <div className="font-medium text-lg bg-gradient-to-r from-eco-sage to-eco-moss bg-clip-text text-transparent">
-                      Designer Space
+                    <div className="font-medium text-lg">
+                      <ShinyText text="Designer Space" speed={3} />
                     </div>
                     <div className="text-xs text-eco-bark/70 mt-1">Professional design tools & workspace</div>
                   </div>
