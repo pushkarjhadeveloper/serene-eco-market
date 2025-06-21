@@ -4,6 +4,8 @@ import Layout from "@/components/Layout";
 import GradientText from "@/components/GradientText";
 import DesignerTutorial from "@/components/DesignerTutorial";
 import PortfolioCard from "@/components/PortfolioCard";
+import SplitText from "@/components/SplitText";
+import SpotlightCard from "@/components/SpotlightCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -389,37 +391,61 @@ const DesignerSpace = () => {
                     Showcase your work, connect with clients, and grow your design practice in a community of thousands of professional designers and architects.
                   </p>
                   
-                  {/* Feature Highlights */}
+                  {/* Feature Highlights with SpotlightCard */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-                    <div className="flex items-center gap-3 p-4 bg-eco-sage/10 rounded-2xl">
-                      <div className="p-3 bg-eco-sage rounded-xl">
-                        <PenTool className="h-6 w-6 text-white" />
+                    <SpotlightCard className="p-4 bg-eco-sage/10 rounded-2xl" spotlightColor="rgba(125, 157, 140, 0.3)">
+                      <div className="flex items-center gap-3">
+                        <div className="p-3 bg-eco-sage rounded-xl">
+                          <PenTool className="h-6 w-6 text-white" />
+                        </div>
+                        <div>
+                          <SplitText 
+                            text="Professional Studio"
+                            className="font-semibold text-eco-moss"
+                            delay={50}
+                            duration={0.4}
+                            splitType="chars"
+                          />
+                          <p className="text-sm text-eco-bark">Complete toolkit for designers</p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="font-semibold text-eco-moss">Professional Studio</h3>
-                        <p className="text-sm text-eco-bark">Complete toolkit for designers</p>
-                      </div>
-                    </div>
+                    </SpotlightCard>
                     
-                    <div className="flex items-center gap-3 p-4 bg-eco-moss/10 rounded-2xl">
-                      <div className="p-3 bg-eco-moss rounded-xl">
-                        <Users className="h-6 w-6 text-white" />
+                    <SpotlightCard className="p-4 bg-eco-moss/10 rounded-2xl" spotlightColor="rgba(94, 139, 111, 0.3)">
+                      <div className="flex items-center gap-3">
+                        <div className="p-3 bg-eco-moss rounded-xl">
+                          <Users className="h-6 w-6 text-white" />
+                        </div>
+                        <div>
+                          <SplitText 
+                            text="15K+ Designers"
+                            className="font-semibold text-eco-moss"
+                            delay={50}
+                            duration={0.4}
+                            splitType="chars"
+                          />
+                          <p className="text-sm text-eco-bark">Vibrant creative community</p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="font-semibold text-eco-moss">15K+ Designers</h3>
-                        <p className="text-sm text-eco-bark">Vibrant creative community</p>
-                      </div>
-                    </div>
+                    </SpotlightCard>
                     
-                    <div className="flex items-center gap-3 p-4 bg-eco-leaf/10 rounded-2xl">
-                      <div className="p-3 bg-eco-leaf rounded-xl">
-                        <Award className="h-6 w-6 text-white" />
+                    <SpotlightCard className="p-4 bg-eco-leaf/10 rounded-2xl" spotlightColor="rgba(125, 157, 140, 0.3)">
+                      <div className="flex items-center gap-3">
+                        <div className="p-3 bg-eco-leaf rounded-xl">
+                          <Award className="h-6 w-6 text-white" />
+                        </div>
+                        <div>
+                          <SplitText 
+                            text="Featured Work"
+                            className="font-semibold text-eco-moss"
+                            delay={50}
+                            duration={0.4}
+                            splitType="chars"
+                          />
+                          <p className="text-sm text-eco-bark">Get recognized globally</p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="font-semibold text-eco-moss">Featured Work</h3>
-                        <p className="text-sm text-eco-bark">Get recognized globally</p>
-                      </div>
-                    </div>
+                    </SpotlightCard>
                   </div>
                   
                   {/* CTA Buttons */}
@@ -497,39 +523,55 @@ const DesignerSpace = () => {
                           </CardTitle>
                           <CardDescription className="text-eco-bark">Manage and track your design projects</CardDescription>
                         </div>
-                        <Button className="bg-eco-sage hover:bg-eco-moss text-white rounded-xl font-semibold">
-                          <Plus className="h-4 w-4 mr-2" />
-                          New Project
-                        </Button>
+                        <SpotlightCard className="bg-eco-sage hover:bg-eco-moss text-white rounded-xl font-semibold" spotlightColor="rgba(255, 255, 255, 0.2)">
+                          <Button className="bg-transparent hover:bg-transparent">
+                            <Plus className="h-4 w-4 mr-2" />
+                            <SplitText 
+                              text="New Project"
+                              className=""
+                              delay={30}
+                              duration={0.3}
+                              splitType="chars"
+                            />
+                          </Button>
+                        </SpotlightCard>
                       </CardHeader>
                       <CardContent>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           {mockProjects.map((project) => (
-                            <Card key={project.id} className="border-2 border-eco-sand hover:shadow-lg transition-all duration-300 hover:scale-105 rounded-2xl">
-                              <CardContent className="p-6">
-                                <div className="aspect-video bg-gradient-to-br from-eco-sage/20 to-eco-moss/20 rounded-xl mb-4 relative overflow-hidden group">
-                                  <div className="absolute inset-0 bg-gradient-to-br from-eco-sage/40 to-eco-moss/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                  <div className="absolute bottom-3 right-3 bg-white px-3 py-1 rounded-full text-sm font-semibold text-eco-moss capitalize">
-                                    {project.status.replace('-', ' ')}
+                            <SpotlightCard key={project.id} className="border-2 border-eco-sand hover:shadow-lg transition-all duration-300 hover:scale-105 rounded-2xl" spotlightColor="rgba(125, 157, 140, 0.2)">
+                              <Card className="border-0">
+                                <CardContent className="p-6">
+                                  <div className="aspect-video bg-gradient-to-br from-eco-sage/20 to-eco-moss/20 rounded-xl mb-4 relative overflow-hidden group">
+                                    <div className="absolute inset-0 bg-gradient-to-br from-eco-sage/40 to-eco-moss/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                    <div className="absolute bottom-3 right-3 bg-white px-3 py-1 rounded-full text-sm font-semibold text-eco-moss capitalize">
+                                      {project.status.replace('-', ' ')}
+                                    </div>
                                   </div>
-                                </div>
-                                <h4 className="font-semibold text-eco-moss mb-2 text-lg">{project.name}</h4>
-                                <p className="text-sm text-eco-bark mb-3">{project.type}</p>
-                                <div className="flex items-center justify-between text-sm text-eco-stone">
-                                  <div className="flex items-center gap-4">
-                                    <span className="flex items-center gap-1">
-                                      <Heart className="h-4 w-4 text-red-500" />
-                                      {project.likes}
-                                    </span>
-                                    <span className="flex items-center gap-1">
-                                      <Eye className="h-4 w-4 text-eco-sage" />
-                                      {project.views}
-                                    </span>
+                                  <SplitText 
+                                    text={project.name}
+                                    className="font-semibold text-eco-moss mb-2 text-lg"
+                                    delay={20}
+                                    duration={0.3}
+                                    splitType="chars"
+                                  />
+                                  <p className="text-sm text-eco-bark mb-3">{project.type}</p>
+                                  <div className="flex items-center justify-between text-sm text-eco-stone">
+                                    <div className="flex items-center gap-4">
+                                      <span className="flex items-center gap-1">
+                                        <Heart className="h-4 w-4 text-red-500" />
+                                        {project.likes}
+                                      </span>
+                                      <span className="flex items-center gap-1">
+                                        <Eye className="h-4 w-4 text-eco-sage" />
+                                        {project.views}
+                                      </span>
+                                    </div>
+                                    <span className="font-medium">{project.timestamp.toLocaleDateString()}</span>
                                   </div>
-                                  <span className="font-medium">{project.timestamp.toLocaleDateString()}</span>
-                                </div>
-                              </CardContent>
-                            </Card>
+                                </CardContent>
+                              </Card>
+                            </SpotlightCard>
                           ))}
                         </div>
                       </CardContent>
@@ -537,47 +579,71 @@ const DesignerSpace = () => {
 
                     {/* Quick Stats */}
                     <div className="space-y-6">
-                      <Card className="border-2 border-eco-sand bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
-                        <CardContent className="p-6">
-                          <div className="flex items-center justify-between mb-4">
-                            <h3 className="font-semibold text-eco-moss text-lg">Profile Views</h3>
-                            <div className="p-2 bg-eco-sage/20 rounded-xl">
-                              <TrendingUp className="h-5 w-5 text-eco-sage" />
+                      <SpotlightCard className="border-2 border-eco-sand bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300" spotlightColor="rgba(125, 157, 140, 0.2)">
+                        <Card className="border-0">
+                          <CardContent className="p-6">
+                            <div className="flex items-center justify-between mb-4">
+                              <SplitText 
+                                text="Profile Views"
+                                className="font-semibold text-eco-moss text-lg"
+                                delay={30}
+                                duration={0.3}
+                                splitType="chars"
+                              />
+                              <div className="p-2 bg-eco-sage/20 rounded-xl">
+                                <TrendingUp className="h-5 w-5 text-eco-sage" />
+                              </div>
                             </div>
-                          </div>
-                          <div className="text-4xl font-bold text-eco-moss mb-2">2,847</div>
-                          <div className="flex items-center gap-2">
-                            <Badge className="bg-green-100 text-green-700 text-xs">+12%</Badge>
-                            <span className="text-sm text-eco-bark">from last month</span>
-                          </div>
-                        </CardContent>
-                      </Card>
+                            <div className="text-4xl font-bold text-eco-moss mb-2">2,847</div>
+                            <div className="flex items-center gap-2">
+                              <Badge className="bg-green-100 text-green-700 text-xs">+12%</Badge>
+                              <span className="text-sm text-eco-bark">from last month</span>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </SpotlightCard>
 
-                      <Card className="border-2 border-eco-sand bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
-                        <CardContent className="p-6">
-                          <div className="flex items-center justify-between mb-4">
-                            <h3 className="font-semibold text-eco-moss text-lg">Project Likes</h3>
-                            <div className="p-2 bg-red-100 rounded-xl">
-                              <Heart className="h-5 w-5 text-red-500" />
+                      <SpotlightCard className="border-2 border-eco-sand bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300" spotlightColor="rgba(125, 157, 140, 0.2)">
+                        <Card className="border-0">
+                          <CardContent className="p-6">
+                            <div className="flex items-center justify-between mb-4">
+                              <SplitText 
+                                text="Project Likes"
+                                className="font-semibold text-eco-moss text-lg"
+                                delay={30}
+                                duration={0.3}
+                                splitType="chars"
+                              />
+                              <div className="p-2 bg-red-100 rounded-xl">
+                                <Heart className="h-5 w-5 text-red-500" />
+                              </div>
                             </div>
-                          </div>
-                          <div className="text-4xl font-bold text-eco-moss mb-2">1,523</div>
-                          <p className="text-sm text-eco-bark">Across all projects</p>
-                        </CardContent>
-                      </Card>
+                            <div className="text-4xl font-bold text-eco-moss mb-2">1,523</div>
+                            <p className="text-sm text-eco-bark">Across all projects</p>
+                          </CardContent>
+                        </Card>
+                      </SpotlightCard>
 
-                      <Card className="border-2 border-eco-sand bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
-                        <CardContent className="p-6">
-                          <div className="flex items-center justify-between mb-4">
-                            <h3 className="font-semibold text-eco-moss text-lg">Followers</h3>
-                            <div className="p-2 bg-eco-moss/20 rounded-xl">
-                              <Users className="h-5 w-5 text-eco-moss" />
+                      <SpotlightCard className="border-2 border-eco-sand bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300" spotlightColor="rgba(125, 157, 140, 0.2)">
+                        <Card className="border-0">
+                          <CardContent className="p-6">
+                            <div className="flex items-center justify-between mb-4">
+                              <SplitText 
+                                text="Followers"
+                                className="font-semibold text-eco-moss text-lg"
+                                delay={30}
+                                duration={0.3}
+                                splitType="chars"
+                              />
+                              <div className="p-2 bg-eco-moss/20 rounded-xl">
+                                <Users className="h-5 w-5 text-eco-moss" />
+                              </div>
                             </div>
-                          </div>
-                          <div className="text-4xl font-bold text-eco-moss mb-2">456</div>
-                          <p className="text-sm text-eco-bark">Growing community</p>
-                        </CardContent>
-                      </Card>
+                            <div className="text-4xl font-bold text-eco-moss mb-2">456</div>
+                            <p className="text-sm text-eco-bark">Growing community</p>
+                          </CardContent>
+                        </Card>
+                      </SpotlightCard>
                     </div>
                   </div>
                 </TabsContent>
@@ -778,26 +844,36 @@ const DesignerSpace = () => {
             {/* CTA Section - FIXED "Explore Community" button visibility */}
             <div className="mt-20 bg-gradient-to-r from-eco-sage/95 to-eco-moss/95 backdrop-blur-sm rounded-3xl p-12 text-white shadow-2xl border border-white/20">
               <div className="text-center">
-                <h3 className="font-serif text-4xl font-bold mb-6">Ready to Showcase Your Work?</h3>
+                <SplitText 
+                  text="Ready to Showcase Your Work?"
+                  className="font-serif text-4xl font-bold mb-6"
+                  delay={80}
+                  duration={0.5}
+                  splitType="chars"
+                />
                 <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
                   Join thousands of designers who have transformed their careers with our platform
                 </p>
                 <div className="flex flex-col sm:flex-row gap-6 justify-center">
-                  <Button 
-                    onClick={() => setShowPortfolioDialog(true)}
-                    size="lg" 
-                    className="bg-white text-eco-moss hover:bg-eco-cream hover:scale-105 transition-all duration-300 px-8 py-4 text-lg font-semibold rounded-xl"
-                  >
-                    <Sparkles className="h-5 w-5 mr-2" />
-                    Start Your Portfolio
-                  </Button>
-                  <Button 
-                    size="lg" 
-                    className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-eco-moss hover:scale-105 transition-all duration-300 px-8 py-4 text-lg font-semibold rounded-xl"
-                  >
-                    <Users className="h-5 w-5 mr-2" />
-                    Explore Community
-                  </Button>
+                  <SpotlightCard className="bg-white text-eco-moss hover:bg-eco-cream hover:scale-105 transition-all duration-300 px-8 py-4 text-lg font-semibold rounded-xl" spotlightColor="rgba(255, 255, 255, 0.3)">
+                    <Button 
+                      onClick={() => setShowPortfolioDialog(true)}
+                      size="lg" 
+                      className="bg-transparent hover:bg-transparent text-eco-moss"
+                    >
+                      <Sparkles className="h-5 w-5 mr-2" />
+                      Start Your Portfolio
+                    </Button>
+                  </SpotlightCard>
+                  <SpotlightCard className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-eco-moss hover:scale-105 transition-all duration-300 px-8 py-4 text-lg font-semibold rounded-xl" spotlightColor="rgba(255, 255, 255, 0.2)">
+                    <Button 
+                      size="lg" 
+                      className="bg-transparent hover:bg-transparent border-0"
+                    >
+                      <Users className="h-5 w-5 mr-2" />
+                      Explore Community
+                    </Button>
+                  </SpotlightCard>
                 </div>
               </div>
             </div>
