@@ -24,17 +24,6 @@ const Index = () => {
   return (
     <Layout>
       <Hero />
-      <div className="eco-container my-8">
-        <div className="bg-eco-sage/10 rounded-lg p-6 flex flex-col sm:flex-row items-center justify-between">
-          <div className="mb-4 sm:mb-0">
-            <h3 className="font-serif text-xl font-medium text-eco-moss">Get Personalized Design Ideas</h3>
-            <p className="text-eco-bark">Subscribe to receive interior design recommendations tailored to your style.</p>
-          </div>
-          <Button onClick={openSubscribeModal} className="eco-button whitespace-nowrap">
-            Subscribe Now
-          </Button>
-        </div>
-      </div>
       <Categories />
       <FeaturedProducts />
       <Sustainability />
