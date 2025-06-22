@@ -1,80 +1,65 @@
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Provider } from "react-redux";
-import { store } from "./store/store";
+import { Toaster } from "@/components/ui/toaster";
+import { Provider } from 'react-redux';
+import { store } from '@/store/store';
+import { AuthProvider } from '@/contexts/AuthContext';
 import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
 import CategoryPage from "./pages/CategoryPage";
-import SignIn from "./pages/SignIn";
-import SignUp from "./pages/SignUp";
-import ThemesPage from "./pages/ThemesPage";
-import RoomVisualizerPage from "./pages/RoomVisualizerPage";
-import NewsletterConfirmation from "./pages/NewsletterConfirmation";
+import ProductDetailsPage from "./pages/ProductDetailsPage";
 import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
-import ProductDetailsPage from "./pages/ProductDetailsPage";
-import ProfilePage from "./pages/ProfilePage";
-import DataMigrationPage from "./pages/DataMigrationPage";
 import DesignerSpace from "./pages/DesignerSpace";
-import Chatbot from "./components/Chatbot";
-import { AuthProvider } from "./contexts/AuthContext";
+import DesignerCommunityPage from "./pages/DesignerCommunityPage";
+import ProfilePage from "./pages/ProfilePage";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
+import NotFound from "./pages/NotFound";
+import NewsletterConfirmation from "./pages/NewsletterConfirmation";
+import ThemesPage from "./pages/ThemesPage";
+import RoomVisualizerPage from "./pages/RoomVisualizerPage";
+import DataMigrationPage from "./pages/DataMigrationPage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import "./App.css";
 
 const queryClient = new QueryClient();
 
-const App = () => {
+function App() {
   return (
-    <Provider store={store}>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <AuthProvider>
-            <TooltipProvider>
-              <Toaster />
-              <Sonner />
+    <QueryClientProvider client={queryClient}>
+      <Provider store={store}>
+        <AuthProvider>
+          <Router>
+            <div className="App">
               <Routes>
                 <Route path="/" element={<Index />} />
-                <Route path="/category/:categoryName" element={<CategoryPage />} />
-                <Route path="/category/:categoryName/:subCategory" element={<CategoryPage />} />
+                <Route path="/category/:categoryId" element={<CategoryPage />} />
                 <Route path="/product/:productId" element={<ProductDetailsPage />} />
-                <Route path="/signin" element={<SignIn />} />
-                <Route path="/signup" element={<SignUp />} />
-                <Route path="/themes" element={<ThemesPage />} />
-                <Route path="/design-services" element={<RoomVisualizerPage />} />
-                <Route path="/designer-space" element={<DesignerSpace />} />
-                <Route path="/newsletter-confirmation" element={<NewsletterConfirmation />} />
                 <Route path="/cart" element={<CartPage />} />
-                <Route path="/data-migration" element={
-                  <ProtectedRoute>
-                    <DataMigrationPage />
-                  </ProtectedRoute>
-                } />
+                <Route path="/checkout" element={<CheckoutPage />} />
+                <Route path="/designer-space" element={<DesignerSpace />} />
+                <Route path="/designer-community" element={<DesignerCommunityPage />} />
+                <Route path="/themes" element={<ThemesPage />} />
+                <Route path="/room-visualizer" element={<RoomVisualizerPage />} />
                 <Route path="/profile" element={
                   <ProtectedRoute>
                     <ProfilePage />
                   </ProtectedRoute>
                 } />
-                <Route path="/checkout" element={
-                  <ProtectedRoute>
-                    <CheckoutPage />
-                  </ProtectedRoute>
-                } />
-                <Route path="/about" element={<Index />} />
-                <Route path="/sustainability" element={<Index />} />
-                <Route path="/contact" element={<Index />} />
-                {/* Catch-all route */}
+                <Route path="/signin" element={<SignIn />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/newsletter-confirmation" element={<NewsletterConfirmation />} />
+                <Route path="/data-migration" element={<DataMigrationPage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
-              <Chatbot />
-            </TooltipProvider>
-          </AuthProvider>
-        </BrowserRouter>
-      </QueryClientProvider>
-    </Provider>
+              <Toaster />
+            </div>
+          </Router>
+        </AuthProvider>
+      </Provider>
+    </QueryClientProvider>
   );
-};
+}
 
 export default App;
