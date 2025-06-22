@@ -6,6 +6,8 @@ import DesignerTutorial from "@/components/DesignerTutorial";
 import PortfolioCard from "@/components/PortfolioCard";
 import ProfileCard from "@/components/ProfileCard";
 import Stepper, { Step } from "@/components/Stepper";
+import SpotlightCard from "@/components/SpotlightCard";
+import SplitText from "@/components/SplitText";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
