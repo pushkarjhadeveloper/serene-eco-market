@@ -16,7 +16,14 @@ const signUpSchema = z.object({
   lastName: z.string().min(2, "Last name must be at least 2 characters"),
   email: z.string().email("Please enter a valid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"),
-  confirmPassword: z.string()
+  confirmPassword: z.string(),
+  tagline: z.string().optional(),
+  location: z.string().optional(),
+  profileSummary: z.string().optional(),
+  socialLinks: z.string().optional(),
+  profileTags: z.string().optional(),
+  experience: z.string().optional(),
+  portfolioLinks: z.string().optional()
 }).refine(data => data.password === data.confirmPassword, {
   message: "Passwords don't match",
   path: ["confirmPassword"]
@@ -43,7 +50,14 @@ const SignUp = () => {
       lastName: "",
       email: "",
       password: "",
-      confirmPassword: ""
+      confirmPassword: "",
+      tagline: "",
+      location: "",
+      profileSummary: "",
+      socialLinks: "",
+      profileTags: "",
+      experience: "",
+      portfolioLinks: ""
     }
   });
 
@@ -141,6 +155,110 @@ const SignUp = () => {
                   </FormItem>
                 )}
               />
+
+              {/* Profile Completion Section */}
+              <div className="border-t border-eco-sand/20 pt-6 mt-6">
+                <h3 className="font-serif text-lg font-medium text-eco-moss mb-4">Complete Your Profile (Optional)</h3>
+                <div className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="tagline"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Add tagline</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Your professional tagline" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="location"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Add your location</FormLabel>
+                        <FormControl>
+                          <Input placeholder="City, Country" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="profileSummary"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Add a profile summary</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Brief description about yourself" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="socialLinks"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Add social links</FormLabel>
+                        <FormControl>
+                          <Input placeholder="LinkedIn, Instagram, etc." {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="profileTags"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Add profile tags</FormLabel>
+                        <FormControl>
+                          <Input placeholder="e.g., sustainable design, minimalism" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="experience"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Add Experience</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Years of experience or expertise" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="portfolioLinks"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Add Portfolio Links</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Portfolio website or project links" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
               
               <Button type="submit" className="eco-button w-full" disabled={isLoading}>
                 {isLoading ? "Creating Account..." : "Sign Up"}
