@@ -10,6 +10,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useToast } from "@/hooks/use-toast";
 import Layout from "@/components/Layout";
 import { useAuth } from "@/contexts/AuthContext";
+import AnimatedList from "@/components/AnimatedList";
+import { User, MapPin, FileText, Share2, Tag, Briefcase, FolderOpen } from "lucide-react";
 
 const signUpSchema = z.object({
   firstName: z.string().min(2, "First name must be at least 2 characters"),
@@ -159,6 +161,30 @@ const SignUp = () => {
               {/* Profile Completion Section */}
               <div className="border-t border-eco-sand/20 pt-6 mt-6">
                 <h3 className="font-serif text-lg font-medium text-eco-moss mb-4">Complete Your Profile (Optional)</h3>
+                
+                {/* Animated List showing profile benefits */}
+                <div className="mb-6">
+                  <AnimatedList
+                    items={[
+                      {
+                        id: "visibility",
+                        text: "Increase your profile visibility in our designer community",
+                        icon: <User className="h-4 w-4" />
+                      },
+                      {
+                        id: "connect",
+                        text: "Connect with clients and other sustainable design enthusiasts",
+                        icon: <Share2 className="h-4 w-4" />
+                      },
+                      {
+                        id: "showcase",
+                        text: "Showcase your expertise and sustainable design portfolio",
+                        icon: <FolderOpen className="h-4 w-4" />
+                      }
+                    ]}
+                    delay={150}
+                  />
+                </div>
                 <div className="space-y-4">
                   <FormField
                     control={form.control}
