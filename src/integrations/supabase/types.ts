@@ -134,7 +134,9 @@ export type Database = {
           material: string | null
           name: string
           price: number
+          status: string | null
           subcategory_id: string
+          vendor_id: string | null
         }
         Insert: {
           bulb_type?: string | null
@@ -146,7 +148,9 @@ export type Database = {
           material?: string | null
           name: string
           price: number
+          status?: string | null
           subcategory_id: string
+          vendor_id?: string | null
         }
         Update: {
           bulb_type?: string | null
@@ -158,7 +162,9 @@ export type Database = {
           material?: string | null
           name?: string
           price?: number
+          status?: string | null
           subcategory_id?: string
+          vendor_id?: string | null
         }
         Relationships: [
           {
@@ -175,22 +181,49 @@ export type Database = {
           avatar_url: string | null
           first_name: string | null
           id: string
+          kyc_approved_at: string | null
+          kyc_status: Database["public"]["Enums"]["kyc_status"] | null
+          kyc_submitted_at: string | null
           last_name: string | null
+          phone: string | null
+          subscription_end_date: string | null
+          subscription_status:
+            | Database["public"]["Enums"]["subscription_status"]
+            | null
           updated_at: string | null
+          user_type: Database["public"]["Enums"]["user_type"] | null
         }
         Insert: {
           avatar_url?: string | null
           first_name?: string | null
           id: string
+          kyc_approved_at?: string | null
+          kyc_status?: Database["public"]["Enums"]["kyc_status"] | null
+          kyc_submitted_at?: string | null
           last_name?: string | null
+          phone?: string | null
+          subscription_end_date?: string | null
+          subscription_status?:
+            | Database["public"]["Enums"]["subscription_status"]
+            | null
           updated_at?: string | null
+          user_type?: Database["public"]["Enums"]["user_type"] | null
         }
         Update: {
           avatar_url?: string | null
           first_name?: string | null
           id?: string
+          kyc_approved_at?: string | null
+          kyc_status?: Database["public"]["Enums"]["kyc_status"] | null
+          kyc_submitted_at?: string | null
           last_name?: string | null
+          phone?: string | null
+          subscription_end_date?: string | null
+          subscription_status?:
+            | Database["public"]["Enums"]["subscription_status"]
+            | null
           updated_at?: string | null
+          user_type?: Database["public"]["Enums"]["user_type"] | null
         }
         Relationships: []
       }
@@ -232,6 +265,39 @@ export type Database = {
           },
         ]
       }
+      subscription_plans: {
+        Row: {
+          created_at: string
+          description: string | null
+          features: Json | null
+          id: string
+          is_active: boolean | null
+          name: string
+          price_monthly: number
+          price_yearly: number | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          features?: Json | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          price_monthly: number
+          price_yearly?: number | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          features?: Json | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          price_monthly?: number
+          price_yearly?: number | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null
@@ -253,6 +319,119 @@ export type Database = {
         }
         Relationships: []
       }
+      vendor_kyc: {
+        Row: {
+          bank_account_holder_name: string
+          bank_account_number: string
+          bank_ifsc_code: string
+          bank_proof_url: string | null
+          created_at: string
+          gstin: string | null
+          gstin_proof_url: string | null
+          id: string
+          pan: string
+          pan_proof_url: string | null
+          rejection_reason: string | null
+          reviewed_at: string | null
+          status: Database["public"]["Enums"]["kyc_status"]
+          submitted_at: string | null
+          udyam_proof_url: string | null
+          udyam_registration: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          bank_account_holder_name: string
+          bank_account_number: string
+          bank_ifsc_code: string
+          bank_proof_url?: string | null
+          created_at?: string
+          gstin?: string | null
+          gstin_proof_url?: string | null
+          id?: string
+          pan: string
+          pan_proof_url?: string | null
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          status?: Database["public"]["Enums"]["kyc_status"]
+          submitted_at?: string | null
+          udyam_proof_url?: string | null
+          udyam_registration?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          bank_account_holder_name?: string
+          bank_account_number?: string
+          bank_ifsc_code?: string
+          bank_proof_url?: string | null
+          created_at?: string
+          gstin?: string | null
+          gstin_proof_url?: string | null
+          id?: string
+          pan?: string
+          pan_proof_url?: string | null
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          status?: Database["public"]["Enums"]["kyc_status"]
+          submitted_at?: string | null
+          udyam_proof_url?: string | null
+          udyam_registration?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      vendor_subscriptions: {
+        Row: {
+          auto_renew: boolean | null
+          created_at: string
+          end_date: string | null
+          id: string
+          plan_id: string
+          razorpay_customer_id: string | null
+          razorpay_subscription_id: string | null
+          start_date: string | null
+          status: Database["public"]["Enums"]["subscription_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          auto_renew?: boolean | null
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          plan_id: string
+          razorpay_customer_id?: string | null
+          razorpay_subscription_id?: string | null
+          start_date?: string | null
+          status?: Database["public"]["Enums"]["subscription_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          auto_renew?: boolean | null
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          plan_id?: string
+          razorpay_customer_id?: string | null
+          razorpay_subscription_id?: string | null
+          start_date?: string | null
+          status?: Database["public"]["Enums"]["subscription_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vendor_subscriptions_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "subscription_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -272,6 +451,9 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
+      kyc_status: "pending" | "submitted" | "approved" | "rejected"
+      subscription_status: "active" | "inactive" | "trial" | "expired"
+      user_type: "architect" | "designer" | "vendor"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -400,6 +582,9 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user"],
+      kyc_status: ["pending", "submitted", "approved", "rejected"],
+      subscription_status: ["active", "inactive", "trial", "expired"],
+      user_type: ["architect", "designer", "vendor"],
     },
   },
 } as const
