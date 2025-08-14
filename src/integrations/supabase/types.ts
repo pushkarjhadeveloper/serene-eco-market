@@ -230,6 +230,36 @@ export type Database = {
         }
         Relationships: []
       }
+      security_audit_log: {
+        Row: {
+          created_at: string
+          id: string
+          ip_address: unknown | null
+          operation: string
+          success: boolean
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          operation: string
+          success?: boolean
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          operation?: string
+          success?: boolean
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       subcategories: {
         Row: {
           category_id: string
@@ -450,6 +480,14 @@ export type Database = {
       is_admin: {
         Args: { _user_id: string }
         Returns: boolean
+      }
+      log_security_event: {
+        Args: {
+          operation_name: string
+          user_id_param?: string
+          success_param?: boolean
+        }
+        Returns: undefined
       }
     }
     Enums: {
