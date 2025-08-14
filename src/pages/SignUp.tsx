@@ -14,6 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 import RoleSelector from "@/components/RoleSelector";
 import VendorSubscription from "@/components/VendorSubscription";
 import Stepper, { Step } from "@/components/Stepper";
+import { RateLimiter } from "@/utils/rateLimiter";
 import { User, MapPin, FileText, Share2, Tag, Briefcase, FolderOpen } from "lucide-react";
 
 const signUpSchema = z.object({
@@ -84,11 +85,24 @@ const SignUp = () => {
   const onSubmit = async (values: SignUpValues) => {
     setIsLoading(true);
     try {
-      // Include user type and phone in signup metadata
+      // Rate limiting check
+      const rateLimitKey = `signup_${values.email}`;
+      if (!RateLimiter.checkRateLimit(rateLimitKey, 3, 60 * 60 * 1000)) { // 3 attempts per hour
+        const remainingTime = RateLimiter.getRemainingTime(rateLimitKey, 60 * 60 * 1000);
+        toast({
+          variant: "destructive",
+          title: "Too many signup attempts",
+          description: `Please wait ${remainingTime} minutes before trying again.`,
+        });
+        return;
+      }
+
+      // Include user type and phone in signup metadata with email redirect
       const { data, error } = await supabase.auth.signUp({
         email: values.email,
         password: values.password,
         options: {
+          emailRedirectTo: `${window.location.origin}/`,
           data: {
             first_name: values.firstName,
             last_name: values.lastName,

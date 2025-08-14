@@ -67,8 +67,11 @@ export const useRazorpay = () => {
         throw new Error('Failed to load Razorpay SDK');
       }
 
+      // Get the secure Razorpay key from the order response
+      const orderData = await createOrder(options.amount, options.currency);
+      
       const razorpayOptions = {
-        key: 'rzp_test_9999999999', // This will be replaced by the actual key from the server
+        key: orderData.razorpay_key_id, // Secure key from server
         amount: options.amount,
         currency: options.currency,
         order_id: options.orderId,
