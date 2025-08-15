@@ -2,9 +2,8 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { useRazorpay } from "@/hooks/useRazorpay";
 import { supabase } from "@/integrations/supabase/client";
-import { Check, Crown, Zap } from "lucide-react";
+import { Check, Crown, Zap, Copy } from "lucide-react";
 
 interface VendorSubscriptionProps {
   onSubscriptionComplete: () => void;
@@ -15,7 +14,6 @@ interface VendorSubscriptionProps {
 const VendorSubscription = ({ onSubscriptionComplete, userEmail, userId }: VendorSubscriptionProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const { initiatePayment } = useRazorpay();
 
   const subscriptionPlan = {
     name: "Vendor Basic",
@@ -29,6 +27,16 @@ const VendorSubscription = ({ onSubscriptionComplete, userEmail, userId }: Vendo
       "Draft mode listing",
       "KYC verification assistance"
     ]
+  };
+
+  const upiId = "9911258992@slc";
+
+  const copyUpiId = () => {
+    navigator.clipboard.writeText(upiId);
+    toast({
+      title: "UPI ID Copied",
+      description: "UPI ID has been copied to clipboard",
+    });
   };
 
   const handleSubscription = async (planType: 'monthly' | 'yearly') => {
@@ -47,84 +55,14 @@ const VendorSubscription = ({ onSubscriptionComplete, userEmail, userId }: Vendo
 
       const amount = planType === 'monthly' ? plans.price_monthly : plans.price_yearly;
       
-      // Create Razorpay order
-      const { data, error } = await supabase.functions.invoke('create-razorpay-order', {
-        body: {
-          amount,
-          currency: 'INR',
-          notes: {
-            plan_type: planType,
-            plan_id: plans.id,
-            user_id: userId
-          }
-        }
+      toast({
+        title: "Payment Instructions",
+        description: `Please pay ₹${amount} to UPI ID: ${upiId} and contact support to activate your subscription.`,
       });
 
-      if (error) throw error;
-
-      // Initialize payment
-      await initiatePayment({
-        orderId: data.order_id,
-        amount,
-        currency: 'INR',
-        customerDetails: {
-          name: userEmail.split('@')[0], // Use email prefix as name fallback
-          email: userEmail,
-          contact: '9999999999' // This should be replaced with actual phone from form
-        },
-        onSuccess: async (paymentData) => {
-          // Create subscription record
-          const endDate = new Date();
-          if (planType === 'monthly') {
-            endDate.setMonth(endDate.getMonth() + 1);
-          } else {
-            endDate.setFullYear(endDate.getFullYear() + 1);
-          }
-
-          const { error: subError } = await supabase
-            .from('vendor_subscriptions')
-            .insert({
-              user_id: userId,
-              plan_id: plans.id,
-              razorpay_subscription_id: paymentData.razorpay_payment_id,
-              status: 'active',
-              start_date: new Date().toISOString(),
-              end_date: endDate.toISOString()
-            });
-
-          if (subError) {
-            console.error('Subscription record error:', subError);
-          }
-
-          // Update profile subscription status
-          const { error: profileError } = await supabase
-            .from('profiles')
-            .update({
-              subscription_status: 'active',
-              subscription_end_date: endDate.toISOString()
-            })
-            .eq('id', userId);
-
-          if (profileError) {
-            console.error('Profile update error:', profileError);
-          }
-
-          toast({
-            title: "Subscription activated!",
-            description: "Welcome to our vendor community. You can now start listing products.",
-          });
-
-          onSubscriptionComplete();
-        },
-        onError: (error) => {
-          toast({
-            variant: "destructive",
-            title: "Payment failed",
-            description: error.description || "Please try again later.",
-          });
-        }
-      });
-
+      // For now, we'll just show the payment instructions
+      // In a real implementation, you'd want to handle manual verification
+      
     } catch (error) {
       console.error('Subscription error:', error);
       toast({
@@ -166,13 +104,30 @@ const VendorSubscription = ({ onSubscriptionComplete, userEmail, userId }: Vendo
                 </li>
               ))}
             </ul>
-            <Button 
-              className="w-full" 
-              onClick={() => handleSubscription('monthly')}
-              disabled={isLoading}
-            >
-              {isLoading ? "Processing..." : "Start Monthly Plan"}
-            </Button>
+            <div className="space-y-3">
+              <div className="p-3 bg-eco-sand/20 rounded-lg">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-eco-bark">Pay via UPI</p>
+                    <p className="text-xs text-muted-foreground">{upiId}</p>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={copyUpiId}
+                  >
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+              <Button 
+                className="w-full" 
+                onClick={() => handleSubscription('monthly')}
+                disabled={isLoading}
+              >
+                {isLoading ? "Processing..." : "Get Payment Details"}
+              </Button>
+            </div>
           </CardContent>
         </Card>
 
@@ -209,13 +164,30 @@ const VendorSubscription = ({ onSubscriptionComplete, userEmail, userId }: Vendo
                 <span className="text-sm font-medium text-primary">2 months free!</span>
               </li>
             </ul>
-            <Button 
-              className="w-full" 
-              onClick={() => handleSubscription('yearly')}
-              disabled={isLoading}
-            >
-              {isLoading ? "Processing..." : "Start Yearly Plan"}
-            </Button>
+            <div className="space-y-3">
+              <div className="p-3 bg-eco-sand/20 rounded-lg">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-eco-bark">Pay via UPI</p>
+                    <p className="text-xs text-muted-foreground">{upiId}</p>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={copyUpiId}
+                  >
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+              <Button 
+                className="w-full" 
+                onClick={() => handleSubscription('yearly')}
+                disabled={isLoading}
+              >
+                {isLoading ? "Processing..." : "Get Payment Details"}
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>

@@ -63,8 +63,8 @@ const CheckoutPage = () => {
   const cartItems = useAppSelector(state => state.cart.items);
   
   // Pre-filled UPI ID
-  const predefinedUpiId = "9911258992.wa.ecz@waicici";
-  const upiOwnerName = "SANTOSH KUMAR JHA";
+  const predefinedUpiId = "9911258992@slc";
+  const upiOwnerName = "MERCHANT";
   const upiMobileNumber = "+91 99112 58992";
 
   // GST rates based on product categories in India
