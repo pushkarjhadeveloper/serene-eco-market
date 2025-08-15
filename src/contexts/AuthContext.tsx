@@ -8,7 +8,6 @@ interface AuthContextType {
   session: Session | null;
   user: User | null;
   signIn: (email: string, password: string) => Promise<void>;
-  signInWithGoogle: () => Promise<void>;
   signUp: (email: string, password: string, firstName: string, lastName: string) => Promise<void>;
   signOut: () => Promise<void>;
   loading: boolean;
@@ -67,28 +66,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const signInWithGoogle = async () => {
-    try {
-      setLoading(true);
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${ttp://localhost:8080/}/`
-        }
-      });
-      
-      if (error) {
-        toast({
-          variant: "destructive",
-          title: "Google sign in failed",
-          description: error.message,
-        });
-        throw error;
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const signUp = async (email: string, password: string, firstName: string, lastName: string) => {
     try {
@@ -137,7 +114,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ session, user, signIn, signInWithGoogle, signUp, signOut, loading }}>
+    <AuthContext.Provider value={{ session, user, signIn, signUp, signOut, loading }}>
       {children}
     </AuthContext.Provider>
   );
