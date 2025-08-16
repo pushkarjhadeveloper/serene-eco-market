@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 import { User, Palette, Briefcase } from "lucide-react";
 
 interface RoleSelectionStepProps {
-  selectedRole: 'architect' | 'designer' | 'both' | null;
-  onRoleSelect: (role: 'architect' | 'designer' | 'both') => void;
+  selectedRole: 'architect' | 'designer' | 'vendor' | null;
+  onRoleSelect: (role: 'architect' | 'designer' | 'vendor') => void;
 }
 
 const RoleSelectionStep = ({ selectedRole, onRoleSelect }: RoleSelectionStepProps) => {
@@ -24,11 +24,11 @@ const RoleSelectionStep = ({ selectedRole, onRoleSelect }: RoleSelectionStepProp
       features: ['Space planning', 'Interior concepts', 'Furniture selection']
     },
     {
-      type: 'both' as const,
-      title: 'Both',
-      description: 'Architect & Interior Designer',
+      type: 'vendor' as const,
+      title: 'Vendor / Seller',
+      description: 'List and sell premium products',
       icon: Briefcase,
-      features: ['Complete design solutions', 'Architecture + Interiors', 'End-to-end projects']
+      features: ['List products', 'Manage inventory', 'Access dashboard', 'KYC required for payouts']
     }
   ];
 

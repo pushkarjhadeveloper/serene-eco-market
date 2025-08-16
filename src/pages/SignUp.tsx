@@ -27,7 +27,7 @@ const signUpSchema = z.object({
   phone: z.string().min(10, "Phone number must be at least 10 digits"),
   password: z.string().min(8, "Password must be at least 8 characters"),
   confirmPassword: z.string(),
-  userType: z.enum(['architect', 'designer', 'both', 'vendor']),
+  userType: z.enum(['architect', 'designer', 'vendor']),
   experience: z.string().optional(),
   education: z.string().optional(),
   coaNumber: z.string().optional(),
@@ -53,7 +53,7 @@ type SignUpValues = z.infer<typeof signUpSchema>;
 const SignUp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
-  const [selectedRole, setSelectedRole] = useState<'architect' | 'designer' | 'both' | 'vendor' | null>(null);
+  const [selectedRole, setSelectedRole] = useState<'architect' | 'designer' | 'vendor' | null>(null);
   const [showSubscription, setShowSubscription] = useState(false);
   const [userId, setUserId] = useState<string>('');
   const { toast } = useToast();
@@ -172,7 +172,7 @@ const SignUp = () => {
     navigate('/');
   };
 
-  const handleRoleSelect = (role: 'architect' | 'designer' | 'both' | 'vendor') => {
+  const handleRoleSelect = (role: 'architect' | 'designer' | 'vendor') => {
     setSelectedRole(role);
     if (role === 'vendor') {
       setCurrentStep(1); // Keep vendor flow simple
@@ -226,7 +226,7 @@ const SignUp = () => {
             {/* Step 0: Role Selection */}
             <Step>
               <RoleSelectionStep 
-                selectedRole={selectedRole as 'architect' | 'designer' | 'both' | null}
+                selectedRole={selectedRole as 'architect' | 'designer' | 'vendor' | null}
                 onRoleSelect={handleRoleSelect}
               />
             </Step>
