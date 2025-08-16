@@ -5,17 +5,20 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import Layout from "@/components/Layout";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import RoleSelector from "@/components/RoleSelector";
 import VendorSubscription from "@/components/VendorSubscription";
 import Stepper, { Step } from "@/components/Stepper";
 import { RateLimiter } from "@/utils/rateLimiter";
-import { User, MapPin, FileText, Share2, Tag, Briefcase, FolderOpen } from "lucide-react";
+import AccountCreationStep from "@/components/signup/AccountCreationStep";
+import RoleSelectionStep from "@/components/signup/RoleSelectionStep";
+import ProfessionalDetailsStep from "@/components/signup/ProfessionalDetailsStep";
+import PortfolioStep from "@/components/signup/PortfolioStep";
+import CredibilityStep from "@/components/signup/CredibilityStep";
+import ProfilePreviewStep from "@/components/signup/ProfilePreviewStep";
 
 const signUpSchema = z.object({
   firstName: z.string().min(2, "First name must be at least 2 characters"),
@@ -24,14 +27,22 @@ const signUpSchema = z.object({
   phone: z.string().min(10, "Phone number must be at least 10 digits"),
   password: z.string().min(8, "Password must be at least 8 characters"),
   confirmPassword: z.string(),
-  userType: z.enum(['architect', 'designer', 'vendor']),
-  tagline: z.string().optional(),
-  location: z.string().optional(),
-  profileSummary: z.string().optional(),
-  socialLinks: z.string().optional(),
-  profileTags: z.string().optional(),
+  userType: z.enum(['architect', 'designer', 'both', 'vendor']),
   experience: z.string().optional(),
-  portfolioLinks: z.string().optional()
+  education: z.string().optional(),
+  coaNumber: z.string().optional(),
+  companyName: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
+  pincode: z.string().optional(),
+  portfolio: z.array(z.object({
+    title: z.string().min(1, "Project title is required"),
+    description: z.string().min(10, "Description must be at least 10 characters"),
+    budgetRange: z.string().min(1, "Budget range is required"),
+    projectType: z.string().min(1, "Project type is required"),
+    images: z.array(z.string()).optional()
+  })).min(3, "Minimum 3 projects required").optional(),
+  certifications: z.string().optional()
 }).refine(data => data.password === data.confirmPassword, {
   message: "Passwords don't match",
   path: ["confirmPassword"]
@@ -42,7 +53,7 @@ type SignUpValues = z.infer<typeof signUpSchema>;
 const SignUp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
-  const [selectedRole, setSelectedRole] = useState<'architect' | 'designer' | 'vendor' | null>(null);
+  const [selectedRole, setSelectedRole] = useState<'architect' | 'designer' | 'both' | 'vendor' | null>(null);
   const [showSubscription, setShowSubscription] = useState(false);
   const [userId, setUserId] = useState<string>('');
   const { toast } = useToast();
@@ -65,13 +76,19 @@ const SignUp = () => {
       password: "",
       confirmPassword: "",
       userType: selectedRole || 'architect',
-      tagline: "",
-      location: "",
-      profileSummary: "",
-      socialLinks: "",
-      profileTags: "",
       experience: "",
-      portfolioLinks: ""
+      education: "",
+      coaNumber: "",
+      companyName: "",
+      city: "",
+      state: "",
+      pincode: "",
+      portfolio: [
+        { title: "", description: "", budgetRange: "", projectType: "", images: [] },
+        { title: "", description: "", budgetRange: "", projectType: "", images: [] },
+        { title: "", description: "", budgetRange: "", projectType: "", images: [] }
+      ],
+      certifications: ""
     }
   });
 
@@ -155,9 +172,28 @@ const SignUp = () => {
     navigate('/');
   };
 
-  const handleRoleSelect = (role: 'architect' | 'designer' | 'vendor') => {
+  const handleRoleSelect = (role: 'architect' | 'designer' | 'both' | 'vendor') => {
     setSelectedRole(role);
-    setCurrentStep(1);
+    if (role === 'vendor') {
+      setCurrentStep(1); // Keep vendor flow simple
+    } else {
+      setCurrentStep(1); // Start architect/designer flow
+    }
+  };
+
+  const handleStepComplete = () => {
+    if (selectedRole === 'vendor') {
+      setCurrentStep(1); // Vendor goes to basic account creation
+    } else {
+      // For architects/designers, progress through all steps
+      if (currentStep < 5) {
+        setCurrentStep(currentStep + 1);
+      }
+    }
+  };
+
+  const handleEditStep = (step: number) => {
+    setCurrentStep(step);
   };
 
   const canProceedToSignup = selectedRole !== null;
@@ -187,128 +223,140 @@ const SignUp = () => {
           </div>
 
           <Stepper initialStep={currentStep} onStepChange={setCurrentStep}>
-            {/* Step 1: Role Selection */}
+            {/* Step 0: Role Selection */}
             <Step>
-              <RoleSelector 
-                selectedRole={selectedRole}
+              <RoleSelectionStep 
+                selectedRole={selectedRole as 'architect' | 'designer' | 'both' | null}
                 onRoleSelect={handleRoleSelect}
               />
             </Step>
 
-            {/* Step 2: Account Details */}
+            {/* Step 1: Account Creation */}
             <Step>
-              <div className="max-w-md mx-auto">
-                <div className="text-center mb-6">
-                  <h2 className="text-xl font-semibold">Account Details</h2>
-                  <p className="text-sm text-muted-foreground">
-                    Creating account for: <span className="font-medium capitalize">{selectedRole}</span>
-                  </p>
-                </div>
-
-                <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <FormField
-                        control={form.control}
-                        name="firstName"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>First Name</FormLabel>
-                            <FormControl>
-                              <Input placeholder="John" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="lastName"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Last Name</FormLabel>
-                            <FormControl>
-                              <Input placeholder="Doe" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                    
-                    <FormField
-                      control={form.control}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Email</FormLabel>
-                          <FormControl>
-                            <Input type="email" placeholder="john.doe@example.com" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <FormField
-                      control={form.control}
-                      name="phone"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Phone Number</FormLabel>
-                          <FormControl>
-                            <Input type="tel" placeholder="+91 98765 43210" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <FormField
-                      control={form.control}
-                      name="password"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Password</FormLabel>
-                          <FormControl>
-                            <Input type="password" placeholder="••••••••" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <FormField
-                      control={form.control}
-                      name="confirmPassword"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Confirm Password</FormLabel>
-                          <FormControl>
-                            <Input type="password" placeholder="••••••••" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    {selectedRole === 'vendor' && (
-                      <div className="p-4 bg-muted rounded-lg">
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-md mx-auto space-y-6">
+                  {selectedRole === 'vendor' ? (
+                    // Simple vendor flow
+                    <div>
+                      <div className="text-center mb-6">
+                        <h2 className="text-xl font-semibold">Vendor Account Details</h2>
+                        <p className="text-sm text-muted-foreground">
+                          Creating vendor account
+                        </p>
+                      </div>
+                      <AccountCreationStep control={form.control} />
+                      <div className="p-4 bg-muted rounded-lg mt-4">
                         <p className="text-sm text-muted-foreground">
                           As a vendor, you'll need to complete subscription payment after creating your account to start listing products.
                         </p>
                       </div>
-                    )}
-                    
-                    <Button type="submit" className="w-full" disabled={isLoading}>
-                      {isLoading ? "Creating Account..." : 
-                       selectedRole === 'vendor' ? "Create Account & Continue to Payment" : "Create Account"}
-                    </Button>
-                  </form>
-                </Form>
-
-              </div>
+                      <Button type="submit" className="w-full mt-6" disabled={isLoading}>
+                        {isLoading ? "Creating Account..." : "Create Account & Continue to Payment"}
+                      </Button>
+                    </div>
+                  ) : (
+                    // Architect/Designer flow
+                    <div>
+                      <AccountCreationStep control={form.control} />
+                      <Button 
+                        type="button" 
+                        className="w-full mt-6" 
+                        onClick={handleStepComplete}
+                      >
+                        Continue to Professional Details
+                      </Button>
+                    </div>
+                  )}
+                </form>
+              </Form>
             </Step>
+
+            {/* Step 2: Professional Details (Architects/Designers only) */}
+            {selectedRole !== 'vendor' && (
+              <Step>
+                <Form {...form}>
+                  <div className="max-w-md mx-auto">
+                    <ProfessionalDetailsStep control={form.control} selectedRole={selectedRole} />
+                    <div className="flex gap-4 mt-6">
+                      <Button variant="outline" onClick={() => setCurrentStep(1)} className="w-full">
+                        Back
+                      </Button>
+                      <Button onClick={handleStepComplete} className="w-full">
+                        Continue to Portfolio
+                      </Button>
+                    </div>
+                  </div>
+                </Form>
+              </Step>
+            )}
+
+            {/* Step 3: Portfolio Showcase (Architects/Designers only) */}
+            {selectedRole !== 'vendor' && (
+              <Step>
+                <Form {...form}>
+                  <div className="max-w-2xl mx-auto">
+                    <PortfolioStep control={form.control} />
+                    <div className="flex gap-4 mt-6">
+                      <Button variant="outline" onClick={() => setCurrentStep(2)} className="w-full">
+                        Back
+                      </Button>
+                      <Button onClick={handleStepComplete} className="w-full">
+                        Continue to Verification
+                      </Button>
+                    </div>
+                  </div>
+                </Form>
+              </Step>
+            )}
+
+            {/* Step 4: Credibility Boost (Architects/Designers only) */}
+            {selectedRole !== 'vendor' && (
+              <Step>
+                <Form {...form}>
+                  <div className="max-w-2xl mx-auto">
+                    <CredibilityStep control={form.control} selectedRole={selectedRole} />
+                    <div className="flex gap-4 mt-6">
+                      <Button variant="outline" onClick={() => setCurrentStep(3)} className="w-full">
+                        Back
+                      </Button>
+                      <Button variant="outline" onClick={handleStepComplete} className="w-full">
+                        Skip Verification
+                      </Button>
+                      <Button onClick={handleStepComplete} className="w-full">
+                        Continue to Preview
+                      </Button>
+                    </div>
+                  </div>
+                </Form>
+              </Step>
+            )}
+
+            {/* Step 5: Profile Preview (Architects/Designers only) */}
+            {selectedRole !== 'vendor' && (
+              <Step>
+                <Form {...form}>
+                  <div className="max-w-4xl mx-auto">
+                    <ProfilePreviewStep 
+                      formData={form.getValues()} 
+                      onEdit={handleEditStep}
+                    />
+                    <div className="flex gap-4 mt-6 max-w-md mx-auto">
+                      <Button variant="outline" onClick={() => setCurrentStep(4)} className="w-full">
+                        Back
+                      </Button>
+                      <Button 
+                        type="submit" 
+                        className="w-full" 
+                        disabled={isLoading}
+                        onClick={form.handleSubmit(onSubmit)}
+                      >
+                        {isLoading ? "Creating Profile..." : "Create Professional Profile"}
+                      </Button>
+                    </div>
+                  </div>
+                </Form>
+              </Step>
+            )}
           </Stepper>
           
           <div className="text-center text-sm mt-6">

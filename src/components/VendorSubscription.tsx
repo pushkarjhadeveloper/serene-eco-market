@@ -106,9 +106,19 @@ const VendorSubscription = ({ onSubscriptionComplete, userEmail, userId }: Vendo
             </ul>
             <div className="space-y-3">
               <div className="p-3 bg-eco-sand/20 rounded-lg">
+                <div className="text-center mb-3">
+                  <p className="text-sm font-medium text-eco-bark mb-2">Scan QR Code to Pay</p>
+                  <div className="bg-white p-2 rounded-lg inline-block">
+                    <img 
+                      src="/lovable-uploads/309971c4-f714-4445-a38e-5dee636a2e88.png" 
+                      alt="UPI QR Code" 
+                      className="w-32 h-32 object-contain"
+                    />
+                  </div>
+                </div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-eco-bark">Pay via UPI</p>
+                    <p className="text-sm font-medium text-eco-bark">Or pay via UPI ID</p>
                     <p className="text-xs text-muted-foreground">{upiId}</p>
                   </div>
                   <Button
@@ -166,9 +176,19 @@ const VendorSubscription = ({ onSubscriptionComplete, userEmail, userId }: Vendo
             </ul>
             <div className="space-y-3">
               <div className="p-3 bg-eco-sand/20 rounded-lg">
+                <div className="text-center mb-3">
+                  <p className="text-sm font-medium text-eco-bark mb-2">Scan QR Code to Pay</p>
+                  <div className="bg-white p-2 rounded-lg inline-block">
+                    <img 
+                      src="/lovable-uploads/309971c4-f714-4445-a38e-5dee636a2e88.png" 
+                      alt="UPI QR Code" 
+                      className="w-32 h-32 object-contain"
+                    />
+                  </div>
+                </div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-eco-bark">Pay via UPI</p>
+                    <p className="text-sm font-medium text-eco-bark">Or pay via UPI ID</p>
                     <p className="text-xs text-muted-foreground">{upiId}</p>
                   </div>
                   <Button
