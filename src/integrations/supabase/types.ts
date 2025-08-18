@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "13.0.4"
@@ -67,6 +67,50 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      portfolio_projects: {
+        Row: {
+          budget_range: string | null
+          created_at: string
+          description: string | null
+          id: string
+          images: string[] | null
+          project_type: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          budget_range?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          images?: string[] | null
+          project_type?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          budget_range?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          images?: string[] | null
+          project_type?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "portfolio_projects_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       product_features: {
         Row: {
@@ -182,49 +226,85 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          bio: string | null
+          city: string | null
+          coa_number: string | null
+          company_name: string | null
+          design_styles: string[] | null
+          education: string | null
+          experience_years: string | null
           first_name: string | null
           id: string
+          is_verified: boolean | null
           kyc_approved_at: string | null
           kyc_status: Database["public"]["Enums"]["kyc_status"] | null
           kyc_submitted_at: string | null
           last_name: string | null
           phone: string | null
+          pin_code: string | null
+          specialization: string | null
+          state: string | null
           subscription_end_date: string | null
           subscription_status:
             | Database["public"]["Enums"]["subscription_status"]
             | null
+          tagline: string | null
           updated_at: string | null
           user_type: Database["public"]["Enums"]["user_type"] | null
         }
         Insert: {
           avatar_url?: string | null
+          bio?: string | null
+          city?: string | null
+          coa_number?: string | null
+          company_name?: string | null
+          design_styles?: string[] | null
+          education?: string | null
+          experience_years?: string | null
           first_name?: string | null
           id: string
+          is_verified?: boolean | null
           kyc_approved_at?: string | null
           kyc_status?: Database["public"]["Enums"]["kyc_status"] | null
           kyc_submitted_at?: string | null
           last_name?: string | null
           phone?: string | null
+          pin_code?: string | null
+          specialization?: string | null
+          state?: string | null
           subscription_end_date?: string | null
           subscription_status?:
             | Database["public"]["Enums"]["subscription_status"]
             | null
+          tagline?: string | null
           updated_at?: string | null
           user_type?: Database["public"]["Enums"]["user_type"] | null
         }
         Update: {
           avatar_url?: string | null
+          bio?: string | null
+          city?: string | null
+          coa_number?: string | null
+          company_name?: string | null
+          design_styles?: string[] | null
+          education?: string | null
+          experience_years?: string | null
           first_name?: string | null
           id?: string
+          is_verified?: boolean | null
           kyc_approved_at?: string | null
           kyc_status?: Database["public"]["Enums"]["kyc_status"] | null
           kyc_submitted_at?: string | null
           last_name?: string | null
           phone?: string | null
+          pin_code?: string | null
+          specialization?: string | null
+          state?: string | null
           subscription_end_date?: string | null
           subscription_status?:
             | Database["public"]["Enums"]["subscription_status"]
             | null
+          tagline?: string | null
           updated_at?: string | null
           user_type?: Database["public"]["Enums"]["user_type"] | null
         }
@@ -472,8 +552,8 @@ export type Database = {
     Functions: {
       has_role: {
         Args: {
-          _user_id: string
           _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
         }
         Returns: boolean
       }
@@ -484,8 +564,8 @@ export type Database = {
       log_security_event: {
         Args: {
           operation_name: string
-          user_id_param?: string
           success_param?: boolean
+          user_id_param?: string
         }
         Returns: undefined
       }
