@@ -1,18 +1,42 @@
 
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import Layout from "@/components/Layout";
-import { Button } from "@/components/ui/button";
-import { useAuth } from "@/contexts/AuthContext";
-import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
+import { Loader2, User, MapPin, Briefcase, Award } from 'lucide-react';
+
+interface Profile {
+  id: string;
+  first_name: string | null;
+  last_name: string | null;
+  phone: string | null;
+  user_type: string | null;
+  company_name: string | null;
+  experience_years: string | null;
+  education: string | null;
+  coa_number: string | null;
+  city: string | null;
+  state: string | null;
+  pin_code: string | null;
+  bio: string | null;
+  specialization: string | null;
+  design_styles: string[] | null;
+  is_verified: boolean | null;
+  tagline: string | null;
+  avatar_url: string | null;
+}
 
 const ProfilePage = () => {
   const { user } = useAuth();
   const { toast } = useToast();
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -22,22 +46,21 @@ const ProfilePage = () => {
 
   const fetchProfile = async () => {
     try {
-      setIsLoading(true);
-      
       const { data, error } = await supabase
         .from('profiles')
-        .select('first_name, last_name')
+        .select('*')
         .eq('id', user?.id)
         .single();
-      
+
       if (error) throw error;
-      
-      if (data) {
-        setFirstName(data.first_name || '');
-        setLastName(data.last_name || '');
-      }
+      setProfile(data);
     } catch (error) {
       console.error('Error fetching profile:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load profile",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -45,107 +68,239 @@ const ProfilePage = () => {
 
   const updateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!user) return;
-    
+    if (!profile) return;
+
+    setIsSaving(true);
     try {
-      setIsLoading(true);
-      
       const { error } = await supabase
         .from('profiles')
         .update({
-          first_name: firstName,
-          last_name: lastName,
-          updated_at: new Date().toISOString(),
+          first_name: profile.first_name,
+          last_name: profile.last_name,
+          phone: profile.phone,
+          company_name: profile.company_name,
+          experience_years: profile.experience_years,
+          education: profile.education,
+          coa_number: profile.coa_number,
+          city: profile.city,
+          state: profile.state,
+          pin_code: profile.pin_code,
+          bio: profile.bio,
+          specialization: profile.specialization,
+          tagline: profile.tagline,
         })
-        .eq('id', user.id);
-      
+        .eq('id', user?.id);
+
       if (error) throw error;
-      
+
       toast({
-        title: "Profile updated",
-        description: "Your profile information has been updated successfully.",
+        title: "Success",
+        description: "Profile updated successfully",
       });
     } catch (error) {
       console.error('Error updating profile:', error);
       toast({
+        title: "Error",
+        description: "Failed to update profile",
         variant: "destructive",
-        title: "Update failed",
-        description: "Could not update your profile. Please try again.",
       });
     } finally {
-      setIsLoading(false);
+      setIsSaving(false);
     }
   };
 
-  return (
-    <Layout>
-      <div className="container mx-auto px-4 sm:px-6 md:px-8 py-6 sm:py-8 md:py-12">
-        <div className="max-w-md mx-auto bg-white p-6 sm:p-8 rounded-lg shadow-sm border border-eco-sand/30">
-          <h1 className="font-serif text-2xl sm:text-3xl font-medium text-eco-moss mb-6">My Profile</h1>
-          
-          <form onSubmit={updateProfile} className="space-y-4 sm:space-y-6">
-            <div>
-              <label htmlFor="email" className="block text-eco-bark mb-2 text-sm sm:text-base">
-                Email
-              </label>
-              <input
-                id="email"
-                type="email"
-                value={user?.email || ''}
-                className="w-full px-3 sm:px-4 py-2 rounded-md border border-eco-sand bg-gray-50 text-sm sm:text-base"
-                disabled
-              />
-              <p className="mt-1 text-xs sm:text-sm text-eco-bark/70">Email cannot be changed</p>
-            </div>
-            
-            <div>
-              <label htmlFor="firstName" className="block text-eco-bark mb-2 text-sm sm:text-base">
-                First Name
-              </label>
-              <input
-                id="firstName"
-                type="text"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                className="w-full px-3 sm:px-4 py-2 rounded-md border border-eco-sand focus:outline-none focus:ring-2 focus:ring-eco-sage text-sm sm:text-base"
-              />
-            </div>
-            
-            <div>
-              <label htmlFor="lastName" className="block text-eco-bark mb-2 text-sm sm:text-base">
-                Last Name
-              </label>
-              <input
-                id="lastName"
-                type="text"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                className="w-full px-3 sm:px-4 py-2 rounded-md border border-eco-sand focus:outline-none focus:ring-2 focus:ring-eco-sage text-sm sm:text-base"
-              />
-            </div>
-            
-            <Button 
-              type="submit" 
-              className="eco-button w-full text-sm sm:text-base py-2 sm:py-3"
-              disabled={isLoading}
-            >
-              {isLoading ? "Saving..." : "Save Changes"}
-            </Button>
-          </form>
-          
-          {/* Admin section */}
-          <div className="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-eco-sand/30">
-            <h2 className="font-serif text-lg sm:text-xl font-medium text-eco-moss mb-3 sm:mb-4">Admin Tools</h2>
-            <Link to="/data-migration">
-              <Button variant="outline" className="w-full text-sm sm:text-base py-2 sm:py-3">
-                Data Migration Tool
-              </Button>
-            </Link>
-          </div>
-        </div>
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20 flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
       </div>
-    </Layout>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20 flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardContent className="p-6 text-center">
+            <p>Profile not found</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20 py-8">
+      <div className="container mx-auto px-4 max-w-4xl">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold mb-2">My Profile</h1>
+          <p className="text-muted-foreground">Manage your professional profile and information</p>
+        </div>
+
+        <form onSubmit={updateProfile} className="space-y-6">
+          {/* Basic Information */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <User className="h-5 w-5" />
+                Basic Information
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium mb-2 block">First Name</label>
+                <Input
+                  value={profile.first_name || ''}
+                  onChange={(e) => setProfile({ ...profile, first_name: e.target.value })}
+                  placeholder="Enter your first name"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-2 block">Last Name</label>
+                <Input
+                  value={profile.last_name || ''}
+                  onChange={(e) => setProfile({ ...profile, last_name: e.target.value })}
+                  placeholder="Enter your last name"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-2 block">Phone</label>
+                <Input
+                  value={profile.phone || ''}
+                  onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
+                  placeholder="Enter your phone number"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-2 block">Role</label>
+                <Badge variant="outline" className="w-fit">
+                  {profile.user_type}
+                  {profile.is_verified && <Award className="h-3 w-3 ml-1" />}
+                </Badge>
+              </div>
+              <div className="md:col-span-2">
+                <label className="text-sm font-medium mb-2 block">Tagline</label>
+                <Input
+                  value={profile.tagline || ''}
+                  onChange={(e) => setProfile({ ...profile, tagline: e.target.value })}
+                  placeholder="e.g., Luxury Interior Designer with 12+ Years of Experience"
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Professional Information */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Briefcase className="h-5 w-5" />
+                Professional Details
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium mb-2 block">Company/Studio Name</label>
+                <Input
+                  value={profile.company_name || ''}
+                  onChange={(e) => setProfile({ ...profile, company_name: e.target.value })}
+                  placeholder="Enter company name"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-2 block">Years of Experience</label>
+                <Input
+                  value={profile.experience_years || ''}
+                  onChange={(e) => setProfile({ ...profile, experience_years: e.target.value })}
+                  placeholder="e.g., 5-10 years"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-2 block">Education</label>
+                <Input
+                  value={profile.education || ''}
+                  onChange={(e) => setProfile({ ...profile, education: e.target.value })}
+                  placeholder="e.g., B.Arch, Diploma"
+                />
+              </div>
+              {profile.user_type === 'architect' && (
+                <div>
+                  <label className="text-sm font-medium mb-2 block">COA Registration Number</label>
+                  <Input
+                    value={profile.coa_number || ''}
+                    onChange={(e) => setProfile({ ...profile, coa_number: e.target.value })}
+                    placeholder="Enter COA number"
+                  />
+                </div>
+              )}
+              <div>
+                <label className="text-sm font-medium mb-2 block">Specialization</label>
+                <Input
+                  value={profile.specialization || ''}
+                  onChange={(e) => setProfile({ ...profile, specialization: e.target.value })}
+                  placeholder="e.g., Residential, Commercial"
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Location */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <MapPin className="h-5 w-5" />
+                Location
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label className="text-sm font-medium mb-2 block">City</label>
+                <Input
+                  value={profile.city || ''}
+                  onChange={(e) => setProfile({ ...profile, city: e.target.value })}
+                  placeholder="Enter city"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-2 block">State</label>
+                <Input
+                  value={profile.state || ''}
+                  onChange={(e) => setProfile({ ...profile, state: e.target.value })}
+                  placeholder="Enter state"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-2 block">Pin Code</label>
+                <Input
+                  value={profile.pin_code || ''}
+                  onChange={(e) => setProfile({ ...profile, pin_code: e.target.value })}
+                  placeholder="Enter pin code"
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Bio */}
+          <Card>
+            <CardHeader>
+              <CardTitle>About</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Textarea
+                value={profile.bio || ''}
+                onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
+                placeholder="Tell us about yourself, your philosophy, and approach..."
+                rows={4}
+              />
+            </CardContent>
+          </Card>
+
+          <Button type="submit" disabled={isSaving} className="w-full">
+            {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Save Changes
+          </Button>
+        </form>
+      </div>
+    </div>
   );
 };
 

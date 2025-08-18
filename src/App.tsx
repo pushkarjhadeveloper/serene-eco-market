@@ -13,6 +13,7 @@ import CheckoutPage from "./pages/CheckoutPage";
 import DesignerSpace from "./pages/DesignerSpace";
 import DesignerCommunityPage from "./pages/DesignerCommunityPage";
 import ProfilePage from "./pages/ProfilePage";
+import NetworkPage from "./pages/NetworkPage";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import NotFound from "./pages/NotFound";
@@ -42,6 +43,7 @@ function App() {
                 <Route path="/designer-community" element={<DesignerCommunityPage />} />
                 <Route path="/themes" element={<ThemesPage />} />
                 <Route path="/room-visualizer" element={<RoomVisualizerPage />} />
+                <Route path="/network" element={<NetworkPage />} />
                 <Route path="/profile" element={
                   <ProtectedRoute>
                     <ProfilePage />
