@@ -22,7 +22,7 @@ export const Step: React.FC<StepProps> = ({ children }) => {
 
 const Stepper: React.FC<StepperProps> = ({
   children,
-  initialStep = 2,
+  initialStep = 1,
   onStepChange,
   onFinalStepCompleted,
   backButtonText = "Previous",
