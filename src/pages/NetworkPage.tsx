@@ -42,25 +42,10 @@ const NetworkPage = () => {
 
   const fetchNetworkProfiles = async () => {
     try {
+      // Query from the secure public_profiles view instead of profiles table
       const { data, error } = await supabase
-        .from('profiles')
-        .select(`
-          id,
-          first_name,
-          last_name,
-          user_type,
-          company_name,
-          experience_years,
-          city,
-          state,
-          bio,
-          specialization,
-          is_verified,
-          tagline,
-          avatar_url
-        `)
-        .in('user_type', ['architect', 'designer', 'vendor'])
-        .not('first_name', 'is', null);
+        .from('public_profiles')
+        .select('*');
 
       if (error) throw error;
       setProfiles(data || []);
