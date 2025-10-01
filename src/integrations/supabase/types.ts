@@ -14,12 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      app: {
-        Row: {}
-        Insert: {}
-        Update: {}
-        Relationships: []
-      }
       categories: {
         Row: {
           created_at: string | null
@@ -108,6 +102,13 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "portfolio_projects_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "public_profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -547,7 +548,57 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_profiles: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          city: string | null
+          company_name: string | null
+          design_styles: string[] | null
+          experience_years: string | null
+          first_name: string | null
+          id: string | null
+          is_verified: boolean | null
+          last_name: string | null
+          specialization: string | null
+          state: string | null
+          tagline: string | null
+          user_type: Database["public"]["Enums"]["user_type"] | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          city?: string | null
+          company_name?: string | null
+          design_styles?: string[] | null
+          experience_years?: string | null
+          first_name?: string | null
+          id?: string | null
+          is_verified?: boolean | null
+          last_name?: string | null
+          specialization?: string | null
+          state?: string | null
+          tagline?: string | null
+          user_type?: Database["public"]["Enums"]["user_type"] | null
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          city?: string | null
+          company_name?: string | null
+          design_styles?: string[] | null
+          experience_years?: string | null
+          first_name?: string | null
+          id?: string | null
+          is_verified?: boolean | null
+          last_name?: string | null
+          specialization?: string | null
+          state?: string | null
+          tagline?: string | null
+          user_type?: Database["public"]["Enums"]["user_type"] | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       has_role: {
