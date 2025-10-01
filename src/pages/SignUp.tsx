@@ -10,7 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import Layout from "@/components/Layout";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import VendorSubscription from "@/components/VendorSubscription";
+import UnifiedSubscription from "@/components/UnifiedSubscription";
 import Stepper, { Step } from "@/components/Stepper";
 import { RateLimiter } from "@/utils/rateLimiter";
 import AccountCreationStep from "@/components/signup/AccountCreationStep";
@@ -141,15 +141,8 @@ const SignUp = () => {
       if (data.user) {
         setUserId(data.user.id);
         
-        if (values.userType === 'vendor') {
-          setShowSubscription(true);
-        } else {
-          toast({
-            title: "Account created!",
-            description: "Check your email to confirm your registration.",
-          });
-          form.reset();
-        }
+        // Show subscription for all user types
+        setShowSubscription(true);
       }
     } catch (error) {
       console.error('Sign up error:', error);
@@ -165,9 +158,13 @@ const SignUp = () => {
 
 
   const handleSubscriptionComplete = () => {
+    const message = selectedRole === 'vendor' 
+      ? "Your vendor account is ready. You can now start listing products."
+      : "Your professional account is ready. Start building your network!";
+    
     toast({
       title: "Welcome to SereneEco!",
-      description: "Your vendor account is ready. You can now start listing products.",
+      description: message,
     });
     navigate('/');
   };
@@ -199,14 +196,15 @@ const SignUp = () => {
   const canProceedToSignup = selectedRole !== null;
 
   // If showing subscription flow
-  if (showSubscription && userId) {
+  if (showSubscription && userId && selectedRole) {
     return (
       <Layout>
         <div className="eco-container py-12 max-w-4xl mx-auto">
-          <VendorSubscription 
+          <UnifiedSubscription 
             onSubscriptionComplete={handleSubscriptionComplete}
             userEmail={form.getValues('email')}
             userId={userId}
+            userType={selectedRole}
           />
         </div>
       </Layout>
